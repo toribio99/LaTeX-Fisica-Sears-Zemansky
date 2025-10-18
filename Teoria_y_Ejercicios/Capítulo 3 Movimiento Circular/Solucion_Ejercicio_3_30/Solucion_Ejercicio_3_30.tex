@@ -1,0 +1,410 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.30} \\
+\large Movimiento Circular: Rotor de Helicóptero}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[14]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Eje central del rotor
+    \filldraw[gray!50] (0,0) circle (0.3);
+
+    % Cuatro aspas del rotor
+    % Aspa 1 (horizontal derecha)
+    \fill[blue!40, opacity=0.7] (0.3,0.15) -- (3.4,0.15) -- (3.4,-0.15) -- (0.3,-0.15) -- cycle;
+    \draw[blue!70!black, very thick] (0.3,0.15) -- (3.4,0.15) -- (3.4,-0.15) -- (0.3,-0.15) -- cycle;
+
+    % Aspa 2 (horizontal izquierda)
+    \fill[blue!40, opacity=0.7] (-0.3,0.15) -- (-3.4,0.15) -- (-3.4,-0.15) -- (-0.3,-0.15) -- cycle;
+    \draw[blue!70!black, very thick] (-0.3,0.15) -- (-3.4,0.15) -- (-3.4,-0.15) -- (-0.3,-0.15) -- cycle;
+
+    % Aspa 3 (vertical arriba)
+    \fill[blue!40, opacity=0.7] (0.15,0.3) -- (0.15,3.4) -- (-0.15,3.4) -- (-0.15,0.3) -- cycle;
+    \draw[blue!70!black, very thick] (0.15,0.3) -- (0.15,3.4) -- (-0.15,3.4) -- (-0.15,0.3) -- cycle;
+
+    % Aspa 4 (vertical abajo)
+    \fill[blue!40, opacity=0.7] (0.15,-0.3) -- (0.15,-3.4) -- (-0.15,-3.4) -- (-0.15,-0.3) -- cycle;
+    \draw[blue!70!black, very thick] (0.15,-0.3) -- (0.15,-3.4) -- (-0.15,-3.4) -- (-0.15,-0.3) -- cycle;
+
+    % Flecha de rotación
+    \draw[-{Latex[length=4mm]}, red!70!black, ultra thick]
+        (0.5,3.6) arc (45:145:1);
+    \node[red!70!black] at (1.5,3.2) {$\omega = 550$ rpm};
+
+    % Radio marcado
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick, orange!80!black]
+        (0,0) -- (3.4,0);
+    \node[orange!80!black, above] at (1.7,0) {$R = 3.40$ m};
+
+    % Punta del aspa destacada
+    \filldraw[green!60!black] (3.4,0) circle (0.12);
+    \node[green!60!black, right] at (3.5,0) {Punta del aspa};
+
+    % Vector de velocidad en la punta
+    \draw[-{Latex[length=3mm]}, purple!70!black, ultra thick]
+        (3.4,0) -- (3.4,1.3);
+    \node[purple!70!black, right] at (3.4,0.7) {$\vec{v}$};
+
+    % Vector de aceleración centrípeta
+    \draw[-{Latex[length=3mm]}, red!70!black, ultra thick]
+        (3.4,0) -- (2.2,0);
+    \node[red!70!black, below] at (2.8,-0.1) {$\vec{a}_{\text{rad}}$};
+
+    % Etiqueta
+    \node[below, align=center] at (0,-4.2) {\textbf{Vista superior del rotor} \\ (4 aspas)};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un modelo de rotor de helicóptero tiene cuatro aspas, cada una de 3.40 m de longitud desde el eje central hasta la punta. El modelo se gira en un túnel de viento a 550 rpm. \\[.5mm]
+
+a) ?`Qué rapidez lineal tiene la punta del aspa en m/s? \\[.5mm]
+
+b) ?`Qué aceleración radial tiene la punta del aspa, expresada como un múltiplo de la aceleración debida a la gravedad, es decir, $g$? \\[.5mm]
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Número de aspas:} 4
+    \item \textbf{Longitud de cada aspa:} $L = 3.40$ m
+    \item \textbf{Radio de rotación:} $R = 3.40$ m (desde el eje hasta la punta)
+    \item \textbf{Frecuencia de rotación:} $f = 550$ rpm (revoluciones por minuto)
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Rapidez Lineal en Movimiento Circular}
+
+La rapidez lineal $v$ de un punto que gira a una distancia $R$ del eje de rotación con frecuencia $f$ (en revoluciones por unidad de tiempo) es:
+
+\begin{equation*}
+    v = 2\pi R f
+\end{equation*}
+
+donde $f$ debe estar en revoluciones por segundo (Hz o rps).
+
+\subsection{Aceleración Centrípeta}
+
+La aceleración centrípeta puede calcularse de dos formas equivalentes:
+
+\begin{equation*}
+    a_{\text{rad}} = \frac{v^2}{R} \quad \text{o} \quad a_{\text{rad}} = 4\pi^2 R f^2
+\end{equation*}
+
+\subsection{Conversión de Unidades}
+
+Para convertir rpm (revoluciones por minuto) a rps (revoluciones por segundo):
+
+\begin{equation*}
+    f_{\text{(rps)}} = \frac{f_{\text{(rpm)}}}{60}
+\end{equation*}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Conversión de unidades}
+
+Primero convertimos la frecuencia de rpm a rps:
+
+\begin{align*}
+    f &= 550 \text{ rpm} = \frac{550 \text{ rev}}{60 \text{ s}} \\
+    &= 9.167 \text{ rps} \\
+    &\approx 9.17 \text{ Hz}
+\end{align*}
+
+\subsection*{Parte a) Rapidez lineal de la punta}
+
+\subsubsection*{Paso 1: Aplicar la fórmula}
+
+La rapidez lineal en la punta del aspa es:
+
+\begin{equation*}
+    v = 2\pi R f
+\end{equation*}
+
+\subsubsection*{Paso 2: Sustituir valores}
+
+\begin{align*}
+    v &= 2\pi \times 3.40 \text{ m} \times 9.167 \text{ rps} \\
+    &= 2\pi \times 31.17 \text{ m/s} \\
+    &= 195.8 \text{ m/s} \\
+    &\approx 196 \text{ m/s}
+\end{align*}
+
+\textbf{Conversión a km/h:}
+
+\begin{equation*}
+    v = 196 \text{ m/s} \times \frac{3.6 \text{ km/h}}{1 \text{ m/s}} = 706 \text{ km/h}
+\end{equation*}
+
+\textbf{Interpretación:} La punta del aspa se mueve a aproximadamente 196 m/s o 706 km/h. ¡Esta es una velocidad muy alta, cercana a la velocidad del sonido (343 m/s)!
+
+\subsection*{Parte b) Aceleración radial como múltiplo de $g$}
+
+\subsubsection*{Método 1: Usando $v$ y $R$}
+
+\begin{align*}
+    a_{\text{rad}} &= \frac{v^2}{R} \\
+    &= \frac{(196 \text{ m/s})^2}{3.40 \text{ m}} \\
+    &= \frac{38\,416 \text{ m}^2\text{/s}^2}{3.40 \text{ m}} \\
+    &= 11\,299 \text{ m/s}^2 \\
+    &\approx 11\,300 \text{ m/s}^2
+\end{align*}
+
+\subsubsection*{Paso 2: Expresar como múltiplo de $g$}
+
+\begin{align*}
+    \frac{a_{\text{rad}}}{g} &= \frac{11\,300 \text{ m/s}^2}{9.8 \text{ m/s}^2} \\
+    &= 1153 \\
+    &\approx 1150
+\end{align*}
+
+Por lo tanto:
+\begin{equation*}
+    a_{\text{rad}} \approx 1150\,g
+\end{equation*}
+
+\subsubsection*{Método 2: Usando la fórmula directa (verificación)}
+
+También podemos usar:
+
+\begin{align*}
+    a_{\text{rad}} &= 4\pi^2 R f^2 \\
+    &= 4\pi^2 \times 3.40 \text{ m} \times (9.167 \text{ rps})^2 \\
+    &= 39.48 \times 3.40 \times 84.03 \\
+    &= 11\,281 \text{ m/s}^2 \\
+    &\approx 11\,300 \text{ m/s}^2 \quad \checkmark
+\end{align*}
+
+Los resultados coinciden, confirmando nuestro cálculo.
+
+\textbf{Interpretación:} La aceleración en la punta del aspa es aproximadamente \textbf{1150 veces} la aceleración gravitacional. ¡Esta es una aceleración extremadamente grande!
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Parte a) Rapidez lineal}
+
+\begin{equation*}
+    \boxed{v = 196 \text{ m/s} = 706 \text{ km/h}}
+\end{equation*}
+
+\subsection*{Parte b) Aceleración radial}
+
+\textbf{En m/s$^2$:}
+\begin{equation*}
+    \boxed{a_{\text{rad}} = 11\,300 \text{ m/s}^2}
+\end{equation*}
+
+\textbf{Como múltiplo de $g$:}
+\begin{equation*}
+    \boxed{a_{\text{rad}} = 1150\,g}
+\end{equation*}
+
+Esto significa que la aceleración en la punta del aspa es \textbf{mil ciento cincuenta veces} mayor que la aceleración gravitacional en la superficie terrestre.
+
+\end{resultadobox}
+
+\section{Análisis Adicional}
+
+\subsection{Comparación con otras situaciones}
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Situación} & \textbf{Aceleración (múltiplos de $g$)} \\
+\hline
+Persona caminando & $< 0.1\,g$ \\
+\hline
+Automóvil deportivo acelerando & $\sim 1.0\,g$ \\
+\hline
+Montaña rusa & $3 - 6\,g$ \\
+\hline
+Piloto de avión caza en maniobra & $\sim 9\,g$ \\
+\hline
+Centrifugadora de laboratorio & $100 - 1000\,g$ \\
+\hline
+\textbf{Punta de aspa de helicóptero} & $\mathbf{1150\,g}$ \\
+\hline
+Ultracentrífuga & $> 100\,000\,g$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Variación de velocidad y aceleración a lo largo del aspa}
+
+La velocidad y aceleración no son constantes a lo largo del aspa, sino que dependen de la distancia al eje:
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Distancia al eje $r$ (m)},
+    ylabel style={align=center},
+    ylabel={Velocidad $v$ (m/s) \\ Aceleración $a_{\text{rad}}/100$ (m/s$^2$)},
+    xmin=0, xmax=3.5,
+    ymin=0, ymax=200,
+    grid=major,
+    legend pos=north west
+]
+
+% Velocidad lineal v = 2πrf
+\addplot[blue, thick, domain=0:3.4] {2*pi*x*9.167};
+
+% Aceleración centrípeta / 100 para escalar
+\addplot[red, thick, domain=0:3.4] {4*pi^2*x*9.167^2/100};
+
+\legend{$v = 2\pi r f$, $a_{\text{rad}}/100$}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\textbf{Observaciones:}
+\begin{itemize}
+    \item La velocidad aumenta linealmente con la distancia al eje
+    \item La aceleración también aumenta linealmente con la distancia
+    \item En el eje central ($r = 0$): $v = 0$ y $a_{\text{rad}} = 0$
+    \item En la punta ($r = 3.40$ m): valores máximos
+\end{itemize}
+
+\subsection{Esfuerzos en el material del aspa}
+
+Con aceleraciones tan grandes, el material del aspa experimenta fuerzas enormes:
+
+\textbf{Ejemplo:} Si cada aspa tiene una masa de 10 kg concentrada en su punto medio (1.70 m del eje):
+
+\begin{align*}
+    a_{\text{medio}} &= 4\pi^2 \times 1.70 \times (9.167)^2 = 5650 \text{ m/s}^2 = 577\,g \\
+    F &= m \times a = 10 \text{ kg} \times 5650 \text{ m/s}^2 = 56\,500 \text{ N}
+\end{align*}
+
+¡Una fuerza de más de 56,000 Newtons (equivalente al peso de 5.8 toneladas)!
+
+\subsection{Relación con la velocidad del sonido}
+
+La velocidad del sonido en el aire a nivel del mar es aproximadamente 343 m/s. La punta del aspa se mueve a:
+
+\begin{equation*}
+    \frac{v_{\text{aspa}}}{v_{\text{sonido}}} = \frac{196}{343} = 0.57
+\end{equation*}
+
+El aspa se mueve a \textbf{57\% de la velocidad del sonido} (Mach 0.57). A velocidades cercanas o superiores a Mach 1, se generan ondas de choque y aumenta dramáticamente la resistencia del aire.
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item La rapidez lineal en movimiento circular aumenta proporcionalmente con la distancia al eje: $v = 2\pi r f$
+
+    \item La aceleración centrípeta también aumenta con la distancia al eje: $a_{\text{rad}} = 4\pi^2 r f^2$
+
+    \item A 550 rpm, las puntas de las aspas experimentan aceleraciones superiores a 1000$g$
+
+    \item Estos valores explican por qué las aspas de helicóptero deben fabricarse con materiales muy resistentes (aleaciones especiales, fibra de carbono)
+
+    \item La velocidad de las puntas se acerca a la velocidad del sonido, lo cual limita la velocidad máxima de rotación práctica
+
+    \item Conversión importante: $1 \text{ rpm} = \frac{1}{60}$ Hz $= 0.01667$ Hz
+\end{enumerate}
+
+\section{Aplicaciones Prácticas}
+
+\subsection{Límites de diseño}
+
+Los diseñadores de helicópteros deben considerar:
+
+\begin{enumerate}
+    \item \textbf{Resistencia estructural:} El material debe soportar fuerzas centrífugas enormes
+
+    \item \textbf{Efectos aerodinámicos:} A velocidades cercanas a la del sonido, aumenta la resistencia del aire
+
+    \item \textbf{Vibración:} Las aspas deben estar perfectamente balanceadas
+
+    \item \textbf{Fatiga del material:} Cada revolución somete las aspas a ciclos de esfuerzo
+\end{enumerate}
+
+\subsection{Helicópteros reales}
+
+En helicópteros de tamaño real:
+\begin{itemize}
+    \item Radio del rotor: 5-10 m
+    \item Velocidad de rotación: 200-400 rpm
+    \item Velocidad de las puntas: limitada a Mach 0.9 (~ 300 m/s) para evitar ondas de choque
+\end{itemize}
+
+\end{document}

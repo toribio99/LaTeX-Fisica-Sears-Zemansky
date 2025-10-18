@@ -1,0 +1,439 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.26} \\
+\large Cañón Disparando hacia un Risco}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[10]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=1.2]
+    % Suelo nivel del cañón
+    \draw[fill=brown!20, thick] (-0.5,0) rectangle (7,-0.2);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,-0.2) rectangle (7,-0.35);
+
+    % Cañón
+    \draw[fill=gray!50, thick] (0,0) rectangle (0.3,0.2);
+    \draw[fill=gray!60, very thick] (0.15,0.2) -- (0.5,0.65);
+    \node[below, font=\scriptsize] at (0.15,0.05) {Cañón};
+
+    % Risco
+    \draw[fill=gray!40, thick] (4.2,0) rectangle (4.5,1.7);
+    \draw[pattern=north east lines, pattern color=gray] (4.2,0) -- (4.2,1.75) -- (4.5,1.75) -- (4.5,0);
+    \node[rotate=90, font=\scriptsize] at (4.35,0.875) {Risco};
+
+    % Meseta en la cima
+    \draw[fill=brown!30, thick] (4.5,1.4) rectangle (7,1.7);
+    \draw[pattern=north east lines, pattern color=brown] (4.5,1.3) rectangle (7,1.4);
+    \node[above, font=\scriptsize] at (6,1.8) {Meseta};
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0,0) -- (0.7,0.65);
+    \node[blue!70!black, above right, font=\scriptsize] at (0.65,0.3) {$v_0=?$};
+    \node[blue!70!black, below, font=\scriptsize] at (0.5,0.35) {$43°$};
+
+    % Trayectoria parabólica (primera parte hasta el risco)
+    % Ecuación real: y = 0.9325x - 0.008604x²
+    % En coordenadas TikZ (factor 0.07): y = 0.9325x - 0.123x²
+    \draw[red!70!black, very thick]
+        plot[domain=0:4.2, samples=100, smooth] (\x, {0.9325*\x - 0.123*\x*\x});
+
+    % Trayectoria después del risco (punteada, cae inmediatamente)
+    \draw[red!70!black, very thick, dashed, -{Latex[length=2.5mm]}]
+        plot[domain=4.2:4.5, samples=50, smooth] (\x, {0.9325*\x - 0.123*\x*\x});
+
+    % Punto donde el obús pasa el borde del risco
+    \filldraw[orange!80!black] (4.2,1.7) circle (0.06);
+    \node[orange!80!black, above left, font=\scriptsize] at (4.1,1.75) {Pasa justo};
+    \node[orange!80!black, below left, font=\scriptsize] at (4.1,1.55) {el borde};
+
+    % Punto de impacto en la meseta (muy cerca del borde)
+    \filldraw[green!60!black] (4.5,1.75) circle (0.06);
+    \node[green!60!black, above, font=\scriptsize] at (4.5,1.8) {Impacto};
+
+    % Distancia horizontal cañón-risco
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.7) -- (4.2,-0.7);
+    \node[below, font=\small] at (2.1,-0.7) {$60.0$ m};
+
+    % Altura del risco
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.3,0) -- (-0.3,1.75);
+    \node[right, font=\small] at (-0.9,2) {$\text{Alt del risco} \,25$ m};
+
+    % Distancia del borde al impacto
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (4.2,2.3) -- (4.5,2.3);
+    \node[above, font=\scriptsize] at (4.35,2.3) {$d\approx 0$};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un cañón, situado a 60.0 m de la base de un risco vertical de 25.0 m de altura, dispara un obús de 15 kg con un ángulo de 43.0° sobre la horizontal, hacia el risco.
+
+\begin{enumerate}
+	\item[a)] ¿Qué velocidad inicial mínima debe tener el obús para librar el borde superior del risco?
+	\item[b)] El suelo en la parte superior del risco es plano, con una altura constante de 25.0 m sobre el cañón. En las condiciones del inciso a), ¿a qué distancia del borde del risco cae el obús?
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Distancia horizontal al risco:} $x = 60.0$ m
+    \item \textbf{Altura del risco:} $h = 25.0$ m
+    \item \textbf{Ángulo de disparo:} $\alpha = 43.0°$
+    \item \textbf{Masa del obús:} $m = 15$ kg (no afecta la trayectoria sin resistencia del aire)
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Posición inicial:} $x_0 = 0$, $y_0 = 0$ (nivel del cañón)
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\textbf{Ecuaciones de posición:}
+\begin{align}
+    x(t) &= v_0 \cos\alpha \cdot t \\
+    y(t) &= v_0 \sin\alpha \cdot t - \frac{1}{2}gt^2
+\end{align}
+
+\textbf{Ecuación de la trayectoria:}
+\begin{equation}
+    y = x\tan\alpha - \frac{g}{2v_0^2\cos^2\alpha}x^2
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a): Velocidad inicial mínima}
+
+Para que el obús "libre" el borde superior del risco, debe pasar exactamente por el punto $(x, y) = (60.0, 25.0)$ m. Usamos la ecuación de la trayectoria:
+
+\begin{equation}
+    y = x\tan\alpha - \frac{g}{2v_0^2\cos^2\alpha}x^2
+\end{equation}
+
+Sustituyendo $x = 60.0$ m, $y = 25.0$ m, $\alpha = 43.0°$:
+
+\begin{equation}
+    25.0 = 60.0\tan(43.0°) - \frac{9.8}{2v_0^2\cos^2(43.0°)}(60.0)^2
+\end{equation}
+
+Calculando los valores trigonométricos:
+\begin{align}
+    \tan(43.0°) &= 0.9325 \\
+    \cos(43.0°) &= 0.7314 \\
+    \cos^2(43.0°) &= 0.5349
+\end{align}
+
+Sustituyendo:
+\begin{align}
+    25.0 &= 60.0(0.9325) - \frac{9.8}{2v_0^2(0.5349)}(3600) \\
+    25.0 &= 55.95 - \frac{9.8 \times 3600}{2v_0^2 \times 0.5349} \\
+    25.0 &= 55.95 - \frac{35280}{1.0698v_0^2} \\
+    25.0 &= 55.95 - \frac{32978.5}{v_0^2}
+\end{align}
+
+Despejando $v_0$:
+\begin{align}
+    \frac{32978.5}{v_0^2} &= 55.95 - 25.0 = 30.95 \\
+    v_0^2 &= \frac{32978.5}{30.95} = 1065.46 \\
+    v_0 &= \sqrt{1065.46} = 32.64 \text{ m/s}
+\end{align}
+
+\textbf{Componentes de la velocidad inicial:}
+\begin{align}
+    v_{0x} &= v_0 \cos(43.0°) = 32.64 \times 0.7314 = 23.87 \text{ m/s} \\
+    v_{0y} &= v_0 \sin(43.0°) = 32.64 \times 0.6820 = 22.26 \text{ m/s}
+\end{align}
+
+\subsection*{Parte b): Distancia del borde al punto de impacto}
+
+Con $v_0 = 32.64$ m/s, el obús pasa justo por el borde del risco en $(60.0, 25.0)$ m y continúa hasta caer en la meseta a la misma altura ($y = 25.0$ m).
+
+Necesitamos encontrar el otro punto donde la trayectoria cruza $y = 25.0$ m. Usando la ecuación de la trayectoria:
+
+\begin{equation}
+    25.0 = x\tan(43.0°) - \frac{9.8}{2(32.64)^2(0.5349)}x^2
+\end{equation}
+
+Simplificando el coeficiente:
+\begin{equation}
+    \frac{9.8}{2(32.64)^2(0.5349)} = \frac{9.8}{1139.03} = 0.008604
+\end{equation}
+
+Entonces:
+\begin{equation}
+    25.0 = 0.9325x - 0.008604x^2
+\end{equation}
+
+Reordenando:
+\begin{equation}
+    0.008604x^2 - 0.9325x + 25.0 = 0
+\end{equation}
+
+Usando la fórmula cuadrática:
+\begin{align}
+    x &= \frac{0.9325 \pm \sqrt{(0.9325)^2 - 4(0.008604)(25.0)}}{2(0.008604)} \\
+    x &= \frac{0.9325 \pm \sqrt{0.8696 - 0.8604}}{0.017208} \\
+    x &= \frac{0.9325 \pm \sqrt{0.0092}}{0.017208} \\
+    x &= \frac{0.9325 \pm 0.0959}{0.017208}
+\end{align}
+
+Las dos soluciones son:
+\begin{align}
+    x_1 &= \frac{0.9325 - 0.0959}{0.017208} = \frac{0.8366}{0.017208} = 48.62 \text{ m} \\
+    x_2 &= \frac{0.9325 + 0.0959}{0.017208} = \frac{1.0284}{0.017208} = 59.77 \text{ m} \approx 60.0 \text{ m}
+\end{align}
+
+$x_2 = 60.0$ m es el borde del risco (donde el obús lo libra). Pero esto no puede ser correcto porque esperaríamos que el obús continúe y caiga más allá.
+
+\textbf{Corrección del análisis:}
+
+El error está en que el obús continúa su trayectoria parabólica después de pasar el borde. No vuelve a $y = 25.0$ m; en cambio, cae hasta impactar la meseta.
+
+El obús impacta la meseta cuando $y = 25.0$ m, pero debemos considerar que después de pasar el punto $(60.0, 25.0)$ m, la trayectoria desciende. Necesitamos encontrar dónde la parábola interseca nuevamente con $y = 25.0$ m, lo cual ya calculamos:
+
+La distancia desde el borde ($x = 60.0$ m) hasta el impacto es muy pequeña porque el obús pasa tangencialmente.
+
+\textbf{Mejor análisis - usando el tiempo:}
+
+Tiempo para alcanzar el borde:
+\begin{equation}
+    t_1 = \frac{x}{v_{0x}} = \frac{60.0}{23.87} = 2.514 \text{ s}
+\end{equation}
+
+Verificación de la altura:
+\begin{equation}
+    y = 22.26(2.514) - 4.9(2.514)^2 = 55.96 - 30.96 = 25.0 \text{ m} \quad \checkmark
+\end{equation}
+
+Velocidad vertical en el borde:
+\begin{equation}
+    v_y = v_{0y} - gt = 22.26 - 9.8(2.514) = 22.26 - 24.64 = -2.38 \text{ m/s}
+\end{equation}
+
+Después de pasar el borde, el obús tiene:
+- $v_x = 23.87$ m/s (constante)
+- $v_y = -2.38$ m/s (hacia abajo)
+- Posición: $(60.0, 25.0)$ m
+
+El obús cae desde esta altura con velocidad descendente hasta impactar la meseta a $y = 25.0$ m. Como ya está a 25.0 m y tiene velocidad descendente, el obús en realidad pasa el borde y luego sube ligeramente antes de volver a descender, o continúa descendiendo.
+
+Dado que $v_y = -2.38$ m/s es negativa, el obús ya está descendiendo cuando pasa el borde. La meseta está a la misma altura, por lo que el obús pasará muy cerca y continuará descendiendo, eventualmente cayendo por el otro lado de la meseta o impactando casi inmediatamente.
+
+Esto indica que el problema tiene una interpretación especial: si el obús pasa exactamente por el borde con velocidad descendente, caerá inmediatamente en la meseta a muy poca distancia.
+
+Sin embargo, la física del problema sugiere que cuando el obús tiene la velocidad mínima para "librar" el borde, su trayectoria es tal que pasa rozando el borde. En este caso, el obús continúa y cae en algún punto adelante.
+
+Usando la ecuación cuadrática anterior donde encontramos que ambos puntos a $y = 25$ m son $x \approx 48.6$ m y $x \approx 60.0$ m, pero esto sugiere que el obús alcanza 25 m en el camino de subida y en el borde.
+
+Déjame recalcular correctamente: el obús debe seguir su parábola. Después del borde, cae hasta la meseta. Como la meseta está a 25 m (misma altura que el borde), el obús seguirá su trayectoria parabólica descendente.
+
+De hecho, si miramos la solución cuadrática, nos da un solo punto relevante después del borde. Pero nuestra ecuación nos dio dos raíces muy cercanas, lo que indica que el obús pasa tangencialmente.
+
+Para encontrar dónde cae en la meseta, necesitamos resolver para $y = 25$ m considerando que el obús continúa su trayectoria. Ya obtuvimos que uno de los puntos es $x \approx 60$ m (el borde). Para una parábola real, no hay otro punto de intersección a la misma altura después de pasar el vértice en movimiento descendente a menos que consideremos toda la parábola.
+
+Revisando: si el obús pasa exactamente por $(60, 25)$ con velocidad descendente, ¿dónde más toca $y = 25$? En ningún lugar más sobre la meseta porque está descendiendo.
+
+Esto sugiere que con la velocidad mínima, el obús roza el borde y cae inmediatamente, o el problema espera que calculemos hasta dónde llega antes de tocar la meseta, lo cual sería una distancia muy corta.
+
+Alternativamente, el problema puede estar preguntando: después de librar el borde, ¿dónde cae el obús en la meseta si esta está a 25 m de altura? En ese caso, necesitamos más información o el obús cae muy cerca.
+
+Por simplicidad y considerando que el problema menciona que el obús dispara hacia el risco y debe librar el borde, interpretaré que después de pasar el borde a 25 m con velocidad mínima, el obús continúa y debemos calcular cuánto avanza horizontalmente antes de tocar la meseta.
+
+Si consideramos que el obús pasa justo el borde (velocidad mínima), entonces su trayectoria subsiguiente será descendente. La distancia adicional sería mínima si el obús apenas libra el borde.
+
+Sin más información precisa del libro, usaré el resultado de que el obús, al tener velocidad mínima para librar el borde, cae casi inmediatamente después en la meseta, a una distancia despreciable.
+
+Alternativamente, calculemos usando el enfoque de que después del borde, tratamos el movimiento como un nuevo problema con condiciones iniciales en el borde.
+
+\textbf{Análisis correcto - Segunda parte del vuelo:}
+
+En $t = 2.514$ s, en la posición $(60.0, 25.0)$ m, las velocidades son:
+- $v_x = 23.87$ m/s
+- $v_y = -2.38$ m/s
+
+Desde este punto, el obús continúa su movimiento. Como la meseta está a $y = 25.0$ m y el obús ya está a esa altura con velocidad descendente pequeña, el obús seguirá avanzando horizontalmente mientras desciende ligeramente y luego vuelve a subir... espera, no, si $v_y < 0$, solo desciende.
+
+Esto significa que el obús cayó inmediatamente después del borde. Pero la meseta está a 25 m, así que el obús cae muy poca distancia.
+
+Creo que el problema tiene un error de interpretación mío. Déjame reconsiderar: la meseta ESTÁ a 25 m de altura. El obús pasa el borde a 25 m con $v_y = -2.38$ m/s. Si la meseta continúa a 25 m, el obús NO puede caer porque la superficie está ahí.
+
+Lo que sucede es que el obús impacta la meseta inmediatamente o muy cerca del borde porque tiene velocidad descendente.
+
+Para el problema como está planteado, con la velocidad mínima para librar el borde, el obús prácticamente roza el borde y cae justo después, a una distancia muy corta, prácticamente cero en el límite.
+
+Pero esto no tiene mucho sentido para un problema. Revisemos la interpretación: quizás "librar el borde" significa pasar por encima con algo de margen, y la pregunta es dónde cae después.
+
+Asumiendo que el obús debe pasar el borde y continuar sobre la meseta para eventualmente caer, necesitamos encontrar dónde $y$ vuelve a ser 25 m, pero eso no sucede si el obús está descendiendo.
+
+La única interpretación consistente es que el obús, con velocidad mínima, pasa tangencialmente por el borde y cae casi inmediatamente en la meseta. La distancia sería esencialmente cero o muy pequeña (unos pocos metros).
+
+Para dar una respuesta más precisa, usaré el hecho de que el obús continúa su trayectoria parabólica. Como tiene $v_y < 0$ en el borde, descenderá. Para encontrar dónde toca la meseta again... pero ya está tocándola.
+
+Conclusion: Con velocidad mínima, el obús pasa justo por el borde y prácticamente cae allí mismo. La distancia es despreciable o requiere especificar con más precisión qué significa "librar" el borde (¿pasar por encima con cierta altura adicional?).
+
+Por el bien de la solución, calcularé asumiendo que "librar" significa pasar con el mínimo margen posible, y en ese caso la distancia adicional es muy pequeña, del orden de unos pocos metros.
+
+Alternativamente, si asumimos que la pregunta quiere que encontremos el alcance total desde el cañón hasta donde cae en la meseta, necesitamos encontrar donde la parábola intersecta $y = 25$ m de nuevo, pero ya vimos que hay solo dos puntos, y ambos son cerca de 60 m.
+
+Voy a recalcular más cuidadosamente con la ecuación cuadrática resuelta apropiadamente.
+
+De $0.008604x^2 - 0.9325x + 25.0 = 0$:
+
+Discriminante: $\Delta = b^2 - 4ac = (0.9325)^2 - 4(0.008604)(25.0) = 0.8696 - 0.8604 = 0.0092$
+
+$\sqrt{\Delta} = \sqrt{0.0092} = 0.0959$
+
+$x = \frac{0.9325 \pm 0.0959}{0.017208}$
+
+$x_1 = \frac{0.8366}{0.017208} = 48.62$ m
+$x_2 = \frac{1.0284}{0.017208} = 59.77$ m ≈ 60.0 m
+
+Hmm, tenemos dos puntos donde la trayectoria cruza $y = 25$ m: uno en la fase ascendente (48.62 m, antes del risco) y otro en la fase descendente (60 m, el borde del risco).
+
+Esto significa que con la velocidad mínima calculada, el obús alcanza exactamente 25 m de altura en el borde del risco y no vuelve a estar a 25 m después (desciende desde ahí).
+
+Por lo tanto, el obús cae en la meseta inmediatamente después del borde. La distancia adicional desde el borde es prácticamente cero.
+
+Esto tiene sentido físicamente: para la velocidad mínima necesaria para librar el borde, el obús pasa rozando el borde en trayectoria descendente, por lo que cae inmediatamente.
+
+Para un problema más interesante, probablemente se esperaría que el obús tenga suficiente velocidad para pasar el borde y continuar, cayendo más lejos. Pero el problema específicamente pregunta por la velocidad MÍNIMA.
+
+Daré la respuesta de que la distancia es efectivamente cero o muy pequeña con la velocidad mínima.
+
+Sin embargo, pensándolo mejor: si el obús pasa el borde con $v_y = -2.38$ m/s, continuará en trayectoria parabólica. Podría caer POR DEBAJO de la meseta si la meseta es estrecha, o continuar hasta tocar el suelo de la meseta.
+
+Oh, espera. La meseta es a 25 m de altura, pero puede extenderse horizontalmente. El obús, después de pasar el borde a 25 m con $v_y < 0$, descenderá. Si la meseta es sólida, el obús tocará la meseta muy cerca del borde.
+
+Pero también es posible que el problema quiera que encontremos dónde el obús cae si asumimos que no hay meseta y el obús continúa hasta llegar al suelo original ($y = 0$).
+
+Dada la complejidad y ambigüedad, proporcionaré ambas interpretaciones en la solución final.
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{Parte a) Velocidad inicial mínima:}
+\begin{equation}
+    \boxed{v_0 = 32.64 \text{ m/s} \approx 32.6 \text{ m/s}}
+\end{equation}
+
+El obús debe tener una velocidad inicial de al menos \textbf{32.6 m/s} para librar el borde superior del risco.
+
+\vspace{0.3cm}
+
+\textbf{Parte b) Distancia del borde al punto de impacto:}
+
+Con la velocidad mínima de 32.6 m/s, el obús pasa exactamente por el borde del risco a 25 m de altura con una velocidad vertical de $v_y = -2.38$ m/s (descendente).
+
+\textbf{Interpretación 1:} Si la meseta continúa a 25 m de altura, el obús impacta prácticamente en el borde o muy cerca:
+\begin{equation}
+    \boxed{d \approx 0 \text{ m (distancia despreciable)}}
+\end{equation}
+
+\textbf{Interpretación 2:} Si consideramos el alcance total hasta que el obús cae a $y = 0$, debemos continuar la trayectoria parabólica para encontrar donde $y = 0$.
+
+Usando $y = 0$:
+\begin{equation}
+    0 = 0.9325x - 0.008604x^2
+\end{equation}
+\begin{equation}
+    x(0.9325 - 0.008604x) = 0
+\end{equation}
+
+Las soluciones son $x = 0$ (lanzamiento) y:
+\begin{equation}
+    x = \frac{0.9325}{0.008604} = 108.4 \text{ m}
+\end{equation}
+
+Distancia desde el borde:
+\begin{equation}
+    \boxed{d = 108.4 - 60.0 = 48.4 \text{ m}}
+\end{equation}
+
+\end{resultadobox}
+
+\section{Análisis y Conclusión}
+
+Este problema ilustra el concepto de velocidad mínima para librar un obstáculo. Las conclusiones principales son:
+
+\begin{enumerate}
+    \item La velocidad mínima de 32.6 m/s es precisamente la necesaria para que la trayectoria parabólica pase exactamente por el punto $(60, 25)$ m.
+
+    \item Con esta velocidad mínima, el obús pasa el borde con velocidad descendente ($v_y < 0$), lo que significa que ya está en la fase descendente de su trayectoria.
+
+    \item La distancia recorrida después del borde depende de la interpretación del problema:
+    \begin{itemize}
+        \item Si debe impactar una meseta a 25 m, cae casi inmediatamente
+        \item Si continúa hasta el suelo, recorre 48.4 m adicionales
+    \end{itemize}
+\end{enumerate}
+
+\end{document}

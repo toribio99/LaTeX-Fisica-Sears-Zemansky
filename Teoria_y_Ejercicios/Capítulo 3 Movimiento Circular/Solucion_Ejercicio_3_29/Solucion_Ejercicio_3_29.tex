@@ -1,0 +1,402 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.29} \\
+\large Movimiento Circular: Rotación de la Tierra}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[10]{r}{.45\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=.85]
+    % Tierra (vista desde el polo)
+    \shade[ball color=blue!40!cyan!60, opacity=0.8] (0,0) circle (2.5);
+
+    % Eje de rotación (indicado)
+    \draw[dashed, thick] (0,-2.8) -- (0,2.8);
+    \node[below] at (0,-2.8) {Polo Sur};
+    \node[above] at (0,2.8) {Polo Norte};
+
+    % Ecuador
+    \draw[red!70!black, very thick] (-2.5,0) arc (180:360:2.5 and 0.5);
+    \draw[red!70!black, very thick, dashed] (-2.5,0) arc (180:0:2.5 and 0.5);
+    \node[red!70!black, right] at (2.8,0) {Ecuador};
+
+    % Radio de la Tierra
+    \draw[-{Latex[length=2mm]}, blue!70!black, thick] (0,0) -- (2.5,0);
+    \node[blue!70!black, above] at (0.65,0) {$R$};
+
+    % Objeto en el ecuador
+    \filldraw[orange!80!black] (2.5,0) circle (0.12);
+    \node[orange!80!black, right] at (2.7,0.3) {Objeto};
+
+    % Vector de velocidad tangencial
+    \draw[-{Latex[length=3mm]}, green!60!black, ultra thick] (2.5,0) -- (2.5,1.2);
+    \node[green!60!black, right] at (2.5,0.8) {$\vec{v}$};
+
+    % Vector de aceleración centrípeta
+    \draw[-{Latex[length=3mm]}, red!70!black, ultra thick] (2.5,0) -- (1.3,0);
+    \node[white, above] at (1.9,-0.1) {$\vec{a}_{\text{rad}}$};
+
+    % Flecha de rotación
+    \draw[-{Latex[length=3mm]}, purple!70!black, very thick]
+        (0.8,2.2) arc (60:120:1.5);
+    \node[purple!70!black] at (0.25,2.68) {$\omega$};
+
+    % Etiqueta
+    \node[below, align=center] at (0,-3.8) {\textbf{Vista desde el polo} \\ (rotación alrededor del eje)};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+La Tierra tiene 6380 km de radio y gira una vez sobre su eje en 24 h. \\[.6mm]
+
+a) ?`Qué aceleración radial tiene un objeto en el ecuador? Dé su respuesta en m/s$^2$ y como fracción de $g$. \\[.6mm]
+
+b) Si $a_{\text{rad}}$ en el ecuador fuera mayor que $g$, los objetos saldrían volando hacia el espacio. (Veremos por qué en el capítulo 5.) ?`Cuál tendría que ser el periodo de rotación para que esto sucediera? \\[.6mm]
+
+\vspace{3mm}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Radio de la Tierra:} $R = 6380$ km $= 6.38 \times 10^6$ m
+    \item \textbf{Periodo de rotación:} $T = 24$ h $= 86\,400$ s
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Localización:} Ecuador (distancia máxima del eje de rotación)
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Aceleración Centrípeta}
+
+Un objeto en el ecuador de la Tierra está en movimiento circular uniforme. La aceleración centrípeta en términos del radio y el periodo es:
+
+\begin{equation*}
+    a_{\text{rad}} = \frac{4\pi^2 R}{T^2}
+\end{equation*}
+
+Esta aceleración está dirigida hacia el centro de la Tierra.
+
+\subsection{Concepto Importante}
+
+La aceleración centrípeta es la aceleración necesaria para mantener un objeto en movimiento circular. En el ecuador:
+\begin{itemize}
+    \item La gravedad proporciona esta aceleración centrípeta
+    \item Si la Tierra girara más rápido, se necesitaría mayor aceleración centrípeta
+    \item Si $a_{\text{rad}} > g$, la gravedad sería insuficiente para mantener los objetos en la superficie
+\end{itemize}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Aceleración radial en el ecuador}
+
+\subsubsection*{Paso 1: Aplicar la fórmula}
+
+Sustituimos los valores en la ecuación de aceleración centrípeta:
+
+\begin{align*}
+    a_{\text{rad}} &= \frac{4\pi^2 R}{T^2} \\
+    &= \frac{4\pi^2 (6.38 \times 10^6 \text{ m})}{(86\,400 \text{ s})^2}
+\end{align*}
+
+\subsubsection*{Paso 2: Calcular el numerador}
+
+\begin{align*}
+    \text{Numerador} &= 4\pi^2 \times 6.38 \times 10^6 \\
+    &= 4 \times 9.8696 \times 6.38 \times 10^6 \\
+    &= 251.9 \times 10^6 \text{ m} \\
+    &= 2.519 \times 10^8 \text{ m}
+\end{align*}
+
+\subsubsection*{Paso 3: Calcular el denominador}
+
+\begin{align*}
+    T^2 &= (86\,400 \text{ s})^2 \\
+    &= 7.466 \times 10^9 \text{ s}^2
+\end{align*}
+
+\subsubsection*{Paso 4: Calcular la aceleración}
+
+\begin{align*}
+    a_{\text{rad}} &= \frac{2.519 \times 10^8}{7.466 \times 10^9} \\
+    &= 0.0337 \text{ m/s}^2 \\
+    &\approx 0.034 \text{ m/s}^2
+\end{align*}
+
+\subsubsection*{Paso 5: Expresar como fracción de $g$}
+
+\begin{align*}
+    \frac{a_{\text{rad}}}{g} &= \frac{0.0337}{9.8} \\
+    &= 0.00344 \\
+    &\approx \frac{1}{291}
+\end{align*}
+
+Por lo tanto:
+\begin{equation*}
+    a_{\text{rad}} \approx 0.0034\,g \quad \text{o} \quad \frac{g}{291}
+\end{equation*}
+
+\textbf{Interpretación:} La aceleración centrípeta en el ecuador es aproximadamente $\frac{1}{300}$ de la aceleración gravitacional. Esto es muy pequeño, por eso no notamos el efecto de la rotación terrestre en nuestra vida diaria.
+
+\subsection*{Parte b) Periodo para que $a_{\text{rad}} = g$}
+
+\subsubsection*{Paso 1: Plantear la condición}
+
+Para que los objetos "salgan volando", necesitamos:
+\begin{equation*}
+    a_{\text{rad}} = g
+\end{equation*}
+
+Sustituyendo en la ecuación de aceleración centrípeta:
+\begin{equation*}
+    \frac{4\pi^2 R}{T^2} = g
+\end{equation*}
+
+\subsubsection*{Paso 2: Despejar el periodo $T$}
+
+\begin{align*}
+    T^2 &= \frac{4\pi^2 R}{g} \\
+    T &= \sqrt{\frac{4\pi^2 R}{g}} \\
+    T &= 2\pi\sqrt{\frac{R}{g}}
+\end{align*}
+
+\subsubsection*{Paso 3: Sustituir valores}
+
+\begin{align*}
+    T &= 2\pi\sqrt{\frac{6.38 \times 10^6 \text{ m}}{9.8 \text{ m/s}^2}} \\
+    &= 2\pi\sqrt{6.51 \times 10^5 \text{ s}^2} \\
+    &= 2\pi \times 807 \text{ s} \\
+    &= 5069 \text{ s}
+\end{align*}
+
+\subsubsection*{Paso 4: Convertir a horas}
+
+\begin{equation*}
+    T = \frac{5069 \text{ s}}{3600 \text{ s/h}} = 1.41 \text{ h} \approx 1.4 \text{ h}
+\end{equation*}
+
+O en minutos:
+\begin{equation*}
+    T = \frac{5069 \text{ s}}{60 \text{ s/min}} = 84.5 \text{ min} \approx 85 \text{ min}
+\end{equation*}
+
+\textbf{Interpretación:} Si la Tierra completara una rotación en aproximadamente 1.4 horas (84.5 minutos) en lugar de 24 horas, la aceleración centrípeta en el ecuador sería igual a $g$, y los objetos no estarían "pegados" a la superficie por la gravedad.
+
+\subsection*{Verificación}
+
+Verifiquemos que con $T = 5069$ s, la aceleración es igual a $g$:
+
+\begin{align*}
+    a_{\text{rad}} &= \frac{4\pi^2 (6.38 \times 10^6)}{(5069)^2} \\
+    &= \frac{2.519 \times 10^8}{2.569 \times 10^7} \\
+    &= 9.8 \text{ m/s}^2 = g \quad \checkmark
+\end{align*}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Parte a) Aceleración radial en el ecuador}
+
+\textbf{En m/s$^2$:}
+\begin{equation*}
+    \boxed{a_{\text{rad}} = 0.034 \text{ m/s}^2}
+\end{equation*}
+
+\textbf{Como fracción de $g$:}
+\begin{equation*}
+    \boxed{a_{\text{rad}} = 0.0034\,g \approx \frac{g}{291}}
+\end{equation*}
+
+\subsection*{Parte b) Periodo crítico}
+
+Para que $a_{\text{rad}} = g$ (objetos saldrían volando):
+
+\begin{equation*}
+    \boxed{T = 5069 \text{ s} = 84.5 \text{ min} = 1.41 \text{ h}}
+\end{equation*}
+
+\textbf{Comparación:} El periodo actual de 24 h tendría que reducirse a aproximadamente 1.4 h, es decir, \textbf{la Tierra tendría que girar 17 veces más rápido}.
+
+\end{resultadobox}
+
+\section{Análisis Adicional}
+
+\subsection{Comparación de periodos}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.9\textwidth,
+    height=7cm,
+    xlabel={Periodo de rotación (horas)},
+    ylabel={Aceleración radial / $g$},
+    xmin=0, xmax=25,
+    ymin=0, ymax=1.2,
+    grid=major,
+    legend pos=north east,
+    title={Aceleración centrípeta en el ecuador vs periodo de rotación}
+]
+
+% Curva arad/g vs T
+\addplot[blue, thick, domain=1.4:24, samples=100] {(24/x)^2 * 0.0034};
+
+% Línea horizontal en arad/g = 1
+\addplot[red, thick, dashed] coordinates {(0,1) (25,1)};
+
+% Punto actual (T=24h)
+\addplot[green!60!black, only marks, mark=*, mark size=3pt] coordinates {(24, 0.0034)};
+
+% Punto crítico (T=1.41h)
+\addplot[orange, only marks, mark=*, mark size=3pt] coordinates {(1.41, 1.0)};
+
+\legend{$a_{\text{rad}}/g$, $a_{\text{rad}} = g$ (crítico), Actual (24 h), Crítico (1.41 h)}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Efectos de la rotación terrestre}
+
+Aunque la aceleración centrípeta es pequeña ($\sim 0.3\%$ de $g$), tiene efectos observables:
+
+\begin{enumerate}
+    \item \textbf{Forma de la Tierra:} La Tierra no es perfectamente esférica; está achatada en los polos debido a la rotación
+
+    \item \textbf{Variación de $g$:} El valor efectivo de $g$ es ligeramente menor en el ecuador que en los polos
+
+    \item \textbf{Lanzamiento de cohetes:} Se prefiere lanzar desde el ecuador para aprovechar la velocidad tangencial adicional
+
+    \item \textbf{Huracanes y tornados:} La rotación terrestre afecta la dirección de los vientos (efecto Coriolis)
+\end{enumerate}
+
+\subsection{?`Qué pasaría si la Tierra girara más rápido?}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Periodo (h)} & \textbf{$a_{\text{rad}}/g$} & \textbf{Efecto} \\
+\hline
+24 (actual) & 0.0034 & Normal \\
+\hline
+12 & 0.0136 & Peso aparente 1.4\% menor \\
+\hline
+6 & 0.054 & Peso aparente 5.4\% menor \\
+\hline
+3 & 0.217 & Peso aparente 22\% menor \\
+\hline
+1.5 & 0.867 & Peso aparente 87\% menor \\
+\hline
+1.41 (crítico) & 1.0 & Objetos flotan \\
+\hline
+$<$ 1.41 & $>$ 1.0 & Objetos salen volando \\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item La aceleración centrípeta en el ecuador es muy pequeña comparada con $g$ (menos del 0.4\%)
+
+    \item La aceleración centrípeta es inversamente proporcional al cuadrado del periodo: $a_{\text{rad}} \propto 1/T^2$
+
+    \item Para que los objetos "salgan volando", la Tierra tendría que girar aproximadamente 17 veces más rápido
+
+    \item El periodo crítico es $T = 2\pi\sqrt{R/g}$, una fórmula que relaciona el tamaño del planeta con la gravedad
+
+    \item Aunque pequeña, la rotación tiene efectos importantes en la forma de la Tierra y en fenómenos meteorológicos
+\end{enumerate}
+
+\section{Curiosidad: Otros cuerpos celestes}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Cuerpo} & \textbf{Radio (km)} & \textbf{Periodo (h)} & \textbf{$a_{\text{rad}}/g_{\text{superficie}}$} \\
+\hline
+Tierra & 6\,380 & 24 & 0.0034 \\
+\hline
+Marte & 3\,396 & 24.6 & 0.0018 \\
+\hline
+Júpiter & 71\,492 & 9.9 & 0.089 \\
+\hline
+Saturno & 60\,268 & 10.7 & 0.14 \\
+\hline
+\end{tabular}
+\end{center}
+
+Júpiter y Saturno, al ser gigantes gaseosos con rotaciones rápidas, tienen aceleraciones centrípetas mucho mayores en proporción a su gravedad superficial.
+
+\end{document}

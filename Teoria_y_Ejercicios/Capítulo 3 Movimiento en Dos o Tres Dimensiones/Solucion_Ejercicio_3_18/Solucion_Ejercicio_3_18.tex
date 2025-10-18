@@ -1,0 +1,666 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.18} \\
+\large Pistola de Bengalas en Utah y en la Luna}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+Una pistola de bengalas en el desierto de Utah se dispara a un ángulo de 55° sobre la horizontal con velocidad inicial de 125 m/s. Si se hiciera un experimento similar en la superficie lunar, donde $g = 1.625$ m/s$^2$, ¿en qué factor cambiaría lo siguiente comparado con el resultado en la Tierra?
+
+\begin{enumerate}
+    \item[a)] El alcance horizontal.
+    \item[b)] El tiempo de vuelo.
+    \item[c)] La altura máxima.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.72]
+    % TIERRA (Utah)
+    \node[above] at (4,6) {\Large \textbf{EN LA TIERRA (Utah)}};
+
+    % Suelo Tierra
+    \draw[fill=brown!20, thick] (-1,0) rectangle (9,-0.7);
+    \draw[pattern=north east lines, pattern color=brown] (-1,-0.7) rectangle (9,-0.9);
+
+    % Punto de lanzamiento
+    \filldraw[blue!70!black] (0,0) circle (0.12);
+    \node[below left, font=\small] at (0,.7) {O};
+
+    % Vector velocidad inicial y sus componentes
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0,0) -- (1.2,1.72);
+    \node[blue!70!black, above, font=\small] at (-0.7,1.2) {$\vec{v}_0=125$ m/s};
+
+    % Componente horizontal
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (0,0) -- (1.2,0);
+    \node[red, below, font=\scriptsize] at (1.7,0.08) {$v_{0x}=71.7$ m/s};
+
+    % Componente vertical
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (1.2,0) -- (1.2,1.72);
+    \node[red, right, font=\scriptsize] at (1.2,0.86) {$v_{0y}=102.4$ m/s};
+
+    % Ángulo
+    \draw[thick] (0.5,0) arc (0:55:0.5);
+    \node[font=\small] at (0.8,0.35) {$55°$};
+
+    % Trayectoria parabólica en Tierra
+    % Ecuación: y = 1.428*x - 0.000953*x^2 (en metros)
+    % Escala: 1 unidad = 200 m, entonces x_graf = x_m/200, y_graf = y_m/200
+    % y_graf = 1.428*x_graf - 0.000953*40000*x_graf^2 = 1.428*x_graf - 38.12*x_graf^2
+    % R_T = 1499 m = 7.495 unidades, h_max = 535 m = 2.675 unidades
+    \draw[red!70!black, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:7.495, samples=100, smooth] (\x, {1.428*\x - 0.19*\x*\x});
+
+    % Punto de altura máxima Tierra (x = 3.7475, y = 2.675)
+    \filldraw[orange!80!black] (3.7475,2.675) circle (0.1);
+    \node[orange!80!black, above right, font=\scriptsize] at (3.7475,2.675) {$h_{\text{máx}}=535$ m};
+    \draw[orange!80!black, dotted, thick] (3.7475,2.675) -- (3.7475,0);
+
+    % Alcance con valor
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-1.2) -- (7.495,-1.2);
+    \node[below, font=\small] at (3.75,-1.2) {$R_T = 1499$ m $\approx 1.5$ km};
+
+    % Etiqueta gravedad
+    \node[below, font=\small] at (4,-2) {$g = 9.8$ m/s$^2$};
+
+    % LUNA
+    \node[above] at (15,6) {\Large \textbf{EN LA LUNA}};
+
+    % Suelo Luna
+    \draw[fill=gray!30, thick] (10,0) rectangle (20,-0.7);
+    \draw[pattern=north east lines, pattern color=gray!50] (10,-0.7) rectangle (20,-0.9);
+
+    % Punto de lanzamiento
+    \filldraw[blue!70!black] (11,0) circle (0.12);
+    \node[below left, font=\small] at (11,.7) {O};
+
+    % Vector velocidad inicial y sus componentes
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (11,0) -- (12.2,1.72);
+    \node[blue!70!black, above, font=\small] at (10.2,1.2) {$\vec{v}_0=125$ m/s};
+
+    % Componente horizontal
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (11,0) -- (12.2,0);
+    \node[red, below, font=\scriptsize] at (13,.08) {$v_{0x}=71.7$ m/s};
+
+    % Componente vertical
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (12.2,0) -- (12.2,1.72);
+    \node[red, right, font=\scriptsize] at (12.2,0.86) {$v_{0y}=102.4$ m/s};
+
+    % Ángulo
+    \draw[thick] (11.5,0) arc (0:55:0.5);
+    \node[font=\small] at (11.8,0.35) {$55°$};
+
+    % Trayectoria parabólica en Luna (6.03 veces más larga)
+    % R_L = 9036 m = 9.036 unidades (en escala de 1000m/unidad)
+    % Usando escala 1 unidad = 1000 m: x_graf = x_m/1000
+    % y_graf = 1.428*x_graf - 0.000157*1000000*x_graf^2 = 1.428*x_graf - 157*x_graf^2
+    % Mejor escala 1 unidad = 500 m
+    % h_max_L = 3226 m, x_max = 4518 m
+    % En escala 1:500: R_L = 18.072 unidades, pero eso es muy largo
+    % Voy a usar escala diferente para Luna: 1 unidad = 1000 m
+    % R_L = 9.036 unidades, h_max = 3.226 unidades
+    \draw[red!70!black, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:9.036, samples=100, smooth] ({11 + \x}, {1.428*\x - 0.1577*\x*\x});
+
+    % Punto de altura máxima Luna (x = 11 + 4.518, y = 3.226)
+    \filldraw[orange!80!black] (15.518,3.226) circle (0.1);
+    \node[orange!80!black, above, font=\scriptsize, align=center] at (15.518,3.2) {$h_{\text{máx}}=3226$ m\\$\approx 3.2$ km};
+    \draw[orange!80!black, dotted, thick] (15.518,3.226) -- (15.518,0);
+
+    % Alcance con valor
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (11,-1.2) -- (20.036,-1.2);
+    \node[below, font=\small] at (15.5,-1.2) {$R_L = 9036$ m $\approx 9.0$ km};
+
+    % Etiqueta gravedad
+    \node[below, font=\small] at (15,-2) {$g = 1.625$ m/s$^2$};
+
+\end{tikzpicture}
+\end{center}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad inicial:} $v_0 = 125$ m/s (igual en ambos casos)
+    \item \textbf{Ángulo de lanzamiento:} $\theta = 55°$ (igual en ambos casos)
+    \item \textbf{Gravedad en la Tierra:} $g_T = 9.8$ m/s$^2$
+    \item \textbf{Gravedad en la Luna:} $g_L = 1.625$ m/s$^2$
+    \item \textbf{Factor:} $\frac{g_T}{g_L} = \frac{9.8}{1.625} = 6.03$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un proyectil lanzado con velocidad inicial $v_0$ a un ángulo $\theta$ desde el nivel del suelo en un lugar con gravedad $g$:
+
+\textbf{Alcance horizontal:}
+\begin{equation}
+    R = \frac{v_0^2 \sin(2\theta)}{g}
+\end{equation}
+
+\textbf{Tiempo de vuelo:}
+\begin{equation}
+    t_{\text{vuelo}} = \frac{2v_0 \sin\theta}{g}
+\end{equation}
+
+\textbf{Altura máxima:}
+\begin{equation}
+    h_{\text{máx}} = \frac{v_0^2 \sin^2\theta}{2g}
+\end{equation}
+
+\textbf{Observación clave:} Todas estas cantidades son inversamente proporcionales a $g$. Por lo tanto:
+\begin{equation}
+    \text{Si } g_L < g_T \implies R_L > R_T, \quad t_L > t_T, \quad h_L > h_T
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Análisis General}
+
+La clave para resolver este problema es notar que las ecuaciones del movimiento de proyectiles dependen inversamente de $g$:
+
+\begin{equation}
+    R \propto \frac{1}{g}, \quad t \propto \frac{1}{g}, \quad h \propto \frac{1}{g}
+\end{equation}
+
+Por lo tanto, si la gravedad es menor (como en la Luna), todas estas cantidades aumentan.
+
+El factor de cambio entre Luna y Tierra es:
+\begin{equation}
+    \text{Factor} = \frac{g_T}{g_L} = \frac{9.8}{1.625} = 6.03
+\end{equation}
+
+\subsection*{Parte a) Alcance horizontal}
+
+\textbf{Alcance en la Tierra:}
+\begin{align}
+    R_T &= \frac{v_0^2 \sin(2\theta)}{g_T} \\
+    R_T &= \frac{(125)^2 \sin(2 \times 55°)}{9.8} \\
+    R_T &= \frac{15625 \times \sin(110°)}{9.8} \\
+    R_T &= \frac{15625 \times 0.9397}{9.8} \\
+    R_T &= \frac{14683}{9.8} \\
+    R_T &= 1499 \text{ m} \approx 1.50 \text{ km}
+\end{align}
+
+\textbf{Alcance en la Luna:}
+\begin{align}
+    R_L &= \frac{v_0^2 \sin(2\theta)}{g_L} \\
+    R_L &= \frac{(125)^2 \sin(110°)}{1.625} \\
+    R_L &= \frac{14683}{1.625} \\
+    R_L &= 9036 \text{ m} \approx 9.04 \text{ km}
+\end{align}
+
+\textbf{Factor de cambio:}
+\begin{equation}
+    \frac{R_L}{R_T} = \frac{9036}{1499} = \frac{g_T}{g_L} = \frac{9.8}{1.625} = 6.03
+\end{equation}
+
+El alcance en la Luna es \textbf{6.03 veces mayor} que en la Tierra.
+
+\subsection*{Parte b) Tiempo de vuelo}
+
+\textbf{Tiempo de vuelo en la Tierra:}
+
+Primero calculamos la componente vertical de velocidad:
+\begin{equation}
+    v_{0y} = v_0 \sin\theta = 125 \times \sin(55°) = 125 \times 0.8192 = 102.4 \text{ m/s}
+\end{equation}
+
+El tiempo de vuelo es:
+\begin{align}
+    t_T &= \frac{2v_{0y}}{g_T} \\
+    t_T &= \frac{2 \times 102.4}{9.8} \\
+    t_T &= \frac{204.8}{9.8} \\
+    t_T &= 20.9 \text{ s}
+\end{align}
+
+\textbf{Tiempo de vuelo en la Luna:}
+\begin{align}
+    t_L &= \frac{2v_{0y}}{g_L} \\
+    t_L &= \frac{2 \times 102.4}{1.625} \\
+    t_L &= \frac{204.8}{1.625} \\
+    t_L &= 126.0 \text{ s}
+\end{align}
+
+\textbf{Factor de cambio:}
+\begin{equation}
+    \frac{t_L}{t_T} = \frac{126.0}{20.9} = \frac{g_T}{g_L} = \frac{9.8}{1.625} = 6.03
+\end{equation}
+
+El tiempo de vuelo en la Luna es \textbf{6.03 veces mayor} que en la Tierra.
+
+\subsection*{Parte c) Altura máxima}
+
+\textbf{Altura máxima en la Tierra:}
+\begin{align}
+    h_{T,\text{máx}} &= \frac{v_{0y}^2}{2g_T} \\
+    h_{T,\text{máx}} &= \frac{(102.4)^2}{2 \times 9.8} \\
+    h_{T,\text{máx}} &= \frac{10485.76}{19.6} \\
+    h_{T,\text{máx}} &= 535 \text{ m}
+\end{align}
+
+\textbf{Altura máxima en la Luna:}
+\begin{align}
+    h_{L,\text{máx}} &= \frac{v_{0y}^2}{2g_L} \\
+    h_{L,\text{máx}} &= \frac{(102.4)^2}{2 \times 1.625} \\
+    h_{L,\text{máx}} &= \frac{10485.76}{3.25} \\
+    h_{L,\text{máx}} &= 3226 \text{ m} \approx 3.23 \text{ km}
+\end{align}
+
+\textbf{Factor de cambio:}
+\begin{equation}
+    \frac{h_{L,\text{máx}}}{h_{T,\text{máx}}} = \frac{3226}{535} = \frac{g_T}{g_L} = \frac{9.8}{1.625} = 6.03
+\end{equation}
+
+La altura máxima en la Luna es \textbf{6.03 veces mayor} que en la Tierra.
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+\textbf{Factor de cambio entre Luna y Tierra:}
+\begin{equation*}
+    \boxed{\text{Factor} = \frac{g_T}{g_L} = \frac{9.8}{1.625} = 6.03}
+\end{equation*}
+
+\vspace{0.5cm}
+
+\textbf{a) Alcance horizontal:}
+\begin{itemize}
+    \item Tierra: $R_T = 1499$ m $\approx 1.50$ km
+    \item Luna: $R_L = 9036$ m $\approx 9.04$ km
+    \item \boxed{\text{Factor: } \frac{R_L}{R_T} = 6.03}
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{b) Tiempo de vuelo:}
+\begin{itemize}
+    \item Tierra: $t_T = 20.9$ s
+    \item Luna: $t_L = 126.0$ s
+    \item \boxed{\text{Factor: } \frac{t_L}{t_T} = 6.03}
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{c) Altura máxima:}
+\begin{itemize}
+    \item Tierra: $h_{T,\text{máx}} = 535$ m
+    \item Luna: $h_{L,\text{máx}} = 3226$ m $\approx 3.23$ km
+    \item \boxed{\text{Factor: } \frac{h_{L,\text{máx}}}{h_{T,\text{máx}}} = 6.03}
+\end{itemize}
+\end{resultadobox}
+
+\section{Verificación}
+
+Podemos verificar que todas las cantidades cambian por el mismo factor:
+
+\subsection*{Relación fundamental}
+
+Como las ecuaciones son:
+\begin{align}
+    R &= \frac{v_0^2 \sin(2\theta)}{g} \\
+    t &= \frac{2v_0 \sin\theta}{g} \\
+    h &= \frac{v_0^2 \sin^2\theta}{2g}
+\end{align}
+
+Todas son inversamente proporcionales a $g$. Por lo tanto:
+\begin{equation}
+    \frac{R_L}{R_T} = \frac{t_L}{t_T} = \frac{h_L}{h_T} = \frac{g_T}{g_L} = 6.03 \quad \checkmark
+\end{equation}
+
+\subsection*{Verificación numérica}
+
+\textbf{Alcance:}
+\begin{equation*}
+    \frac{R_L}{R_T} = \frac{9036}{1499} = 6.03 \quad \checkmark
+\end{equation*}
+
+\textbf{Tiempo:}
+\begin{equation*}
+    \frac{t_L}{t_T} = \frac{126.0}{20.9} = 6.03 \quad \checkmark
+\end{equation*}
+
+\textbf{Altura:}
+\begin{equation*}
+    \frac{h_L}{h_T} = \frac{3226}{535} = 6.03 \quad \checkmark
+\end{equation*}
+
+\section{Análisis Físico}
+
+\subsection{Interpretación de los resultados}
+
+\begin{enumerate}
+    \item \textbf{Menor gravedad $\implies$ Mayor rendimiento:} En la Luna, la gravedad es aproximadamente 6 veces menor que en la Tierra, lo que hace que la bengala:
+    \begin{itemize}
+        \item Vuele 6 veces más lejos
+        \item Permanezca en el aire 6 veces más tiempo
+        \item Alcance una altura 6 veces mayor
+    \end{itemize}
+
+    \item \textbf{Proporcionalidad inversa:} Todos los parámetros del movimiento de proyectiles son inversamente proporcionales a la gravedad cuando $v_0$ y $\theta$ permanecen constantes.
+
+    \item \textbf{Mismo factor para todo:} El factor $\frac{g_T}{g_L} = 6.03$ se aplica universalmente a alcance, tiempo y altura.
+\end{enumerate}
+
+\subsection{Comparación visual}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\begin{axis}[
+    width=15cm,
+    height=9cm,
+    xlabel={Distancia horizontal (km)},
+    ylabel={Altura (km)},
+    xmin=0, xmax=10,
+    ymin=0, ymax=3.5,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% Trayectoria en Tierra (usando x en km)
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:1.5,
+    samples=100,
+    smooth
+] {1.428*x - 0.0348*x^2};
+\addlegendentry{Tierra ($g = 9.8$ m/s$^2$)}
+
+% Trayectoria en Luna (usando x en km)
+\addplot[
+    blue!70!black,
+    very thick,
+    domain=0:9.04,
+    samples=100,
+    smooth
+] {1.428*x - 0.00577*x^2};
+\addlegendentry{Luna ($g = 1.625$ m/s$^2$)}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Implicaciones prácticas}
+
+Si se hiciera este experimento en diferentes cuerpos celestes:
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Cuerpo} & \textbf{$g$ (m/s$^2$)} & \textbf{Alcance (km)} & \textbf{Tiempo (s)} & \textbf{Altura (m)} \\
+\hline
+Tierra & 9.8 & 1.50 & 20.9 & 535 \\
+Luna & 1.625 & 9.04 & 126.0 & 3226 \\
+Marte & 3.71 & 3.96 & 55.2 & 1413 \\
+Júpiter & 24.8 & 0.59 & 8.3 & 211 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Curiosidades}
+
+\begin{enumerate}
+    \item \textbf{Récord lunar:} En la Luna, la bengala alcanzaría más de 3 km de altura, ¡equivalente a 10 edificios del Empire State apilados!
+
+    \item \textbf{Tiempo de vuelo:} La bengala permanecería en el aire más de 2 minutos en la Luna, comparado con solo 21 segundos en la Tierra.
+
+    \item \textbf{Alcance extraordinario:} Los 9 km de alcance en la Luna son comparables a la distancia de una carrera de 10K.
+
+    \item \textbf{Deportes lunares:} Los astronautas del Apollo experimentaron con el lanzamiento de objetos en la Luna. Un martillo geológico lanzado podría volar cientos de metros.
+\end{enumerate}
+
+\section{Fórmula General}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Relación entre Gravedades]
+
+Si el mismo proyectil se lanza con la misma velocidad inicial y ángulo en dos lugares con diferentes gravedades:
+
+\textbf{Factor de cambio:}
+\begin{equation}
+    \text{Factor} = \frac{g_1}{g_2}
+\end{equation}
+
+\textbf{Aplicaciones:}
+\begin{align}
+    R_2 &= R_1 \times \frac{g_1}{g_2} \\
+    t_2 &= t_1 \times \frac{g_1}{g_2} \\
+    h_2 &= h_1 \times \frac{g_1}{g_2}
+\end{align}
+
+\textbf{Para este problema (Luna vs. Tierra):}
+\begin{equation*}
+    \text{Factor} = \frac{g_T}{g_L} = \frac{9.8}{1.625} = 6.03
+\end{equation*}
+
+\textbf{Resultado:} Todas las cantidades (alcance, tiempo, altura) se multiplican por 6.03 en la Luna.
+
+\end{tcolorbox}
+
+\section{Gráficas Comparativas}
+
+\subsection{Alcance vs. Gravedad}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=7cm,
+    xlabel={Gravedad $g$ (m/s$^2$)},
+    ylabel={Alcance $R$ (km)},
+    xmin=0, xmax=12,
+    ymin=0, ymax=10,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% R = k/g donde k = v0^2 * sin(2θ)
+\addplot[
+    red!70!black,
+    very thick,
+    domain=1:11,
+    samples=100,
+    smooth
+] {14683/(x*1000)};
+\addlegendentry{$R = \frac{v_0^2 \sin(2\theta)}{g}$}
+
+% Punto Luna
+\addplot[
+    mark=*,
+    mark size=3pt,
+    blue!70!black,
+    only marks
+] coordinates {(1.625, 9.04)};
+\addlegendentry{Luna}
+
+% Punto Tierra
+\addplot[
+    mark=*,
+    mark size=3pt,
+    red!70!black,
+    only marks
+] coordinates {(9.8, 1.50)};
+\addlegendentry{Tierra}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Tiempo de vuelo vs. Gravedad}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=7cm,
+    xlabel={Gravedad $g$ (m/s$^2$)},
+    ylabel={Tiempo de vuelo $t$ (s)},
+    xmin=0, xmax=12,
+    ymin=0, ymax=140,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% t = k/g donde k = 2*v0*sin(θ)
+\addplot[
+    green!50!black,
+    very thick,
+    domain=1:11,
+    samples=100,
+    smooth
+] {204.8/x};
+\addlegendentry{$t = \frac{2v_0\sin\theta}{g}$}
+
+% Punto Luna
+\addplot[
+    mark=*,
+    mark size=3pt,
+    blue!70!black,
+    only marks
+] coordinates {(1.625, 126.0)};
+\addlegendentry{Luna}
+
+% Punto Tierra
+\addplot[
+    mark=*,
+    mark size=3pt,
+    red!70!black,
+    only marks
+] coordinates {(9.8, 20.9)};
+\addlegendentry{Tierra}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Altura máxima vs. Gravedad}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=7cm,
+    xlabel={Gravedad $g$ (m/s$^2$)},
+    ylabel={Altura máxima $h$ (km)},
+    xmin=0, xmax=12,
+    ymin=0, ymax=3.5,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% h = k/g donde k = v0^2*sin^2(θ)/2
+\addplot[
+    orange!70!black,
+    very thick,
+    domain=1:11,
+    samples=100,
+    smooth
+] {10485.76/(2*x*1000)};
+\addlegendentry{$h = \frac{v_0^2\sin^2\theta}{2g}$}
+
+% Punto Luna
+\addplot[
+    mark=*,
+    mark size=3pt,
+    blue!70!black,
+    only marks
+] coordinates {(1.625, 3.226)};
+\addlegendentry{Luna}
+
+% Punto Tierra
+\addplot[
+    mark=*,
+    mark size=3pt,
+    red!70!black,
+    only marks
+] coordinates {(9.8, 0.535)};
+\addlegendentry{Tierra}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Conclusiones}
+
+\begin{enumerate}
+    \item Todas las cantidades del movimiento de proyectiles son inversamente proporcionales a la gravedad cuando las condiciones iniciales permanecen constantes.
+
+    \item La relación entre Luna y Tierra es exactamente $\frac{g_T}{g_L} = 6.03$ para alcance, tiempo y altura.
+
+    \item La gravedad lunar, siendo 6 veces menor que la terrestre, permite que los proyectiles viajen 6 veces más lejos, permanezcan 6 veces más tiempo en el aire, y alcancen 6 veces mayor altura.
+
+    \item Este principio se aplica a cualquier par de cuerpos celestes con diferentes gravedades.
+
+    \item Los deportes y actividades que involucren lanzamiento de objetos tendrían características completamente diferentes en la Luna.
+\end{enumerate}
+
+\end{document}

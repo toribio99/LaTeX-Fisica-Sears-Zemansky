@@ -1,0 +1,465 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.35} \\
+\large Movimiento Circular: Centrifugador NASA (Hipergravedad)}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[12]{r}{.62\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=.65]
+    % Eje central vertical
+    \draw[very thick, gray!60] (0,5) -- (0,-1);
+    \filldraw[gray!80] (0,3.3) circle (0.3);
+    \node[left] at (-0.3,3.5) {Eje};
+
+    % Brazo de la centrífuga
+    \draw[thick, blue!60!black, fill=blue!20]
+        (0,3.6) -- (0,3) -- (8.8,3) -- (8.8,3.6) -- cycle;
+
+    % Soporte del astronauta
+    \draw[thick, orange!80!black] (7,2.5) -- (8,2.5);
+
+    % Astronauta (simplificado)
+    % Cabeza
+    \filldraw[red!70!black] (8.8,3.8) circle (0.2);
+    \node[red!70!black, right] at (9,4.1) {Cabeza};
+
+    % Cuerpo
+    \draw[thick, red!70!black] (8.8,3.6) -- (8.8,2);
+
+    % Pies
+    \filldraw[red!70!black] (8.8,2) circle (0.15);
+    \node[red!70!black, right] at (9,1.7) {Pies};
+
+    % Radio a la cabeza
+    \draw[Latex-Latex, thick, purple!70!black] (0,4.5) -- (8.8,4.5);
+    \node[purple!70!black, above] at (4.4,4.5) {$R_{\text{cabeza}} = 8.84$ m};
+
+    % Altura del astronauta
+    \draw[Latex-Latex, thick, green!60!black] (9.5,3.8) -- (9.5,2);
+    \node[green!60!black, right] at (9.5,2.9) {$h = 2.00$ m};
+
+    % Vector velocidad en la cabeza
+    \draw[-{Latex[length=3mm]}, blue!70!black, ultra thick]
+        (8.8,3.8) -- (8.8,5.2);
+    \node[blue!70!black, right] at (8.8,5) {$\vec{v}_{\text{cabeza}}$};
+
+    % Vector aceleración centrípeta (hacia el eje)
+    \draw[-{Latex[length=4mm]}, orange!80!black, ultra thick]
+        (8.8,3.8) -- (6.5,3.8);
+    \node[orange!80!black, below] at (4.5,4.32) {$\vec{a}_{\text{rad}} = 12.5g$};
+
+    % Flecha de rotación
+    \draw[-{Latex[length=4mm]}, red!70!black, very thick]
+        (4,0.5) arc (-30:30:2);
+    \node[red!70!black] at (4,0.2) {Rotación};
+
+    % Base del dispositivo
+    \draw[thick, gray!60] (-1,-1) -- (1,-1) -- (1,-0.8) -- (-1,-0.8) -- cycle;
+
+    \node[below, align=center] at (4,-1.2) {\textbf{Centrifugador NASA para} \\ \textbf{entrenamiento de astronautas}};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+En el Centro de Investigación Ames de la NASA, se utiliza el enorme centrifugador ``20-G'' para probar los efectos de aceleraciones muy elevadas (``hipergravedad'') sobre los pilotos y los astronautas. En este dispositivo, un brazo de 8.84 m de largo gira uno de sus extremos en un plano horizontal, mientras el astronauta se encuentra sujeto con una banda en el otro extremo. Suponga que el astronauta está alineado en el brazo con su cabeza del extremo exterior. La aceleración máxima sostenida a la que los seres humanos se han sometido en esta máquina comúnmente es de 12.5$g$.
+
+a) ?`Qué tan rápido debe moverse la cabeza del astronauta para experimentar esta aceleración máxima?
+
+b) ?`Cuál es la diferencia entre la aceleración de su cabeza y pies, si el astronauta mide 2.00 m de altura?
+
+c) ?`Que tan rapido, en rpm (rev/min), gira el brazo para producir la aceleración sostenida máxima?
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Distancia del eje a la cabeza:} $R_{\text{cabeza}} = 8.84$ m
+    \item \textbf{Altura del astronauta:} $h = 2.00$ m
+    \item \textbf{Distancia del eje a los pies:} $R_{\text{pies}} = R_{\text{cabeza}} - h = 8.84 - 2.00 = 6.84$ m
+    \item \textbf{Aceleración centrípeta en la cabeza:} $a_{\text{cabeza}} = 12.5g = 12.5 \times 9.8 = 122.5$ m/s$^2$
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Hipergravedad y Entrenamiento de Astronautas}
+
+Los astronautas experimentan hipergravedad durante el lanzamiento y el reingreso a la atmósfera. La NASA utiliza centrifugadoras gigantes para simular estas condiciones y entrenar a los astronautas para que puedan funcionar bajo aceleraciones extremas.
+
+\subsection{Aceleración Centrípeta en Función del Radio}
+
+En movimiento circular, la aceleración centrípeta depende del radio:
+
+\begin{equation*}
+    a_{\text{rad}} = \omega^2 R = \frac{v^2}{R}
+\end{equation*}
+
+donde $\omega$ es la velocidad angular (constante para todo el sistema rígido).
+
+\subsection{Variación de la Aceleración con el Radio}
+
+Para un sistema rígido giratorio:
+\begin{itemize}
+    \item Todos los puntos tienen la misma velocidad angular $\omega$
+    \item La velocidad lineal aumenta con el radio: $v = \omega R$
+    \item La aceleración centrípeta también aumenta con el radio: $a = \omega^2 R$
+\end{itemize}
+
+Por lo tanto, los pies (más cerca del eje) experimentan menor aceleración que la cabeza.
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Rapidez lineal de la cabeza}
+
+Usamos la relación entre aceleración centrípeta y velocidad:
+
+\begin{align*}
+    a_{\text{cabeza}} &= \frac{v_{\text{cabeza}}^2}{R_{\text{cabeza}}} \\
+    v_{\text{cabeza}}^2 &= a_{\text{cabeza}} \times R_{\text{cabeza}} \\
+    v_{\text{cabeza}} &= \sqrt{a_{\text{cabeza}} \times R_{\text{cabeza}}}
+\end{align*}
+
+Sustituyendo valores:
+
+\begin{align*}
+    v_{\text{cabeza}} &= \sqrt{122.5 \text{ m/s}^2 \times 8.84 \text{ m}} \\
+    &= \sqrt{1082.7 \text{ m}^2\text{/s}^2} \\
+    &= 32.9 \text{ m/s}
+\end{align*}
+
+\textbf{Resultado:} $v_{\text{cabeza}} = 32.9$ m/s $\approx$ 33 m/s
+
+\textbf{Interpretación:} La cabeza del astronauta se mueve a aproximadamente 118 km/h.
+
+\subsection*{Parte b) Diferencia de aceleración entre pies y cabeza}
+
+Primero, calculamos la velocidad angular $\omega$, que es la misma para todo el sistema:
+
+\begin{equation*}
+    \omega = \frac{v_{\text{cabeza}}}{R_{\text{cabeza}}} = \frac{32.9}{8.84} = 3.72 \text{ rad/s}
+\end{equation*}
+
+Ahora calculamos la aceleración en los pies:
+
+\begin{align*}
+    a_{\text{pies}} &= \omega^2 R_{\text{pies}} \\
+    &= (3.72)^2 \times 6.84 \\
+    &= 13.84 \times 6.84 \\
+    &= 94.7 \text{ m/s}^2
+\end{align*}
+
+La diferencia de aceleración es:
+
+\begin{align*}
+    \Delta a &= a_{\text{cabeza}} - a_{\text{pies}} \\
+    &= 122.5 - 94.7 \\
+    &= 27.8 \text{ m/s}^2
+\end{align*}
+
+Expresado en términos de $g$:
+
+\begin{equation*}
+    \Delta a = \frac{27.8}{9.8} \approx 2.84g
+\end{equation*}
+
+\textbf{Resultado:} $\Delta a = 27.8$ m/s$^2$ = 2.8$g$
+
+\textbf{Interpretación:} La cabeza experimenta casi 3$g$ más de aceleración que los pies. Esta diferencia puede causar molestias significativas.
+
+\subsection*{Método alternativo para la parte b)}
+
+También podemos usar la proporción directa:
+
+\begin{align*}
+    \frac{a_{\text{pies}}}{a_{\text{cabeza}}} &= \frac{R_{\text{pies}}}{R_{\text{cabeza}}} = \frac{6.84}{8.84} = 0.774 \\
+    a_{\text{pies}} &= 0.774 \times 122.5 = 94.8 \text{ m/s}^2 \quad \checkmark
+\end{align*}
+
+\subsection*{Parte c) Velocidad de rotación en rpm}
+
+La velocidad angular en rad/s ya la calculamos:
+
+\begin{equation*}
+    \omega = 3.72 \text{ rad/s}
+\end{equation*}
+
+Convertimos a revoluciones por minuto (rpm):
+
+\begin{align*}
+    \omega_{\text{rpm}} &= \omega \times \frac{1 \text{ rev}}{2\pi \text{ rad}} \times \frac{60 \text{ s}}{1 \text{ min}} \\
+    &= 3.72 \times \frac{60}{2\pi} \\
+    &= 3.72 \times \frac{60}{6.283} \\
+    &= 3.72 \times 9.549 \\
+    &= 35.5 \text{ rpm}
+\end{align*}
+
+\textbf{Resultado:} $\omega = 35.5$ rpm $\approx$ 36 rpm
+
+\textbf{Interpretación:} El dispositivo completa aproximadamente 36 revoluciones cada minuto, es decir, más de una revolución cada 2 segundos.
+
+\subsection*{Verificación del periodo}
+
+El periodo de rotación es:
+
+\begin{equation*}
+    T = \frac{2\pi}{\omega} = \frac{2\pi}{3.72} = 1.69 \text{ s}
+\end{equation*}
+
+Verificación usando frecuencia:
+
+\begin{equation*}
+    f = \frac{35.5 \text{ rpm}}{60} = 0.592 \text{ Hz} \quad \Rightarrow \quad T = \frac{1}{f} = 1.69 \text{ s} \quad \checkmark
+\end{equation*}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Parte a) Rapidez lineal de la cabeza}
+
+\begin{equation*}
+    \boxed{v_{\text{cabeza}} = 32.9 \text{ m/s} = 118 \text{ km/h}}
+\end{equation*}
+
+\subsection*{Parte b) Diferencia de aceleración}
+
+\begin{equation*}
+    \boxed{\Delta a = 27.8 \text{ m/s}^2 = 2.8g}
+\end{equation*}
+
+La cabeza experimenta una aceleración \textbf{2.8$g$ mayor} que los pies.
+
+\subsection*{Parte c) Velocidad de rotación}
+
+\begin{equation*}
+    \boxed{\omega = 35.5 \text{ rpm} \approx 36 \text{ rpm}}
+\end{equation*}
+
+El dispositivo completa una revolución cada \textbf{1.69 segundos}.
+
+\end{resultadobox}
+
+\section{Análisis Adicional}
+
+\subsection{Comparación de aceleraciones en diferentes puntos}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.9\textwidth,
+    height=7cm,
+    xlabel={Distancia al eje $R$ (m)},
+    ylabel={Aceleración / $g$},
+    xmin=0, xmax=10,
+    ymin=0, ymax=15,
+    grid=major,
+    title={Aceleración centrípeta vs distancia al eje ($\omega = 3.72$ rad/s)}
+]
+
+% Curva a = omega^2 * R
+\addplot[blue, thick, domain=0:10, samples=100] {(3.72)^2*x/9.8};
+
+% Puntos específicos
+\addplot[red, only marks, mark=*, mark size=3pt] coordinates {(6.84, 9.66)};
+\addplot[orange, only marks, mark=*, mark size=3pt] coordinates {(8.84, 12.5)};
+
+% Líneas de referencia
+\draw[dashed, gray] (axis cs:0,9.66) -- (axis cs:6.84,9.66);
+\draw[dashed, gray] (axis cs:6.84,0) -- (axis cs:6.84,9.66);
+\draw[dashed, gray] (axis cs:0,12.5) -- (axis cs:8.84,12.5);
+\draw[dashed, gray] (axis cs:8.84,0) -- (axis cs:8.84,12.5);
+
+% Etiquetas
+\node[red] at (axis cs:5.5,10.5) {Pies: 9.7$g$};
+\node[orange] at (axis cs:7.5,13.3) {Cabeza: 12.5$g$};
+
+% Zona del astronauta
+\fill[green!20, opacity=0.3] (axis cs:6.84,0) rectangle (axis cs:8.84,15);
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Perfil de aceleración en el cuerpo del astronauta}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+    % Silueta simple del astronauta
+    \draw[thick, blue!60] (0,0) -- (0,2);
+    \filldraw[red] (0,0) circle (0.1);
+    \filldraw[red] (0,2) circle (0.1);
+
+    \node[left] at (0,0) {Pies};
+    \node[left] at (0,2) {Cabeza};
+    \node[left] at (0,1) {Torso};
+
+    % Flechas de aceleración
+    \draw[-{Latex[length=3mm]}, orange, very thick] (0.5,0) -- (2.4,0);
+    \draw[-{Latex[length=3mm]}, orange, very thick] (0.5,1) -- (3.1,1);
+    \draw[-{Latex[length=3mm]}, orange, very thick] (0.5,2) -- (3.6,2);
+
+    % Etiquetas
+    \node[orange, right] at (2.5,0) {$a_{\text{pies}} = 9.7g$};
+    \node[orange, right] at (3.2,1) {$a_{\text{torso}} \approx 11.1g$};
+    \node[orange, right] at (3.7,2) {$a_{\text{cabeza}} = 12.5g$};
+
+    \node[below] at (2,-0.5) {\textbf{Distribución de la aceleración centrípeta}};
+\end{tikzpicture}
+\end{center}
+
+\subsection{Tabla resumen de condiciones}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Parte del cuerpo} & \textbf{Radio (m)} & \textbf{Velocidad (m/s)} & \textbf{Aceleración} \\
+\hline
+Pies & 6.84 & 25.4 & 9.7$g$ \\
+\hline
+Centro del torso & 7.84 & 29.2 & 11.1$g$ \\
+\hline
+Cabeza & 8.84 & 32.9 & 12.5$g$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Efectos fisiológicos del gradiente de aceleración}
+
+La diferencia de 2.8$g$ entre cabeza y pies crea efectos significativos:
+
+\begin{itemize}
+    \item \textbf{Sensación de estiramiento:} El astronauta siente como si fuerzas opuestas tiraran de su cabeza y pies
+
+    \item \textbf{Distribución de la sangre:} La mayor aceleración en la cabeza tiende a desplazar la sangre hacia la cabeza (opuesto al efecto gravitacional normal)
+
+    \item \textbf{Presión diferencial:} La columna vertebral experimenta fuerzas de compresión variables
+
+    \item \textbf{Desorientación:} El gradiente de aceleración puede causar mareos y náuseas (de ahí el apodo ``vomadera'')
+\end{itemize}
+
+\subsection{Comparación con otras centrifugadoras}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Instalación} & \textbf{Radio (m)} & \textbf{$a_{\text{max}}$} & \textbf{Aplicación} \\
+\hline
+NASA Ames (EE.UU.) & 8.84 & 12.5$g$ & Entrenamiento \\
+\hline
+NASTAR (EE.UU.) & 7.60 & 10$g$ & Entrenamiento civil \\
+\hline
+Star City (Rusia) & 7.25 & 30$g$ & Investigación \\
+\hline
+ESA (Holanda) & 8.00 & 20$g$ & Investigación médica \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Cálculo de la fuerza aparente}
+
+La fuerza neta aparente sobre el astronauta (masa $m$) en la cabeza:
+
+\begin{equation*}
+    F_{\text{aparente}} = m \times 12.5g = 12.5 \times mg
+\end{equation*}
+
+Un astronauta de 80 kg ``pesaría'' efectivamente:
+
+\begin{equation*}
+    W_{\text{aparente}} = 80 \times 12.5 \times 9.8 = 9800 \text{ N} = 1000 \text{ kg-fuerza}
+\end{equation*}
+
+¡El astronauta se sentiría como si pesara 1 tonelada!
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item En un sistema rígido giratorio, todos los puntos tienen la misma velocidad angular $\omega$
+
+    \item La aceleración centrípeta es proporcional a la distancia del eje: $a = \omega^2 R$
+
+    \item Los puntos más alejados del eje experimentan mayor aceleración centrípeta
+
+    \item El gradiente de aceleración en el cuerpo humano causa efectos fisiológicos significativos
+
+    \item Las centrifugadoras de entrenamiento permiten a los astronautas adaptarse a condiciones de hipergravedad antes de los vuelos espaciales
+
+    \item La conversión entre rad/s y rpm es: $\omega_{\text{rpm}} = \omega_{\text{rad/s}} \times \frac{60}{2\pi}$
+
+    \item A pesar de las condiciones extremas, el entrenamiento en centrifugadora es crucial para preparar a los astronautas para las aceleraciones del lanzamiento y reingreso
+\end{enumerate}
+
+\end{document}

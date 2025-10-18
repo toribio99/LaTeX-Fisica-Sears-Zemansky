@@ -1,0 +1,430 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.32} \\
+\large Movimiento Circular: Órbitas Planetarias}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[13]{r}{.5\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=.85]
+    % Sol
+    \shade[ball color=yellow!80!orange] (0,0) circle (0.6);
+    \node[below] at (0,-0.8) {\textbf{Sol}};
+
+    % Órbita de Mercurio
+    \draw[blue!50, thick, dashed] (0,0) circle (2);
+    \node[blue!50] at (0,2.45) {\small Mercurio};
+    \filldraw[blue!60] (0,2) circle (0.12);
+
+    % Órbita de la Tierra
+    \draw[green!60!black, thick] (0,0) circle (4);
+    \node[green!60!black] at (2,2.8) {\small Tierra};
+    \filldraw[green!60!black] (4,0) circle (0.15);
+
+    % Vectores para la Tierra
+    \draw[-{Latex[length=2.5mm]}, purple!70!black, ultra thick]
+        (4,0) -- (4,1.2);
+    \node[purple!70!black, right] at (4,0.8) {$\vec{v}_T$};
+
+    \draw[-{Latex[length=2.5mm]}, red!70!black, ultra thick]
+        (4,0) -- (3,0);
+    \node[red!70!black, above] at (3.5,0.1) {$\vec{a}_T$};
+
+    % Radio de la Tierra
+    \draw[{Latex[length=2mm]}-,green!60!black, thick] (0,0) -- (4,0);
+    \node[green!60!black, below] at (2,-0.1) {$R_T$};
+
+    % Radio de Mercurio
+    \draw[{Latex[length=2mm]}-,blue!50, thick] (0,0) -- (0,2);
+    \node[blue!50, left] at (-0.1,1) {$R_M$};
+
+    % Flecha de órbita
+    \draw[-{Latex[length=3mm]}, red!70!black, very thick]
+        (3.5,-2.6) arc (-37:10:4);
+
+    \node[below] at (0,-4.2) {\textbf{Sistema Solar (no a escala)}};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+El radio de la órbita terrestre alrededor del Sol (suponiendo que fuera circular) es de $1.50 \times 10^8$ km, y la Tierra la recorre en 365 días. \\[.1mm]
+
+a) Calcule la magnitud de la velocidad orbital de la Tierra en m/s. \\[.1mm]
+
+b) Calcule la aceleración radial de la Tierra hacia el Sol en m/s$^2$. \\[.1mm]
+
+c) Repita los incisos a) y b) para el movimiento del planeta Mercurio (radio orbital $= 5.79 \times 10^7$ km, periodo orbital $= 88.0$ días). \\[.1mm]
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+
+\textbf{Tierra:}
+\begin{itemize}
+    \item \textbf{Radio orbital:} $R_T = 1.50 \times 10^8$ km $= 1.50 \times 10^{11}$ m
+    \item \textbf{Periodo orbital:} $T_T = 365$ días $= 3.156 \times 10^7$ s
+\end{itemize}
+
+\textbf{Mercurio:}
+\begin{itemize}
+    \item \textbf{Radio orbital:} $R_M = 5.79 \times 10^7$ km $= 5.79 \times 10^{10}$ m
+    \item \textbf{Periodo orbital:} $T_M = 88.0$ días $= 7.603 \times 10^6$ s
+\end{itemize}
+
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Velocidad Orbital}
+
+Para un objeto en órbita circular de radio $R$ con periodo $T$:
+
+\begin{equation*}
+    v = \frac{2\pi R}{T}
+\end{equation*}
+
+\subsection{Aceleración Centrípeta}
+
+La aceleración centrípeta dirigida hacia el centro (en este caso, hacia el Sol) es:
+
+\begin{equation*}
+    a_{\text{rad}} = \frac{v^2}{R} = \frac{4\pi^2 R}{T^2}
+\end{equation*}
+
+\subsection{Conversión de Unidades}
+
+\textbf{Días a segundos:}
+\begin{equation*}
+    1 \text{ día} = 24 \text{ h} \times 3600 \text{ s/h} = 86\,400 \text{ s}
+\end{equation*}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Conversiones previas}
+
+\textbf{Tierra:}
+\begin{align*}
+    T_T &= 365 \times 86\,400 = 31\,536\,000 \text{ s} = 3.1536 \times 10^7 \text{ s}
+\end{align*}
+
+\textbf{Mercurio:}
+\begin{align*}
+    T_M &= 88.0 \times 86\,400 = 7\,603\,200 \text{ s} = 7.603 \times 10^6 \text{ s}
+\end{align*}
+
+\subsection*{Parte a) Velocidad orbital de la Tierra}
+
+\subsubsection*{Paso 1: Aplicar la fórmula}
+
+\begin{equation*}
+    v_T = \frac{2\pi R_T}{T_T}
+\end{equation*}
+
+\subsubsection*{Paso 2: Sustituir valores}
+
+\begin{align*}
+    v_T &= \frac{2\pi \times 1.50 \times 10^{11} \text{ m}}{3.1536 \times 10^7 \text{ s}} \\
+    &= \frac{9.425 \times 10^{11} \text{ m}}{3.1536 \times 10^7 \text{ s}} \\
+    &= 2.989 \times 10^4 \text{ m/s} \\
+    &\approx 29\,900 \text{ m/s} \\
+    &\approx 30\,000 \text{ m/s} = 30 \text{ km/s}
+\end{align*}
+
+\textbf{En km/h:}
+\begin{equation*}
+    v_T = 30\,000 \text{ m/s} \times 3.6 = 108\,000 \text{ km/h}
+\end{equation*}
+
+\subsection*{Parte b) Aceleración radial de la Tierra}
+
+\subsubsection*{Método 1: Usando $v$ y $R$}
+
+\begin{align*}
+    a_T &= \frac{v_T^2}{R_T} \\
+    &= \frac{(2.99 \times 10^4)^2}{1.50 \times 10^{11}} \\
+    &= \frac{8.94 \times 10^8}{1.50 \times 10^{11}} \\
+    &= 5.96 \times 10^{-3} \text{ m/s}^2 \\
+    &\approx 0.006 \text{ m/s}^2
+\end{align*}
+
+\subsubsection*{Método 2: Usando la fórmula directa (verificación)}
+
+\begin{align*}
+    a_T &= \frac{4\pi^2 R_T}{T_T^2} \\
+    &= \frac{4\pi^2 \times 1.50 \times 10^{11}}{(3.1536 \times 10^7)^2} \\
+    &= \frac{5.921 \times 10^{12}}{9.945 \times 10^{14}} \\
+    &= 5.95 \times 10^{-3} \text{ m/s}^2 \quad \checkmark
+\end{align*}
+
+\subsection*{Parte c) Mercurio}
+
+\subsubsection*{Velocidad orbital de Mercurio}
+
+\begin{align*}
+    v_M &= \frac{2\pi R_M}{T_M} \\
+    &= \frac{2\pi \times 5.79 \times 10^{10}}{7.603 \times 10^6} \\
+    &= \frac{3.638 \times 10^{11}}{7.603 \times 10^6} \\
+    &= 4.78 \times 10^4 \text{ m/s} \\
+    &\approx 47\,800 \text{ m/s} = 47.8 \text{ km/s}
+\end{align*}
+
+\textbf{En km/h:}
+\begin{equation*}
+    v_M = 47\,800 \times 3.6 = 172\,000 \text{ km/h}
+\end{equation*}
+
+\subsubsection*{Aceleración radial de Mercurio}
+
+\begin{align*}
+    a_M &= \frac{v_M^2}{R_M} \\
+    &= \frac{(4.78 \times 10^4)^2}{5.79 \times 10^{10}} \\
+    &= \frac{2.285 \times 10^9}{5.79 \times 10^{10}} \\
+    &= 3.95 \times 10^{-2} \text{ m/s}^2 \\
+    &\approx 0.040 \text{ m/s}^2
+\end{align*}
+
+\textbf{Verificación:}
+\begin{align*}
+    a_M &= \frac{4\pi^2 \times 5.79 \times 10^{10}}{(7.603 \times 10^6)^2} \\
+    &= 3.95 \times 10^{-2} \text{ m/s}^2 \quad \checkmark
+\end{align*}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{TIERRA}
+
+\textbf{a) Velocidad orbital:}
+\begin{equation*}
+    \boxed{v_T = 30\,000 \text{ m/s} = 30 \text{ km/s} = 108\,000 \text{ km/h}}
+\end{equation*}
+
+\textbf{b) Aceleración radial:}
+\begin{equation*}
+    \boxed{a_T = 0.006 \text{ m/s}^2 = 6.0 \times 10^{-3} \text{ m/s}^2}
+\end{equation*}
+
+\vspace{0.5cm}
+
+\subsection*{MERCURIO}
+
+\textbf{c.a) Velocidad orbital:}
+\begin{equation*}
+    \boxed{v_M = 47\,800 \text{ m/s} = 47.8 \text{ km/s} = 172\,000 \text{ km/h}}
+\end{equation*}
+
+\textbf{c.b) Aceleración radial:}
+\begin{equation*}
+    \boxed{a_M = 0.040 \text{ m/s}^2 = 4.0 \times 10^{-2} \text{ m/s}^2}
+\end{equation*}
+
+\end{resultadobox}
+
+\section{Análisis Comparativo}
+
+\subsection{Comparación entre Tierra y Mercurio}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Parámetro} & \textbf{Tierra} & \textbf{Mercurio} & \textbf{Razón M/T} \\
+\hline
+Radio orbital (km) & $1.50 \times 10^8$ & $5.79 \times 10^7$ & 0.39 \\
+\hline
+Periodo (días) & 365 & 88.0 & 0.24 \\
+\hline
+Velocidad (km/s) & 30.0 & 47.8 & 1.59 \\
+\hline
+Aceleración (m/s$^2$) & 0.006 & 0.040 & 6.67 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Observaciones:}
+\begin{itemize}
+    \item Mercurio está más cerca del Sol ($\sim$ 39\% de la distancia de la Tierra)
+    \item Mercurio se mueve más rápido ($\sim$ 1.6 veces la velocidad de la Tierra)
+    \item Mercurio completa su órbita en solo 88 días
+    \item La aceleración de Mercurio es $\sim$ 6.7 veces mayor que la de la Tierra
+\end{itemize}
+
+\subsection{Gráfica comparativa}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    width=0.9\textwidth,
+    height=7cm,
+    ylabel={Velocidad orbital (km/s)},
+    symbolic x coords={Mercurio, Venus, Tierra, Marte, Júpiter},
+    xtick=data,
+    ymin=0, ymax=50,
+    bar width=0.8cm,
+    title={Velocidades orbitales planetarias (planetas interiores)},
+    grid=major
+]
+
+\addplot coordinates {
+    (Mercurio,47.8)
+    (Venus,35.0)
+    (Tierra,30.0)
+    (Marte,24.1)
+    (Júpiter,13.1)
+};
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\textbf{Patrón:} Los planetas más cercanos al Sol se mueven más rápido.
+
+\section{Conexión con las Leyes de Kepler}
+
+\subsection{Tercera Ley de Kepler}
+
+La tercera ley de Kepler establece que:
+
+\begin{equation*}
+    T^2 \propto R^3
+\end{equation*}
+
+Verifiquemos con nuestros datos:
+
+\textbf{Tierra:}
+\begin{equation*}
+    \frac{T^2}{R^3} = \frac{(3.154 \times 10^7)^2}{(1.50 \times 10^{11})^3} = 2.95 \times 10^{-19}
+\end{equation*}
+
+\textbf{Mercurio:}
+\begin{equation*}
+    \frac{T^2}{R^3} = \frac{(7.603 \times 10^6)^2}{(5.79 \times 10^{10})^3} = 2.98 \times 10^{-19}
+\end{equation*}
+
+¡Los valores son casi idénticos! Esto confirma la tercera ley de Kepler.
+
+\subsection{Relación entre velocidad y radio}
+
+De $v = 2\pi R/T$ y la tercera ley de Kepler, podemos deducir:
+
+\begin{equation*}
+    v \propto \frac{1}{\sqrt{R}}
+\end{equation*}
+
+Es decir, la velocidad es inversamente proporcional a la raíz cuadrada del radio.
+
+\textbf{Verificación:}
+\begin{equation*}
+    \frac{v_M}{v_T} = \sqrt{\frac{R_T}{R_M}} = \sqrt{\frac{1.50 \times 10^{11}}{5.79 \times 10^{10}}} = \sqrt{2.59} = 1.61
+\end{equation*}
+
+Y de nuestros cálculos: $\frac{47.8}{30.0} = 1.59$ ¡Coincide!
+
+\section{Perspectiva}
+
+\subsection{Velocidades orbitales en contexto}
+
+\begin{itemize}
+    \item \textbf{Avión comercial:} $\sim$ 900 km/h $\approx$ 0.25 km/s
+    \item \textbf{Bala de rifle:} $\sim$ 1 km/s
+    \item \textbf{Velocidad de escape terrestre:} 11.2 km/s
+    \item \textbf{Tierra alrededor del Sol:} 30 km/s
+    \item \textbf{Mercurio alrededor del Sol:} 47.8 km/s
+    \item \textbf{Sol alrededor de la galaxia:} $\sim$ 220 km/s
+\end{itemize}
+
+\subsection{Aceleraciones en contexto}
+
+Aunque las aceleraciones centrípetas son muy pequeñas (milésimas de m/s$^2$), son suficientes para mantener a los planetas en órbita debido a:
+\begin{enumerate}
+    \item La gran masa del Sol proporciona la fuerza gravitacional necesaria
+    \item Las órbitas son muy grandes (millones de kilómetros)
+    \item No hay fricción en el espacio que detenga el movimiento
+\end{enumerate}
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item Los planetas más cercanos al Sol tienen velocidades orbitales mayores
+
+    \item La aceleración centrípeta aumenta dramáticamente al acercarse al Sol (proporcional a $1/R^2$)
+
+    \item Las velocidades orbitales planetarias son del orden de decenas de km/s
+
+    \item La tercera ley de Kepler relaciona el periodo con el radio orbital: $T^2 \propto R^3$
+
+    \item Aunque las aceleraciones parecen pequeñas, son suficientes para mantener órbitas estables durante miles de millones de años
+\end{enumerate}
+
+\end{document}

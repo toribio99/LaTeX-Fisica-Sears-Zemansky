@@ -1,0 +1,242 @@
+% ================================================================================
+% DOCUMENTO MAESTRO - CAPÍTULO 3: MOVIMIENTO EN DOS O TRES DIMENSIONES
+% Física Universitaria - Sears y Zemansky
+% ================================================================================
+%
+% DESCRIPCIÓN:
+%   Este es el archivo principal que compila todos los ejercicios resueltos
+%   del Capítulo 3 del libro "Física Universitaria" de Sears y Zemansky.
+%
+% ESTRUCTURA DEL DOCUMENTO:
+%   1. Carga del preámbulo (configuraciones, paquetes, comandos)
+%   2. Portada del capítulo
+%   3. Tabla de contenidos
+%   4. Inclusión de cada ejercicio individual
+%
+% MODO DE USO:
+%   - Para compilar TODO el documento:
+%       Comenta o elimina la línea \includeonly
+%
+%   - Para compilar SOLO algunos ejercicios:
+%       Descomenta la línea \includeonly y lista los ejercicios deseados
+%       Ejemplo: \includeonly{Solucion_Ejercicio_3_10/Solucion_Ejercicio_3_10,
+%                             Solucion_Ejercicio_3_15/Solucion_Ejercicio_3_15}
+%
+% COMPILACIÓN:
+%   Se recomienda compilar DOS veces para actualizar referencias cruzadas
+%   y la tabla de contenidos:
+%       pdflatex main.tex
+%       pdflatex main.tex
+%
+% AUTOR: Generado automáticamente
+% FECHA: \today
+% VERSIÓN: 1.0
+%
+% ================================================================================
+
+% --------------------------------------------------------------------------------
+% CLASE DEL DOCUMENTO Y PAQUETES BÁSICOS
+% --------------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{pdfpages}  % Para incluir PDFs externos
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=cyan,
+    pdftitle={Capítulo 3: Movimiento en Dos o Tres Dimensiones},
+    pdfauthor={Física Universitaria - Sears y Zemansky},
+}
+
+% --------------------------------------------------------------------------------
+% NOTA IMPORTANTE SOBRE LA ESTRUCTURA
+% --------------------------------------------------------------------------------
+% Los ejercicios individuales son documentos LaTeX completos e independientes.
+% Este archivo principal utiliza el paquete 'pdfpages' para incluir los PDFs
+% ya compilados de cada ejercicio.
+%
+% REQUISITO PREVIO:
+%   Antes de compilar este documento, asegúrate de que cada ejercicio individual
+%   haya sido compilado y exista su archivo PDF correspondiente.
+%
+% VENTAJAS DE ESTE ENFOQUE:
+%   - Cada ejercicio puede compilarse y editarse independientemente
+%   - Mayor flexibilidad para modificar ejercicios individuales
+%   - Compilación más rápida del documento maestro
+%   - Fácil reorganización del orden de ejercicios
+%
+% PARA COMPILAR SOLO ALGUNOS EJERCICIOS:
+%   Simplemente comenta las líneas \includepdf de los ejercicios que no desees incluir
+
+% --------------------------------------------------------------------------------
+% INICIO DEL DOCUMENTO
+% --------------------------------------------------------------------------------
+\begin{document}
+
+% --------------------------------------------------------------------------------
+% PORTADA DEL CAPÍTULO
+% --------------------------------------------------------------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    % Título principal
+    {\Huge\bfseries Física Universitaria\par}
+    \vspace{0.5cm}
+    {\LARGE Sears y Zemansky\par}
+    \vspace{2cm}
+
+    % Título del capítulo
+    {\huge\bfseries Capítulo 3\par}
+    \vspace{0.5cm}
+    {\LARGE Movimiento en Dos o Tres Dimensiones\par}
+    \vspace{1cm}
+    {\Large Ejercicios Resueltos\par}
+    \vspace{2cm}
+
+    % Información adicional
+    {\large
+    \textbf{Contenido:}\\[0.3cm]
+    Ejercicios del 3.9 al 3.27\\[0.2cm]
+    \textit{Cinemática Vectorial}\\
+    \textit{Movimiento de Proyectiles}\\
+    \textit{Movimiento Circular}\\
+    \textit{Velocidad Relativa}
+    \par}
+
+    \vfill
+
+    % Fecha
+    {\large \today\par}
+\end{titlepage}
+
+% --------------------------------------------------------------------------------
+% ÍNDICE / TABLA DE CONTENIDOS
+% --------------------------------------------------------------------------------
+% Nota: Como estamos incluyendo PDFs externos completos, no se genera una tabla
+% de contenidos automática. Cada ejercicio mantiene su propia estructura interna.
+
+% --------------------------------------------------------------------------------
+% INCLUSIÓN DE EJERCICIOS INDIVIDUALES
+% --------------------------------------------------------------------------------
+% Cada ejercicio se incluye como PDF completo usando el comando \includepdf
+%
+% SINTAXIS:
+%   \includepdf[pages=-]{ruta/archivo.pdf}
+%   - pages=-  : incluye todas las páginas del PDF
+%   - pages=1-3: incluye solo las páginas 1 a 3
+%
+% PARA EXCLUIR UN EJERCICIO:
+%   Simplemente comenta la línea correspondiente con %
+%
+% REQUISITO:
+%   Cada ejercicio debe haber sido compilado previamente para generar su PDF
+% ================================================================================
+
+% Ejercicio 3.9 - Libro cayendo de una mesa
+\includepdf[pages=-]{Solucion_Ejercicio_3_9/Solucion_Ejercicio_3_9.pdf}
+
+% Ejercicio 3.10 - Componentes de vectores
+\includepdf[pages=-]{Solucion_Ejercicio_3_10/Solucion_Ejercicio_3_10.pdf}
+
+% Ejercicio 3.11 - Velocidad y aceleración vectorial
+\includepdf[pages=-]{Solucion_Ejercicio_3_11/Solucion_Ejercicio_3_11.pdf}
+
+% Ejercicio 3.12 - Trayectoria de una partícula
+\includepdf[pages=-]{Solucion_Ejercicio_3_12/Solucion_Ejercicio_3_12.pdf}
+
+% Ejercicio 3.13 - Movimiento parabólico básico
+\includepdf[pages=-]{Solucion_Ejercicio_3_13/Solucion_Ejercicio_3_13.pdf}
+
+% Ejercicio 3.14 - Alcance de proyectil
+\includepdf[pages=-]{Solucion_Ejercicio_3_14/Solucion_Ejercicio_3_14.pdf}
+
+% Ejercicio 3.15 - Altura máxima de proyectil
+\includepdf[pages=-]{Solucion_Ejercicio_3_15/Solucion_Ejercicio_3_15.pdf}
+
+% Ejercicio 3.16 - Tiempo de vuelo
+\includepdf[pages=-]{Solucion_Ejercicio_3_16/Solucion_Ejercicio_3_16.pdf}
+
+% Ejercicio 3.17 - Proyectil con altura inicial
+\includepdf[pages=-]{Solucion_Ejercicio_3_17/Solucion_Ejercicio_3_17.pdf}
+
+% Ejercicio 3.18 - Ángulo óptimo de lanzamiento
+\includepdf[pages=-]{Solucion_Ejercicio_3_18/Solucion_Ejercicio_3_18.pdf}
+
+% Ejercicio 3.19 - Velocidad al impacto
+\includepdf[pages=-]{Solucion_Ejercicio_3_19/Solucion_Ejercicio_3_19.pdf}
+
+% Ejercicio 3.20 - Proyectil con obstáculo
+\includepdf[pages=-]{Solucion_Ejercicio_3_20/Solucion_Ejercicio_3_20.pdf}
+
+% Ejercicio 3.21 - Dos proyectiles simultáneos
+\includepdf[pages=-]{Solucion_Ejercicio_3_21/Solucion_Ejercicio_3_21.pdf}
+
+% Ejercicio 3.22 - Cazador y mono
+\includepdf[pages=-]{Solucion_Ejercicio_3_22/Solucion_Ejercicio_3_22.pdf}
+
+% Ejercicio 3.23 - Pelota lanzada desde edificio
+\includepdf[pages=-]{Solucion_Ejercicio_3_23/Solucion_Ejercicio_3_23.pdf}
+
+% Ejercicio 3.24 - Alcance en terreno inclinado
+\includepdf[pages=-]{Solucion_Ejercicio_3_24/Solucion_Ejercicio_3_24.pdf}
+
+% Ejercicio 3.25 - Piedra desde globo en descenso
+\includepdf[pages=-]{Solucion_Ejercicio_3_25/Solucion_Ejercicio_3_25.pdf}
+
+% Ejercicio 3.26 - Cañón disparando hacia risco
+\includepdf[pages=-]{Solucion_Ejercicio_3_26/Solucion_Ejercicio_3_26.pdf}
+
+% Ejercicio 3.27 - Maleta cayendo de avión
+\includepdf[pages=-]{Solucion_Ejercicio_3_27/Solucion_Ejercicio_3_27.pdf}
+
+% --------------------------------------------------------------------------------
+% FIN DEL DOCUMENTO
+% --------------------------------------------------------------------------------
+\end{document}
+
+% ================================================================================
+% NOTAS ADICIONALES PARA EL USUARIO
+% ================================================================================
+%
+% ESTRUCTURA DE DIRECTORIOS:
+%   Capítulo 3 Movimiento en Dos o Tres Dimensiones/
+%   ├── main.tex (este archivo - compila todos los ejercicios en un solo PDF)
+%   ├── preambCap_3MovDosTresDim.tex (referencia, no se usa con pdfpages)
+%   ├── Solucion_Ejercicio_3_9/
+%   │   ├── Solucion_Ejercicio_3_9.tex (fuente LaTeX)
+%   │   └── Solucion_Ejercicio_3_9.pdf (PDF compilado)
+%   ├── Solucion_Ejercicio_3_10/
+%   │   ├── Solucion_Ejercicio_3_10.tex
+%   │   └── Solucion_Ejercicio_3_10.pdf
+%   └── ... (resto de ejercicios)
+%
+% PROCESO DE COMPILACIÓN:
+%   1. Compilar cada ejercicio individual (genera los PDFs individuales):
+%      cd Solucion_Ejercicio_3_9 && pdflatex Solucion_Ejercicio_3_9.tex
+%      cd Solucion_Ejercicio_3_10 && pdflatex Solucion_Ejercicio_3_10.tex
+%      ... (repetir para cada ejercicio)
+%
+%   2. Compilar este documento maestro (combina todos los PDFs):
+%      pdflatex main.tex
+%
+% VENTAJAS DE ESTE MÉTODO:
+%   - Cada ejercicio es un documento independiente que puede editarse solo
+%   - No hay conflictos entre paquetes o configuraciones
+%   - Compilación más rápida (solo compilas lo que modificaste)
+%   - Fácil inclusión/exclusión de ejercicios (comentando líneas)
+%
+% PARA INCLUIR SOLO ALGUNOS EJERCICIOS:
+%   Comenta con % las líneas \includepdf que no desees incluir
+%
+% SOLUCIÓN DE PROBLEMAS:
+%   - Error "file not found": El PDF del ejercicio no existe. Compílalo primero.
+%   - Para modificar un ejercicio: edita su .tex individual y recompílalo
+%   - Para reorganizar: cambia el orden de las líneas \includepdf
+%
+% ================================================================================

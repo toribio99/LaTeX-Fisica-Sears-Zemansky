@@ -1,0 +1,415 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.16} \\
+\large Movimiento de Proyectiles: Lanzamiento de Balón}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[6]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.1]
+    % Suelo
+    \draw[fill=green!30, thick] (-10,-2) rectangle (70,0);
+    \draw[pattern=north east lines, pattern color=green!60] (-10,-2) rectangle (70,-4);
+
+    % Mariscal
+    \draw[fill=blue!30, thick] (0,0) circle (3);
+    \node[below] at (0,-7.5) {\small Mariscal};
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=4mm]}, red!70!black, ultra thick] (3,0) -- (15,9.6);
+    \node[red!70!black, right] at (15,9.6) {$\vec{v}_0$};
+    \draw[-{Latex[length=3mm]}, blue!70!black, ultra thick] (3,0) -- (15,0);
+    \node[blue!70!black, below] at (13,-1) {$v_{0x} = 20.0$ m/s};
+    \draw[-{Latex[length=3mm]}, blue!70!black, ultra thick] (15,0) -- (15,9.6);
+    \node[blue!70!black, right] at (15,4.8) {$v_{0y} = 16.0$ m/s};
+
+    % Trayectoria parabólica (ecuación física: y = v0y*t - 0.5*g*t^2, x = v0x*t)
+    % En función de x: y = (v0y/v0x)*x - (g/(2*v0x^2))*x^2
+    % Coeficientes: a = v0y/v0x = 16/20 = 0.8
+    %              b = g/(2*v0x^2) = 9.8/(2*20^2) = 9.8/800 = 0.01225
+    \draw[red!70!black, very thick, dashed, -{Latex[length=3mm]}]
+        plot[domain=0:65.3, samples=100, smooth] (\x, {0.8*\x - 0.01225*\x*\x});
+
+    % Punto máximo (x_max = 32.66 m, h_max = 13.06 m)
+    \filldraw[orange!70!black] (32.66,13.06) circle (1.5);
+    \node[orange!70!black, above] at (32.66,14.5) {Altura máxima};
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-5,0) -- (-5,13.06) node[midway,left] {$h_{\text{max}}$};
+
+    % Punto final
+    \filldraw[green!70!black] (65.3,0) circle (1.5);
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-8) -- (65.3,-8) node[midway,below] {$R = ?$};
+
+    % Etiquetas de tiempo
+    \node[above] at (32.66,7) {$t = t_{\text{h-max}}$};
+    \node[below] at (65.3,-7.5) {$t = t_{\text{total}}$};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un mariscal de campo novato lanza un balón con una componente de velocidad inicial hacia arriba de 16.0 m/s y una componente de velocidad horizontal de 20.0 m/s. Ignore la resistencia del aire.
+
+\vspace{3mm}
+
+\textbf{Preguntas:}
+\begin{enumerate}
+	\item[a)] ¿Cuánto tiempo tardará el balón en llegar al punto más alto de la trayectoria?
+\end{enumerate}
+
+\begin{enumerate}
+	\item[b)] ¿A qué altura está este punto?
+	\item[c)] ¿Cuánto tiempo pasa desde que se lanza el balón hasta que vuelve a su nivel original? ¿Qué relación hay entre este tiempo y el calculado en el inciso a)?
+	\item[d)] ¿Qué distancia horizontal viaja el balón en este tiempo?
+	\item[e)] Dibuje gráficas $x$-$t$, $y$-$t$, $v_x$-$t$ y $v_y$-$t$ para el movimiento.
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Componente horizontal de velocidad inicial:} $v_{0x} = 20.0$ m/s
+    \item \textbf{Componente vertical de velocidad inicial:} $v_{0y} = 16.0$ m/s
+    \item \textbf{Aceleración de la gravedad:} $g = 9.8$ m/s$^2$
+    \item \textbf{Resistencia del aire:} despreciable
+    \item \textbf{Altura inicial:} $y_0 = 0$ (nivel de lanzamiento)
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Ecuaciones del Movimiento de Proyectiles}
+
+\textbf{Movimiento horizontal:}
+\begin{align}
+    x &= v_{0x} t \\
+    v_x &= v_{0x} = \text{constante}
+\end{align}
+
+\textbf{Movimiento vertical:}
+\begin{align}
+    y &= v_{0y} t - \frac{1}{2}gt^2 \\
+    v_y &= v_{0y} - gt
+\end{align}
+
+\textbf{En el punto más alto:}
+\begin{equation}
+    v_y = 0 \quad \Rightarrow \quad t_{\text{max}} = \frac{v_{0y}}{g}
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Tiempo para alcanzar el punto más alto}
+
+En el punto más alto de la trayectoria, la componente vertical de la velocidad es cero:
+\begin{align*}
+    v_y &= v_{0y} - gt_{\text{max}} = 0 \\
+    t_{\text{max}} &= \frac{v_{0y}}{g} \\
+    t_{\text{max}} &= \frac{16.0}{9.8} \\
+    t_{\text{max}} &= 1.633 \text{ s}
+\end{align*}
+
+\textbf{Tiempo al punto máximo:} $t_{\text{max}} = 1.63$ s
+
+\subsection*{Parte b) Altura máxima}
+
+Usando la ecuación del movimiento vertical en $t = t_{\text{max}}$:
+\begin{align*}
+    h_{\text{max}} &= v_{0y} t_{\text{max}} - \frac{1}{2}g t_{\text{max}}^2 \\
+    h_{\text{max}} &= 16.0(1.633) - \frac{1}{2}(9.8)(1.633)^2 \\
+    h_{\text{max}} &= 26.13 - 13.07 \\
+    h_{\text{max}} &= 13.06 \text{ m}
+\end{align*}
+
+También podemos usar la fórmula directa:
+\begin{align*}
+    h_{\text{max}} &= \frac{v_{0y}^2}{2g} \\
+    h_{\text{max}} &= \frac{(16.0)^2}{2(9.8)} \\
+    h_{\text{max}} &= \frac{256}{19.6} \\
+    h_{\text{max}} &= 13.06 \text{ m}
+\end{align*}
+
+\textbf{Altura máxima:} $h_{\text{max}} = 13.1$ m
+
+\subsection*{Parte c) Tiempo total de vuelo}
+
+El balón regresa a su nivel original cuando $y = 0$:
+\begin{align*}
+    y &= v_{0y} t - \frac{1}{2}gt^2 = 0 \\
+    t(v_{0y} - \frac{1}{2}gt) &= 0
+\end{align*}
+
+Esto da dos soluciones: $t = 0$ (lanzamiento) y:
+\begin{align*}
+    v_{0y} - \frac{1}{2}gt &= 0 \\
+    t_{\text{total}} &= \frac{2v_{0y}}{g} \\
+    t_{\text{total}} &= \frac{2(16.0)}{9.8} \\
+    t_{\text{total}} &= 3.265 \text{ s}
+\end{align*}
+
+\textbf{Tiempo total:} $t_{\text{total}} = 3.27$ s
+
+\textbf{Relación con el inciso a):}
+\begin{equation*}
+    t_{\text{total}} = 2 \times t_{\text{max}} = 2 \times 1.63 = 3.26 \text{ s}
+\end{equation*}
+
+El tiempo total es exactamente el doble del tiempo para alcanzar la altura máxima. Esto se debe a la simetría del movimiento parabólico.
+
+\subsection*{Parte d) Distancia horizontal (alcance)}
+
+El balón mantiene velocidad horizontal constante:
+\begin{align*}
+    R &= v_{0x} \times t_{\text{total}} \\
+    R &= 20.0 \times 3.265 \\
+    R &= 65.3 \text{ m}
+\end{align*}
+
+\textbf{Alcance horizontal:} $R = 65.3$ m
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{a) Tiempo al punto más alto:}
+\begin{equation}
+    \boxed{t_{\text{max}} = 1.63 \text{ s}}
+\end{equation}
+
+\textbf{b) Altura máxima:}
+\begin{equation}
+    \boxed{h_{\text{max}} = 13.1 \text{ m}}
+\end{equation}
+
+\textbf{c) Tiempo total de vuelo:}
+\begin{equation}
+    \boxed{t_{\text{total}} = 3.27 \text{ s} = 2 \times t_{\text{max}}}
+\end{equation}
+
+\textbf{d) Alcance horizontal:}
+\begin{equation}
+    \boxed{R = 65.3 \text{ m}}
+\end{equation}
+
+\end{resultadobox}
+
+\section{Parte e) Gráficas del Movimiento}
+
+\subsection{Gráfica $x$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición horizontal $x$ (m)},
+    xmin=0, xmax=3.5,
+    ymin=0, ymax=70,
+    grid=major,
+    title={Posición horizontal vs tiempo}
+]
+\addplot[blue, thick, domain=0:3.265] {20*x};
+\addplot[red, only marks, mark=*] coordinates {(1.633,32.66) (3.265,65.3)};
+\node[above] at (axis cs:1.633,32.66) {$(1.63, 32.7)$};
+\node[above right] at (axis cs:3.265,65.3) {$(3.27, 65.3)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $y$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=3.5,
+    ymin=0, ymax=15,
+    grid=major,
+    title={Altura vs tiempo}
+]
+\addplot[blue, thick, domain=0:3.265] {16*x - 4.9*x^2};
+\addplot[red, only marks, mark=*] coordinates {(1.633,13.06) (3.265,0)};
+\node[above right] at (axis cs:1.633,13.06) {Máximo: $(1.63, 13.1)$};
+\node[below] at (axis cs:3.265,0) {$(3.27, 0)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $v_x$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad horizontal $v_x$ (m/s)},
+    xmin=0, xmax=3.5,
+    ymin=0, ymax=25,
+    grid=major,
+    title={Velocidad horizontal vs tiempo}
+]
+\addplot[blue, thick, domain=0:3.265] {20};
+\node[above] at (axis cs:1.6,20) {$v_x = 20.0$ m/s (constante)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $v_y$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad vertical $v_y$ (m/s)},
+    xmin=0, xmax=3.5,
+    ymin=-20, ymax=20,
+    grid=major,
+    title={Velocidad vertical vs tiempo}
+]
+\addplot[blue, thick, domain=0:3.265] {16 - 9.8*x};
+\addplot[red, only marks, mark=*] coordinates {(1.633,0) (3.265,-16)};
+\node[right] at (axis cs:1.633,0) {$v_y = 0$ en el máximo};
+\node[below right] at (axis cs:3.265,-16) {$(3.27, -16.0)$};
+\draw[dashed] (axis cs:0,0) -- (axis cs:3.5,0);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Verificación}
+
+\subsection{Verificación de simetría}
+
+La velocidad vertical al regresar al nivel original debe ser igual en magnitud pero opuesta en dirección a la velocidad inicial:
+\begin{align*}
+    v_y(t_{\text{total}}) &= v_{0y} - g t_{\text{total}} \\
+    &= 16.0 - 9.8(3.265) \\
+    &= 16.0 - 32.0 \\
+    &= -16.0 \text{ m/s} \quad \checkmark
+\end{align*}
+
+\subsection{Verificación del alcance}
+
+Usando la fórmula del alcance para lanzamiento desde el nivel del suelo:
+\begin{align*}
+    R &= \frac{2v_{0x}v_{0y}}{g} \\
+    R &= \frac{2(20.0)(16.0)}{9.8} \\
+    R &= \frac{640}{9.8} \\
+    R &= 65.3 \text{ m} \quad \checkmark
+\end{align*}
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item \textbf{Simetría del movimiento parabólico:} El tiempo de subida es igual al tiempo de bajada.
+
+    \item \textbf{Velocidad horizontal constante:} No hay aceleración en la dirección horizontal.
+
+    \item \textbf{Altura máxima cuando $v_y = 0$:} En el punto más alto, toda la velocidad es horizontal.
+
+    \item \textbf{Simetría de velocidades:} La velocidad vertical al impacto es igual en magnitud pero opuesta a la velocidad vertical inicial.
+\end{enumerate}
+
+\section{Fórmulas Utilizadas}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Resumen de Fórmulas]
+
+\textbf{Tiempo al punto máximo:}
+\begin{equation*}
+    t_{\text{max}} = \frac{v_{0y}}{g} = \frac{16.0}{9.8} = 1.63 \text{ s}
+\end{equation*}
+
+\textbf{Altura máxima:}
+\begin{equation*}
+    h_{\text{max}} = \frac{v_{0y}^2}{2g} = \frac{(16.0)^2}{2(9.8)} = 13.1 \text{ m}
+\end{equation*}
+
+\textbf{Tiempo total:}
+\begin{equation*}
+    t_{\text{total}} = \frac{2v_{0y}}{g} = 2t_{\text{max}} = 3.27 \text{ s}
+\end{equation*}
+
+\textbf{Alcance horizontal:}
+\begin{equation*}
+    R = v_{0x} t_{\text{total}} = 20.0 \times 3.27 = 65.3 \text{ m}
+\end{equation*}
+
+\end{tcolorbox}
+
+\end{document}

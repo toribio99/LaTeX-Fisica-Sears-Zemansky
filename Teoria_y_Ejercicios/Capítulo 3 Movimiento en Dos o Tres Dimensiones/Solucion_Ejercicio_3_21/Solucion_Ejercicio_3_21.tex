@@ -1,0 +1,310 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.21} \\
+\large Gane el Premio - Moneda en el Platito}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[10]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=2]
+    % Suelo
+    \draw[fill=brown!20, thick] (-0.5,0) rectangle (3,-0.35);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,-0.35) rectangle (3,-0.45);
+
+    % Persona lanzando
+    \draw[fill=blue!20, thick] (0,0) circle (0.08);
+    \node[below, font=\small] at (0,-0.06) {Lanzador};
+
+    % Plataforma con platito
+    \draw[fill=gray!30, thick] (2.1,1.53) rectangle (2.5,1.63);
+    \draw[fill=yellow!40, thick] (2.25,1.63) circle (0.08);
+    \node[above right, font=\scriptsize] at (2,1.7) {Platito};
+    \node[right, font=\scriptsize] at (2.5,1.58) {Repisa};
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0,0) -- (0.4,0.693);
+    \node[blue!70!black, above left, font=\small] at (-0.35,0) {$\vec{v}_0=6.4$ m/s};
+
+    % Componentes de velocidad
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (0,0) -- (0.4,0);
+    \node[red, below, font=\scriptsize] at (0.7,0.06) {$v_{0x}=3.2$ m/s};
+
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (0.4,0) -- (0.4,0.693);
+    \node[red, right, font=\scriptsize] at (0.4,0.35) {$v_{0y}=5.54$ m/s};
+
+    % Ángulo
+    \draw[thick] (0.15,0) arc (0:60:0.15);
+    \node[font=\scriptsize] at (0.22,0.14) {$60°$};
+
+    % Trayectoria parabólica correcta
+    % Ecuación: y = tan(60°)*x - (g/(2*v₀²*cos²(60°)))*x²
+    % y = 1.732*x - 0.477*x²
+    % Verificación: en x=2.1, y = 1.732(2.1) - 0.477(2.1)² = 3.637 - 2.102 = 1.535 m ✓
+    \draw[red!70!black, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:2.1, samples=100, smooth] (\x, {1.732*\x - 0.477*\x*\x});
+
+    % Punto de impacto en el platito
+    \filldraw[orange!80!black] (2.1,1.53) circle (0.06);
+    \node[orange!80!black, left, font=\scriptsize] at (3.05,1.4) {$(2.1, 1.53)$ m};
+
+    % Línea punteada vertical
+    \draw[orange!80!black, dotted, thick] (2.1,1.53) -- (2.1,0);
+
+    % Altura de la repisa
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.3,0) -- (-0.3,1.53);
+    \node[left, font=\small] at (-0.3,1.5) {$h=?$};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.6) -- (2.1,-0.6);
+    \node[below, font=\small] at (1.05,-0.6) {$x = 2.1$ m};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Gane el premio. En una feria, se gana una jirafa de peluche lanzando una moneda a un platito, el cual está sobre una repisa más arriba del punto en que la moneda sale de la mano y a una distancia horizontal de 2.1 m desde ese punto. Si lanza la moneda con velocidad de 6.4 m/s, a un ángulo de 60° sobre la horizontal, la moneda caerá en el platito. Ignore la resistencia del aire.
+
+\begin{enumerate}
+	\item[a)] ¿A qué altura está la repisa sobre el punto donde se lanza la moneda?
+	\item[b)] ¿Qué componente vertical tiene la velocidad de la moneda justo antes de caer en el platito?
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad inicial:} $v_0 = 6.4$ m/s
+    \item \textbf{Ángulo de lanzamiento:} $\theta_0 = 60°$
+    \item \textbf{Distancia horizontal al platito:} $x = 2.1$ m
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Posición inicial:} $x_0 = 0$, $y_0 = 0$ (nivel de lanzamiento)
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un proyectil lanzado desde el origen con velocidad inicial $v_0$ a un ángulo $\theta_0$:
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align}
+    v_{0x} &= v_0 \cos\theta_0 \\
+    v_{0y} &= v_0 \sin\theta_0
+\end{align}
+
+\textbf{Ecuaciones de posición:}
+\begin{align}
+    x(t) &= v_{0x}t \\
+    y(t) &= v_{0y}t - \frac{1}{2}gt^2
+\end{align}
+
+\textbf{Ecuaciones de velocidad:}
+\begin{align}
+    v_x(t) &= v_{0x} \quad \text{(constante)} \\
+    v_y(t) &= v_{0y} - gt
+\end{align}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Componentes de la velocidad inicial}
+
+Calculamos las componentes horizontal y vertical de la velocidad inicial:
+
+\begin{align}
+    v_{0x} &= v_0 \cos\theta_0 = (6.4 \text{ m/s}) \cos(60°) \\
+    v_{0x} &= (6.4 \text{ m/s})(0.5) = 3.2 \text{ m/s}
+\end{align}
+
+\begin{align}
+    v_{0y} &= v_0 \sin\theta_0 = (6.4 \text{ m/s}) \sin(60°) \\
+    v_{0y} &= (6.4 \text{ m/s})(0.866) = 5.542 \text{ m/s}
+\end{align}
+
+\subsection*{Paso 2: Tiempo de vuelo hasta el platito}
+
+La moneda recorre una distancia horizontal de $x = 2.1$ m hasta llegar al platito. Como el movimiento horizontal tiene velocidad constante, el tiempo se obtiene de:
+
+\begin{equation}
+    x = v_{0x}t
+\end{equation}
+
+Despejando $t$:
+
+\begin{align}
+    t &= \frac{x}{v_{0x}} = \frac{2.1 \text{ m}}{3.2 \text{ m/s}} \\
+    t &= 0.65625 \text{ s}
+\end{align}
+
+\subsection*{Parte a): Altura de la repisa}
+
+Usamos la ecuación de posición vertical para calcular la altura $h$ (que es $y$) en el instante en que la moneda llega al platito:
+
+\begin{equation}
+    y = v_{0y}t - \frac{1}{2}gt^2
+\end{equation}
+
+Sustituyendo los valores:
+
+\begin{align}
+    h &= (5.542 \text{ m/s})(0.65625 \text{ s}) - \frac{1}{2}(9.8 \text{ m/s}^2)(0.65625 \text{ s})^2 \\
+    h &= 3.637 \text{ m} - \frac{1}{2}(9.8 \text{ m/s}^2)(0.4307 \text{ s}^2) \\
+    h &= 3.637 \text{ m} - 2.110 \text{ m} \\
+    h &= 1.527 \text{ m} \approx 1.53 \text{ m}
+\end{align}
+
+\subsection*{Parte b): Componente vertical de la velocidad}
+
+La componente vertical de la velocidad en el instante en que la moneda llega al platito se calcula con:
+
+\begin{equation}
+    v_y = v_{0y} - gt
+\end{equation}
+
+Sustituyendo los valores:
+
+\begin{align}
+    v_y &= 5.542 \text{ m/s} - (9.8 \text{ m/s}^2)(0.65625 \text{ s}) \\
+    v_y &= 5.542 \text{ m/s} - 6.431 \text{ m/s} \\
+    v_y &= -0.889 \text{ m/s} \approx -0.89 \text{ m/s}
+\end{align}
+
+El signo negativo indica que la componente vertical de la velocidad apunta hacia abajo en el momento en que la moneda cae en el platito.
+
+\subsection*{Verificación de la ecuación de la trayectoria}
+
+La trayectoria parabólica tiene la forma:
+
+\begin{equation}
+    y = (\tan\theta_0)x - \frac{g}{2v_0^2\cos^2\theta_0}x^2
+\end{equation}
+
+Sustituyendo valores:
+
+\begin{align}
+    y &= \tan(60°)x - \frac{9.8}{2(6.4)^2\cos^2(60°)}x^2 \\
+    y &= 1.732x - \frac{9.8}{2(40.96)(0.25)}x^2 \\
+    y &= 1.732x - \frac{9.8}{20.48}x^2 \\
+    y &= 1.732x - 0.478x^2
+\end{align}
+
+Verificación en $x = 2.1$ m:
+\begin{equation}
+    y = 1.732(2.1) - 0.478(2.1)^2 = 3.637 - 2.110 = 1.527 \text{ m} \checkmark
+\end{equation}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{Parte a) Altura de la repisa:}
+\begin{equation}
+    \boxed{h = 1.53 \text{ m}}
+\end{equation}
+
+La repisa está a una altura de \textbf{1.53 metros} sobre el punto desde donde se lanza la moneda.
+
+\vspace{0.3cm}
+
+\textbf{Parte b) Componente vertical de la velocidad:}
+\begin{equation}
+    \boxed{v_y = -0.89 \text{ m/s}}
+\end{equation}
+
+La componente vertical de la velocidad de la moneda justo antes de caer en el platito es \textbf{$-0.89$ m/s} (hacia abajo).
+
+\vspace{0.3cm}
+
+\textbf{Información adicional:}
+\begin{itemize}
+    \item Tiempo de vuelo: $t = 0.656$ s
+    \item Componente horizontal de velocidad (constante): $v_x = 3.2$ m/s
+    \item Velocidad total al llegar al platito: $v = \sqrt{v_x^2 + v_y^2} = \sqrt{(3.2)^2 + (-0.89)^2} = 3.32$ m/s
+    \item Ángulo de la velocidad respecto a la horizontal: $\alpha = \arctan\left(\frac{v_y}{v_x}\right) = \arctan\left(\frac{-0.89}{3.2}\right) = -15.5°$ (bajo la horizontal)
+\end{itemize}
+
+\end{resultadobox}
+
+\section{Análisis y Conclusión}
+
+Este problema ilustra un caso típico de movimiento de proyectiles donde conocemos el punto de impacto y la velocidad inicial. Las conclusiones principales son:
+
+\begin{enumerate}
+    \item La moneda sigue una trayectoria parabólica descrita por $y = 1.732x - 0.478x^2$
+
+    \item A pesar de que la moneda se lanza con un ángulo de 60° (muy empinado), cuando llega al platito su trayectoria está descendiendo con un ángulo de solo 15.5° bajo la horizontal.
+
+    \item La componente vertical de la velocidad ha cambiado de $+5.54$ m/s (hacia arriba) a $-0.89$ m/s (hacia abajo), mientras que la componente horizontal se mantiene constante en $3.2$ m/s durante todo el vuelo.
+
+    \item La altura de 1.53 m es razonable para una repisa en un juego de feria, y el tiempo de vuelo de aproximadamente 0.66 segundos hace que el juego sea desafiante pero factible.
+\end{enumerate}
+
+\end{document}

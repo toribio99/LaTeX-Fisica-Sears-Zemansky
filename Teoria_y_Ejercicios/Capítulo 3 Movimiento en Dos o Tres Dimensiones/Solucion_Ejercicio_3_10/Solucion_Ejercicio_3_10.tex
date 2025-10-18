@@ -1,0 +1,502 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+\NewDocumentCommand{\figuratikz}{ O{l} O{0.5} m m m m}{%
+	% #1 = posición (l o r), default: l
+	% #2 = ancho como fracción (0.25, 0.5, etc.), default: 0.5
+	% #3 = entorno TIKZ
+	% #3 = caption
+		\begin{wrapfigure}{#1}{#2\textwidth}
+		\centering
+		\vspace{-\baselineskip} % Ajuste vertical más suave
+		{3}
+		\caption{#4}
+		\vspace{-\baselineskip} % Reduce espacio después
+		\end{wrapfigure}
+	}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.10} \\
+\large Movimiento de Proyectiles: Bomba desde Helicóptero}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+
+\begin{wrapfigure}[10]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.015]
+    % Cielo
+    \fill[blue!10] (-50,0) rectangle (550,320);
+
+    % Helicóptero inicial
+    \draw[fill=gray!60, thick] (0,300) ellipse (20 and 5);
+    \draw[fill=gray!70, thick] (-5,300) rectangle (5,310);
+    \draw[thick] (-15,312) -- (15,312);
+    \node at (45,270) {\small Helicóptero};
+
+    % Flecha de velocidad del helicóptero
+    \draw[-{Latex[length=5mm]},red!70!black, ultra thick] (20,305) -- (60,305)
+        node[midway,above] {$v_0 = 60.0$ m/s};
+
+    % Bomba cayendo
+    \filldraw[red!70!black] (0,300) circle (3);
+
+    % Trayectoria parabólica de la bomba (ecuación física real: y = y0 - (g/(2v0^2))*x^2)
+    % Para v0 = 60.0 m/s, g = 9.8 m/s^2: coeficiente = 0.00136
+    \draw[blue!70!black, thick, dashed, -{Latex[length=3mm]}]
+        plot[domain=0:470, samples=100, smooth] (\x, {300 - 0.00136*(\x)*(\x)});
+
+    % Helicóptero al final
+    \draw[fill=gray!40, thick, dashed] (470,300) ellipse (20 and 5);
+    \draw[fill=gray!50, thick, dashed] (465,300) rectangle (475,310);
+    \draw[thick, dashed] (455,312) -- (485,312);
+
+    % Línea punteada vertical
+    \draw[dotted, thick] (470,0) -- (470,300);
+
+    % Suelo
+    \draw[fill=green!40!brown, thick] (-50,0) rectangle (550,-10);
+    \draw[pattern=north east lines, pattern color=brown!50] (-50,-10) rectangle (550,-20);
+
+    % Cotas
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (-30,0) -- (-30,300) node[midway,right] {300 m};
+
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (0,-40) -- (470,-40) node[midway,below] {$d = ?$};
+
+    % Etiquetas
+    \node[blue!70!black] at (235,150) {Trayectoria de la bomba};
+    \node at (470,326) {\small Posición final del helicóptero};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un helicóptero militar está en una misión de entrenamiento y vuela horizontalmente con una rapidez de 60.0 m/s y accidentalmente suelta una bomba (desactivada, por suerte) a una altitud de 300 m. Puede despreciarse la resistencia del aire.
+
+\begin{enumerate}
+	\item[a)] ¿Qué tiempo tarda la bomba en llegar al suelo?
+	\item[b)] ¿Qué distancia horizontal viaja mientras cae?
+\end{enumerate}
+
+\begin{enumerate}
+	\item[c)] Obtenga las componentes horizontal y vertical de su velocidad justo antes de llegar al suelo.
+	\item[d)] Dibuje gráficas $x$-$t$, $y$-$t$, $v_x$-$t$ y $v_y$-$t$ para el movimiento de la bomba.
+	\item[e)] ¿Dónde está el helicóptero cuando la bomba toca tierra, si la rapidez del helicóptero se mantuvo constante?
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad del helicóptero:} $v_0 = 60.0$ m/s (horizontal)
+    \item \textbf{Altitud inicial:} $h = 300$ m
+    \item \textbf{Velocidad inicial vertical de la bomba:} $v_{0y} = 0$
+    \item \textbf{Aceleración de la gravedad:} $g = 9.8$ m/s$^2$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Ecuaciones del Movimiento de Proyectiles}
+
+Para un objeto lanzado horizontalmente desde una altura $h$:
+
+\textbf{Movimiento horizontal:}
+\begin{align}
+    x &= v_0 t \\
+    v_x &= v_0 = \text{constante}
+\end{align}
+
+\textbf{Movimiento vertical:}
+\begin{align}
+    y &= h - \frac{1}{2}gt^2 \\
+    v_y &= -gt
+\end{align}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Tiempo de caída}
+
+La bomba cae desde una altura de 300 m hasta el suelo.
+
+Usando la ecuación del movimiento vertical:
+\begin{align*}
+    y &= h - \frac{1}{2}gt^2 \\
+    0 &= 300 - \frac{1}{2}(9.8)t^2 \\
+    0 &= 300 - 4.9t^2 \\
+    4.9t^2 &= 300 \\
+    t^2 &= \frac{300}{4.9} \\
+    t^2 &= 61.22 \\
+    t &= \sqrt{61.22} \\
+    t &= 7.82 \text{ s}
+\end{align*}
+
+También podemos usar la fórmula directa:
+\begin{equation*}
+    t = \sqrt{\frac{2h}{g}} = \sqrt{\frac{2(300)}{9.8}} = \sqrt{61.22} = 7.82 \text{ s}
+\end{equation*}
+
+\textbf{Tiempo de caída:} $t = 7.82$ s
+
+\subsection*{Parte b) Distancia horizontal}
+
+La bomba mantiene la velocidad horizontal del helicóptero (60.0 m/s) durante toda su caída:
+
+\begin{align*}
+    d &= v_0 t \\
+    d &= (60.0)(7.82) \\
+    d &= 469.2 \text{ m} \\
+    d &\approx 469 \text{ m}
+\end{align*}
+
+\textbf{Distancia horizontal:} $d = 469$ m
+
+\subsection*{Parte c) Componentes de velocidad al impactar}
+
+\subsubsection*{Componente horizontal:}
+\begin{equation*}
+    v_x = v_0 = 60.0 \text{ m/s}
+\end{equation*}
+
+\subsubsection*{Componente vertical:}
+\begin{align*}
+    v_y &= -gt \\
+    v_y &= -(9.8)(7.82) \\
+    v_y &= -76.6 \text{ m/s}
+\end{align*}
+
+(El signo negativo indica movimiento hacia abajo)
+
+También podemos calcularla usando:
+\begin{align*}
+    v_y &= -\sqrt{2gh} \\
+    v_y &= -\sqrt{2(9.8)(300)} \\
+    v_y &= -\sqrt{5880} \\
+    v_y &= -76.7 \text{ m/s}
+\end{align*}
+
+\subsubsection*{Magnitud de la velocidad:}
+\begin{align*}
+    v &= \sqrt{v_x^2 + v_y^2} \\
+    v &= \sqrt{(60.0)^2 + (76.6)^2} \\
+    v &= \sqrt{3600 + 5868} \\
+    v &= \sqrt{9468} \\
+    v &= 97.3 \text{ m/s}
+\end{align*}
+
+\subsubsection*{Dirección:}
+\begin{align*}
+    \theta &= \arctan\left(\frac{|v_y|}{v_x}\right) \\
+    \theta &= \arctan\left(\frac{76.6}{60.0}\right) \\
+    \theta &= \arctan(1.277) \\
+    \theta &= 51.9°
+\end{align*}
+
+La bomba impacta con un ángulo de 51.9° por debajo de la horizontal.
+
+\subsection*{Parte e) Posición del helicóptero}
+
+Si el helicóptero mantiene su velocidad constante de 60.0 m/s, en 7.82 s habrá recorrido:
+
+\begin{align*}
+    d_h &= v_0 t \\
+    d_h &= (60.0)(7.82) \\
+    d_h &= 469 \text{ m}
+\end{align*}
+
+\textbf{El helicóptero está directamente encima del punto de impacto de la bomba}, a 300 m de altura.
+
+Esto se debe a que tanto el helicóptero como la bomba tienen la misma velocidad horizontal, por lo que la bomba siempre está directamente debajo del helicóptero durante la caída.
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Parte a) Tiempo de caída}
+\begin{equation}
+    \boxed{t = 7.82 \text{ s}}
+\end{equation}
+
+\subsection*{Parte b) Distancia horizontal}
+\begin{equation}
+    \boxed{d = 469 \text{ m}}
+\end{equation}
+
+\subsection*{Parte c) Velocidad al impactar}
+
+\textbf{Componentes:}
+\begin{itemize}
+    \item Horizontal: $v_x = 60.0$ m/s
+    \item Vertical: $v_y = 76.6$ m/s (hacia abajo)
+\end{itemize}
+
+\textbf{Magnitud:}
+\begin{equation}
+    \boxed{v = 97.3 \text{ m/s}}
+\end{equation}
+
+\textbf{Dirección:}
+\begin{equation}
+    \boxed{\theta = 51.9° \text{ por debajo de la horizontal}}
+\end{equation}
+
+\subsection*{Parte e) Posición del helicóptero}
+
+\begin{equation}
+    \boxed{\text{Directamente encima del punto de impacto, a 300 m de altura}}
+\end{equation}
+
+\end{resultadobox}
+
+\section{Parte d) Gráficas del Movimiento}
+
+\subsection{Gráfica $x$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición horizontal $x$ (m)},
+    xmin=0, xmax=8.5,
+    ymin=0, ymax=500,
+    grid=major,
+    title={Posición horizontal vs tiempo}
+]
+\addplot[blue, thick, domain=0:7.82] {60*x};
+\addplot[red, only marks, mark=*] coordinates {(7.82,469.2)};
+\node[above right] at (axis cs:7.82,469.2) {$(7.82, 469)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $y$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=8.5,
+    ymin=0, ymax=350,
+    grid=major,
+    title={Altura vs tiempo}
+]
+\addplot[blue, thick, domain=0:7.82] {300 - 4.9*x^2};
+\addplot[red, only marks, mark=*] coordinates {(7.82,0)};
+\node[below right] at (axis cs:7.82,0) {$(7.82, 0)$};
+\node[above left] at (axis cs:0,300) {Altitud inicial: 300 m};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $v_x$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad horizontal $v_x$ (m/s)},
+    xmin=0, xmax=8.5,
+    ymin=0, ymax=70,
+    grid=major,
+    title={Velocidad horizontal vs tiempo}
+]
+\addplot[blue, thick, domain=0:7.82] {60};
+\addplot[red, only marks, mark=*] coordinates {(7.82,60)};
+\node[above] at (axis cs:4,60) {$v_x = 60.0$ m/s (constante)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $v_y$ vs $t$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad vertical $v_y$ (m/s)},
+    xmin=0, xmax=8.5,
+    ymin=-85, ymax=5,
+    grid=major,
+    title={Velocidad vertical vs tiempo}
+]
+\addplot[blue, thick, domain=0:7.82] {-9.8*x};
+\addplot[red, only marks, mark=*] coordinates {(7.82,-76.6)};
+\node[below right] at (axis cs:7.82,-76.6) {$(7.82, -76.6)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Verificación}
+
+\subsection{Verificación con energía}
+
+Usando conservación de energía mecánica:
+\begin{align*}
+    \frac{1}{2}mv_f^2 &= \frac{1}{2}mv_0^2 + mgh \\
+    v_f^2 &= v_0^2 + 2gh \\
+    v_f^2 &= (60.0)^2 + 2(9.8)(300) \\
+    v_f^2 &= 3600 + 5880 \\
+    v_f^2 &= 9480 \\
+    v_f &= 97.4 \text{ m/s} \quad \checkmark
+\end{align*}
+
+\subsection{Verificación de la distancia}
+
+\begin{align*}
+    d &= v_0 \sqrt{\frac{2h}{g}} \\
+    d &= 60.0 \sqrt{\frac{2(300)}{9.8}} \\
+    d &= 60.0 \sqrt{61.22} \\
+    d &= 60.0 \times 7.82 \\
+    d &= 469 \text{ m} \quad \checkmark
+\end{align*}
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item \textbf{Herencia de velocidad:} La bomba hereda la velocidad horizontal del helicóptero en el momento de soltarse.
+
+    \item \textbf{Independencia de movimientos:} El movimiento horizontal (uniforme) es independiente del vertical (acelerado).
+
+    \item \textbf{Posición relativa:} Durante toda la caída, la bomba permanece directamente debajo del helicóptero.
+
+    \item \textbf{Alta velocidad de impacto:} La bomba impacta a 97.3 m/s (≈ 350 km/h), debido a la combinación de las velocidades horizontal y vertical.
+
+    \item \textbf{Gran alcance horizontal:} La altura de 300 m permite un tiempo de caída de casi 8 segundos, resultando en un alcance de casi medio kilómetro.
+\end{enumerate}
+
+\section{Análisis Adicional}
+
+\subsection{¿Por qué el helicóptero está encima del impacto?}
+
+Este es un resultado contraintuitivo pero importante. La bomba y el helicóptero tienen la misma velocidad horizontal (60.0 m/s) durante toda la caída. Por lo tanto:
+
+\begin{itemize}
+    \item Ambos recorren la misma distancia horizontal en el mismo tiempo
+    \item La bomba está siempre directamente debajo del helicóptero
+    \item Desde el helicóptero, parecería que la bomba cae verticalmente
+\end{itemize}
+
+\subsection{Conversión de unidades}
+
+\textbf{Velocidad del helicóptero:}
+\begin{equation*}
+    60.0 \text{ m/s} \times 3.6 = 216 \text{ km/h}
+\end{equation*}
+
+\textbf{Velocidad de impacto:}
+\begin{equation*}
+    97.3 \text{ m/s} \times 3.6 = 350 \text{ km/h}
+\end{equation*}
+
+\section{Resumen de Fórmulas}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Fórmulas Clave para este Problema]
+
+\textbf{Tiempo de caída desde altura $h$:}
+\begin{equation*}
+    t = \sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Alcance horizontal:}
+\begin{equation*}
+    d = v_0 t = v_0\sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Velocidad vertical al impactar:}
+\begin{equation*}
+    v_y = \sqrt{2gh}
+\end{equation*}
+
+\textbf{Velocidad total al impactar:}
+\begin{equation*}
+    v = \sqrt{v_0^2 + 2gh}
+\end{equation*}
+
+\textbf{Para este problema:}
+\begin{align*}
+    h &= 300 \text{ m}, \quad v_0 = 60.0 \text{ m/s} \\
+    t &= 7.82 \text{ s}, \quad d = 469 \text{ m} \\
+    v &= 97.3 \text{ m/s}, \quad \theta = 51.9°
+\end{align*}
+
+\end{tcolorbox}
+
+\end{document}

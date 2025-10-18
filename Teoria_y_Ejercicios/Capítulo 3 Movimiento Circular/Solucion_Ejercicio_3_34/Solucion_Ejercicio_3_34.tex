@@ -1,0 +1,394 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.34} \\
+\large Movimiento Circular: Rueda con Aceleración Variable}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[14]{r}{.4\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Estructura de la rueda
+    \draw[blue!50!black, very thick] (0,0) circle (3.5);
+
+    % Eje central
+    \filldraw[green!35!white] (0,0) circle (0.2);
+
+    % Pasajero en punto más bajo
+    \filldraw[red!70!black] (0,-3.5) circle (0.25);
+    \node[red!70!black, below] at (1.2,-3.4) {\textbf{Pasajero}};
+
+    % Vector velocidad (tangente, hacia la izquierda)
+    \draw[-{Latex[length=4mm]}, green!60!black, ultra thick, line width=2pt]
+        (0,-3.5) -- (-2,-3.5);
+    \node[green!60!black, above] at (-3,-3.4) {$\vec{v}$};
+    \node[green!60!black, below] at (-3,-3.2) {$3.00$ m/s};
+
+    % Vector aceleración radial (hacia arriba, hacia el centro)
+    \draw[-{Latex[length=3mm]}, blue!70!black, ultra thick, line width=1.5pt]
+        (0,-3.5) -- (0,-2);
+    \node[blue!70!black, , rotate=90, anchor=south] at (0.5,-1.6) {$\vec{a}_{\text{rad}}$};
+    \node[blue!70!black, , rotate=90, anchor=south] at (0.5,0.2) {$=0.643$ m/s$^2$};
+
+    % Vector aceleración tangencial (misma dirección que v)
+    \draw[-{Latex[length=3mm]}, orange!80!black, ultra thick, line width=1.5pt]
+        (0,-3.5) -- (-1,-3.5);
+    \node[orange!80!black, below] at (-0.5,-3.5) {$\vec{a}_{\text{tan}}$};
+    \node[orange!80!black, below] at (-0.5,-3.9) {$0.500$ m/s$^2$};
+
+    % Vector aceleración total
+    \draw[-{Latex[length=4mm]}, red!70!black, ultra thick, line width=2pt]
+        (0,-3.5) -- (-0.94,-2.19);
+    \node[red!70!black, left] at (-0.7,-1.5) {$\vec{a}_{\text{total}}$};
+    \node[red!70!black, left] at (-0.1,-2) {$0.817$ m/s$^2$};
+
+    % Ángulo
+    \draw[violet, ultra thick] (0,-3.5) -- (0,-2.5);
+    \draw[violet, -Latex, thick] (-0.3,-3.2) arc (180:146:0.5);
+    \node at (-0.8,-3) {$\theta$};
+
+    % Radio marcado
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (0.5,0) -- (0.5,-3.5);
+    \node[right] at (0.6,-1.75) {$R = 14.0$ m};
+
+    % Flecha de rotación antihorario
+    \draw[-{Latex[length=4mm]}, purple!70!black, very thick]
+        (-2.5,2.5) arc (135:90:3.5);
+    \node[purple!70!black] at (-0.2,3.2) {Sentido};
+    \node[purple!70!black] at (-0.2,2.8) {antihorario};
+
+    \node[below, align=center] at (0,-4.5) {\textbf{Movimiento circular} \\ \textbf{NO uniforme} (acelerando)};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+La rueda de la figura 3.42, que gira en sentido antihorario, se acaba de poner en movimiento. En un instante dado, un pasajero en el borde de la rueda que está pasando por el punto más bajo de su movimiento circular tiene una rapidez de 3.00 m/s, la cual está aumentando a razón de 0.500 m/s$^2$. \\[.1mm]
+
+a) Calcule la magnitud y la dirección de la aceleración del pasajero en este instante. \\[.1mm]
+
+b) Dibuje la rueda de la fortuna y el pasajero mostrando sus vectores de velocidad y aceleración. \\[.1mm]
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Radio de la rueda:} $R = 14.0$ m (dato del ejercicio 3.33)
+    \item \textbf{Rapidez instantánea:} $v = 3.00$ m/s
+    \item \textbf{Razón de cambio de rapidez:} $\frac{dv}{dt} = 0.500$ m/s$^2$ (aceleración tangencial)
+    \item \textbf{Posición:} Punto más bajo de la trayectoria circular
+    \item \textbf{Sentido de rotación:} Antihorario
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Movimiento Circular No Uniforme}
+
+A diferencia del movimiento circular uniforme, aquí la rapidez cambia con el tiempo. Por lo tanto, hay DOS componentes de aceleración:
+
+\subsubsection*{1. Aceleración Radial (Centrípeta)}
+
+Dirigida hacia el centro del círculo:
+\begin{equation*}
+    a_{\text{rad}} = \frac{v^2}{R}
+\end{equation*}
+
+Esta componente cambia la \textbf{dirección} del movimiento.
+
+\subsubsection*{2. Aceleración Tangencial}
+
+Tangente a la trayectoria circular:
+\begin{equation*}
+    a_{\text{tan}} = \frac{d|\vec{v}|}{dt}
+\end{equation*}
+
+Esta componente cambia la \textbf{magnitud} (rapidez) del movimiento.
+
+\subsection{Aceleración Total}
+
+La aceleración total es la suma vectorial de ambas componentes:
+
+\begin{equation*}
+    \vec{a}_{\text{total}} = \vec{a}_{\text{rad}} + \vec{a}_{\text{tan}}
+\end{equation*}
+
+Como estas componentes son perpendiculares entre sí:
+
+\begin{equation*}
+    |\vec{a}_{\text{total}}| = \sqrt{a_{\text{rad}}^2 + a_{\text{tan}}^2}
+\end{equation*}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Calcular la aceleración radial}
+
+\begin{align*}
+    a_{\text{rad}} &= \frac{v^2}{R} \\
+    &= \frac{(3.00 \text{ m/s})^2}{14.0 \text{ m}} \\
+    &= \frac{9.00 \text{ m}^2\text{/s}^2}{14.0 \text{ m}} \\
+    &= 0.643 \text{ m/s}^2
+\end{align*}
+
+\textbf{Dirección:} Hacia arriba (hacia el centro de la rueda), ya que el pasajero está en el punto más bajo.
+
+\subsection*{Paso 2: Identificar la aceleración tangencial}
+
+Del enunciado:
+\begin{equation*}
+    a_{\text{tan}} = 0.500 \text{ m/s}^2
+\end{equation*}
+
+\textbf{Dirección:} Como la rapidez está aumentando y la rueda gira en sentido antihorario, en el punto más bajo la aceleración tangencial apunta hacia la \textbf{izquierda} (en la misma dirección que la velocidad).
+
+\subsection*{Paso 3: Calcular la magnitud de la aceleración total}
+
+Como $\vec{a}_{\text{rad}}$ y $\vec{a}_{\text{tan}}$ son perpendiculares:
+
+\begin{align*}
+    |\vec{a}_{\text{total}}| &= \sqrt{a_{\text{rad}}^2 + a_{\text{tan}}^2} \\
+    &= \sqrt{(0.643)^2 + (0.500)^2} \\
+    &= \sqrt{0.413 + 0.250} \\
+    &= \sqrt{0.663} \\
+    &= 0.814 \text{ m/s}^2 \\
+    &\approx 0.81 \text{ m/s}^2
+\end{align*}
+
+\subsection*{Paso 4: Determinar la dirección de la aceleración total}
+
+El ángulo $\theta$ que forma la aceleración total con la vertical (dirección radial) es:
+
+\begin{align*}
+    \tan\theta &= \frac{a_{\text{tan}}}{a_{\text{rad}}} \\
+    &= \frac{0.500}{0.643} \\
+    &= 0.778
+\end{align*}
+
+\begin{align*}
+    \theta &= \arctan(0.778) \\
+    &= 37.9° \\
+    &\approx 38°
+\end{align*}
+
+\textbf{Dirección completa:} La aceleración total tiene una magnitud de 0.81 m/s$^2$ y apunta \textbf{hacia arriba y a la izquierda}, formando un ángulo de aproximadamente 38° con respecto a la vertical (o 52° con respecto a la horizontal).
+
+\subsection*{Parte b) Diagrama (ver figura al inicio)}
+
+El diagrama muestra:
+\begin{itemize}
+    \item $\vec{v}$: Velocidad (tangente, hacia la izquierda)
+    \item $\vec{a}_{\text{rad}}$: Aceleración radial (hacia arriba, hacia el centro)
+    \item $\vec{a}_{\text{tan}}$: Aceleración tangencial (hacia la izquierda, misma dirección que $\vec{v}$)
+    \item $\vec{a}_{\text{total}}$: Aceleración total (suma vectorial de las dos anteriores)
+\end{itemize}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Parte a) Aceleración del pasajero}
+
+\textbf{Magnitud:}
+\begin{equation*}
+    \boxed{|\vec{a}_{\text{total}}| = 0.81 \text{ m/s}^2}
+\end{equation*}
+
+\textbf{Dirección:}
+\begin{equation*}
+    \boxed{\text{38° desde la vertical hacia la izquierda}}
+\end{equation*}
+
+O equivalentemente: \textbf{52° por encima de la horizontal hacia la izquierda}.
+
+\vspace{0.3cm}
+
+\textbf{Componentes:}
+\begin{align*}
+    a_{\text{rad}} &= 0.64 \text{ m/s}^2 \quad \text{(hacia arriba)} \\
+    a_{\text{tan}} &= 0.50 \text{ m/s}^2 \quad \text{(hacia la izquierda)}
+\end{align*}
+
+\subsection*{Parte b) Diagrama}
+
+Ver figura al inicio del documento.
+
+\end{resultadobox}
+
+\section{Análisis Adicional}
+
+\subsection{Comparación: Uniforme vs No Uniforme}
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Característica} & \textbf{MCU} & \textbf{MCNU} \\
+ & \textbf{(Ej. 3.33)} & \textbf{(Ej. 3.34)} \\
+\hline
+Rapidez & Constante & Variable \\
+\hline
+$a_{\text{tan}}$ & 0 & $\neq 0$ \\
+\hline
+$a_{\text{rad}}$ & $v^2/R$ & $v^2/R$ \\
+\hline
+Dirección de $\vec{a}$ & Siempre radial & Combina radial + tangencial \\
+\hline
+Magnitud de $\vec{a}$ & Constante & Variable \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evolución de las aceleraciones}
+
+A medida que la rueda aumenta su velocidad:
+
+\begin{itemize}
+    \item $a_{\text{tan}}$ permanece constante (0.500 m/s$^2$)
+    \item $a_{\text{rad}} = v^2/R$ aumenta proporcionalmente a $v^2$
+    \item La magnitud de $\vec{a}_{\text{total}}$ aumenta
+    \item El ángulo $\theta$ disminuye (la aceleración se hace más radial)
+\end{itemize}
+
+\subsection{Tabla: Evolución temporal}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Rapidez $v$ (m/s)} & \textbf{$a_{\text{rad}}$ (m/s$^2$)} & \textbf{$|\vec{a}|$ (m/s$^2$)} & \textbf{Ángulo $\theta$} \\
+\hline
+3.00 & 0.64 & 0.81 & 38° \\
+\hline
+5.00 & 1.79 & 1.86 & 16° \\
+\hline
+7.00 & 3.50 & 3.54 & 8° \\
+\hline
+10.00 & 7.14 & 7.16 & 4° \\
+\hline
+\end{tabular}
+\end{center}
+
+A velocidades mayores, la aceleración es casi completamente radial.
+
+\subsection{Gráfica de componentes}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7cm,
+    xlabel={Rapidez $v$ (m/s)},
+    ylabel={Aceleración (m/s$^2$)},
+    xmin=0, xmax=10,
+    ymin=0, ymax=8,
+    grid=major,
+    legend pos=north west,
+    title={Evolución de las aceleraciones al aumentar la rapidez}
+]
+
+% arad = v²/R con R=14.0
+\addplot[blue, thick, domain=0:10, samples=50] {x^2/14};
+
+% atan = constante
+\addplot[orange, thick, domain=0:10] {0.5};
+
+% |a| = sqrt(arad² + atan²)
+\addplot[red, thick, domain=0:10, samples=50] {sqrt((x^2/14)^2 + 0.5^2)};
+
+% Punto actual
+\addplot[green!60!black, only marks, mark=*, mark size=3pt] coordinates {(3, 0.643)};
+\addplot[orange, only marks, mark=*, mark size=3pt] coordinates {(3, 0.5)};
+\addplot[red, only marks, mark=*, mark size=3pt] coordinates {(3, 0.814)};
+
+\legend{$a_{\text{rad}} = v^2/R$, $a_{\text{tan}} = 0.50$ m/s$^2$, $|\vec{a}_{\text{total}}|$}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item En movimiento circular NO uniforme hay dos componentes de aceleración: radial y tangencial
+
+    \item La aceleración radial cambia la dirección del movimiento (apunta al centro)
+
+    \item La aceleración tangencial cambia la rapidez (paralela o antiparalela a la velocidad)
+
+    \item Ambas componentes son perpendiculares entre sí
+
+    \item La aceleración total es la suma vectorial: $\vec{a} = \vec{a}_{\text{rad}} + \vec{a}_{\text{tan}}$
+
+    \item A medida que aumenta la rapidez, la componente radial se vuelve dominante
+
+    \item La dirección de la aceleración total forma un ángulo con la dirección radial
+\end{enumerate}
+
+\end{document}

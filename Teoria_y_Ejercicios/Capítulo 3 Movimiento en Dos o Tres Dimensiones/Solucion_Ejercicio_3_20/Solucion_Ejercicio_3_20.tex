@@ -1,0 +1,766 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.20} \\
+\large Lanzamiento de Bala}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[10]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=.85]
+    % Suelo (ajustado a la nueva escala)
+    \draw[fill=brown!20, thick] (-1,0) rectangle (8.5,-0.3);
+    \draw[pattern=north east lines, pattern color=brown] (-1,-0.3) rectangle (8.5,-0.5);
+
+    % Plataforma de lanzamiento
+    \draw[fill=gray!30, thick] (-0.5,0) rectangle (0.5,2);
+    \node[right] at (0.6,1) {\small Plataforma};
+    \node[right] at (0.6,0.5) {\small $h_0 = 2$ m};
+
+    % Punto de lanzamiento
+    \filldraw[blue!70!black] (0,2) circle (0.15);
+    \node[below] at (-0.6,2.6) {\small Lanzador};
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=3mm]},blue!70!black, very thick] (0,2) -- (1.2,3.48)
+        node[midway,above left] {$\vec{v}_0$};
+
+    % Componentes
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (0,2) -- (1.2,2)
+        node[midway,below] {$v_{0x}$};
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (1.2,2) -- (1.2,3.48)
+        node[midway,right] {$v_{0y}$};
+
+    % Ángulo
+    \draw[thick] (0.6,2) arc (0:51:0.6);
+    \node at (0.9,2.3) {$51°$};
+
+    % Trayectoria parabólica desde altura inicial
+    % Ecuación correcta: y = h0 + tan(θ)*x - (g/(2*v0^2*cos^2(θ)))*x^2
+    % Coeficiente correcto: b = 9.8/(2*12^2*cos^2(51°)) = 9.8/(2*144*0.396) = 0.0859
+    % y = 2 + 1.2349*x - 0.0859*x^2 (en metros)
+    % Alcance: R = 15.9 m, Altura máxima: 6.44 m en x = 7.18 m
+    % Escala: 1 unidad gráfica = 2 m → x_graf = x_m/2
+    % y_graf = 2 + 1.2349*(2*x_graf) - 0.0859*(2*x_graf)^2
+    % y_graf = 2 + 2.4698*x_graf - 0.3436*x_graf^2
+    \draw[red!70!black, very thick, -{Latex[length=3mm]}]
+        plot[domain=0:7.95, samples=100, smooth] (\x, {2 + 2.4698*\x - 0.3436*\x*\x});
+
+    % Punto de altura máxima (x_m = 7.18 m → x_graf = 3.59, y = 6.44)
+    \filldraw[green!50!black] (3.59,6.44) circle (0.12);
+    \node[green!50!black, above, font=\small] at (3.59,6.44) {$h_{\text{máx}}=6.44$ m};
+
+    % Línea de altura máxima
+    \draw[green!50!black, dotted, thick] (3.59,6.44) -- (3.59,0);
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-1.2,0) -- (-1.2,6.44)
+        node[below,right,font=\small] {$h_{\text{máx}}$};
+
+    % Alcance horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-1.0) -- (7.95,-1.0)
+        node[midway,below] {$R = 15.9$ m};
+
+    % Punto de impacto
+    \filldraw[red!70!black] (7.95,0) circle (0.12);
+    \node[below] at (7.95,-0.5) {\small Impacto};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Se lanza una bala con velocidad inicial de 12.0 m/s, a un ángulo de 51.0° sobre la horizontal desde un punto a 2.00 m de altura. Calcule:
+
+\begin{enumerate}
+	\item[a)] Las componentes $x$ e $y$ de la velocidad inicial.
+	\item[b)] El tiempo que tarda la bala en alcanzar la altura máxima.
+	\item[c)] La altura máxima sobre el suelo.
+	\item[d)] El tiempo total de vuelo.
+	\item[e)] El alcance horizontal total.
+\end{enumerate}
+
+\begin{enumerate}
+	\item[f)] Las componentes de velocidad de la bala justo antes de golpear el suelo.
+\end{enumerate}
+
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad inicial:} $v_0 = 12.0$ m/s
+    \item \textbf{Ángulo de lanzamiento:} $\theta_0 = 51.0°$
+    \item \textbf{Altura inicial:} $h_0 = 2.00$ m
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Altura final:} $y_f = 0$ m (nivel del suelo)
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un proyectil lanzado desde una altura $h_0$ con velocidad inicial $v_0$ a un ángulo $\theta_0$:
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align*}
+    v_{0x} &= v_0 \cos\theta_0 \\
+    v_{0y} &= v_0 \sin\theta_0
+\end{align*}
+
+\textbf{Ecuaciones de posición:}
+\begin{align*}
+    x(t) &= v_{0x}t \\
+    y(t) &= h_0 + v_{0y}t - \frac{1}{2}gt^2
+\end{align*}
+
+\textbf{Ecuaciones de velocidad:}
+\begin{align*}
+    v_x(t) &= v_{0x} \quad \text{(constante)} \\
+    v_y(t) &= v_{0y} - gt
+\end{align*}
+
+\textbf{Tiempo hasta altura máxima:}
+\begin{equation}
+    t_{\text{máx}} = \frac{v_{0y}}{g}
+\end{equation}
+
+\textbf{Altura máxima:}
+\begin{equation}
+    h_{\text{máx}} = h_0 + \frac{v_{0y}^2}{2g}
+\end{equation}
+
+\textbf{Tiempo total de vuelo (hasta llegar al suelo):}
+
+Se obtiene resolviendo $y(t) = 0$:
+\begin{equation}
+    0 = h_0 + v_{0y}t - \frac{1}{2}gt^2
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Componentes de velocidad inicial}
+
+\textbf{Componente horizontal:}
+\begin{align*}
+    v_{0x} &= v_0 \cos\theta_0 \\
+    v_{0x} &= 12.0 \times \cos(51.0°) \\
+    v_{0x} &= 12.0 \times 0.6293 \\
+    v_{0x} &= 7.55 \text{ m/s}
+\end{align*}
+
+\textbf{Componente vertical:}
+\begin{align*}
+    v_{0y} &= v_0 \sin\theta_0 \\
+    v_{0y} &= 12.0 \times \sin(51.0°) \\
+    v_{0y} &= 12.0 \times 0.7771 \\
+    v_{0y} &= 9.33 \text{ m/s}
+\end{align*}
+
+\subsection*{Parte b) Tiempo hasta altura máxima}
+
+En la altura máxima, $v_y = 0$:
+\begin{align*}
+    0 &= v_{0y} - gt_{\text{máx}} \\
+    t_{\text{máx}} &= \frac{v_{0y}}{g} \\
+    t_{\text{máx}} &= \frac{9.33}{9.8} \\
+    t_{\text{máx}} &= 0.952 \text{ s}
+\end{align*}
+
+\subsection*{Parte c) Altura máxima sobre el suelo}
+
+Usando la ecuación de posición en $t = t_{\text{máx}}$:
+\begin{align*}
+    h_{\text{máx}} &= h_0 + v_{0y}t_{\text{máx}} - \frac{1}{2}g t_{\text{máx}}^2 \\
+    h_{\text{máx}} &= 2.00 + 9.33 \times 0.952 - \frac{1}{2} \times 9.8 \times (0.952)^2 \\
+    h_{\text{máx}} &= 2.00 + 8.88 - 4.44 \\
+    h_{\text{máx}} &= 6.44 \text{ m}
+\end{align*}
+
+\textbf{Forma alternativa:}
+\begin{align*}
+    h_{\text{máx}} &= h_0 + \frac{v_{0y}^2}{2g} \\
+    h_{\text{máx}} &= 2.00 + \frac{(9.33)^2}{2 \times 9.8} \\
+    h_{\text{máx}} &= 2.00 + \frac{87.05}{19.6} \\
+    h_{\text{máx}} &= 2.00 + 4.44 \\
+    h_{\text{máx}} &= 6.44 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection*{Parte d) Tiempo total de vuelo}
+
+La bala regresa al suelo cuando $y = 0$. Usamos:
+\begin{equation}
+    0 = h_0 + v_{0y}t - \frac{1}{2}gt^2
+\end{equation}
+
+Reordenando:
+\begin{equation}
+    \frac{1}{2}gt^2 - v_{0y}t - h_0 = 0
+\end{equation}
+
+Sustituyendo valores:
+\begin{equation}
+    4.9t^2 - 9.33t - 2.00 = 0
+\end{equation}
+
+Usando la fórmula cuadrática:
+\begin{equation}
+    t = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} = \frac{9.33 \pm \sqrt{(-9.33)^2 - 4(4.9)(-2.00)}}{2(4.9)}
+\end{equation}
+
+\begin{align*}
+    t &= \frac{9.33 \pm \sqrt{87.05 + 39.2}}{9.8} \\
+    t &= \frac{9.33 \pm \sqrt{126.25}}{9.8} \\
+    t &= \frac{9.33 \pm 11.24}{9.8}
+\end{align*}
+
+Tomando la solución positiva:
+\begin{align*}
+    t_{\text{total}} &= \frac{9.33 + 11.24}{9.8} \\
+    t_{\text{total}} &= \frac{20.57}{9.8} \\
+    t_{\text{total}} &= 2.10 \text{ s}
+\end{align*}
+
+\subsection*{Parte e) Alcance horizontal total}
+
+El alcance horizontal es:
+\begin{align*}
+    R &= v_{0x} \times t_{\text{total}} \\
+    R &= 7.55 \times 2.10 \\
+    R &= 15.9 \text{ m}
+\end{align*}
+
+\subsection*{Parte f) Velocidad justo antes del impacto}
+
+\textbf{Componente horizontal (constante):}
+\begin{equation}
+    v_x = v_{0x} = 7.55 \text{ m/s}
+\end{equation}
+
+\textbf{Componente vertical:}
+\begin{align*}
+    v_y &= v_{0y} - gt_{\text{total}} \\
+    v_y &= 9.33 - 9.8 \times 2.10 \\
+    v_y &= 9.33 - 20.58 \\
+    v_y &= -11.25 \text{ m/s}
+\end{align*}
+
+El signo negativo indica que la bala se está moviendo hacia abajo.
+
+\textbf{Magnitud de la velocidad:}
+\begin{align*}
+    |\vec{v}| &= \sqrt{v_x^2 + v_y^2} \\
+    |\vec{v}| &= \sqrt{(7.55)^2 + (-11.25)^2} \\
+    |\vec{v}| &= \sqrt{57.00 + 126.56} \\
+    |\vec{v}| &= \sqrt{183.56} \\
+    |\vec{v}| &= 13.5 \text{ m/s}
+\end{align*}
+
+\textbf{Dirección:}
+\begin{align*}
+    \theta &= \arctan\left(\frac{|v_y|}{v_x}\right) \\
+    \theta &= \arctan\left(\frac{11.25}{7.55}\right) \\
+    \theta &= \arctan(1.490) \\
+    \theta &= 56.1°
+\end{align*}
+
+La velocidad forma un ángulo de $56.1°$ debajo de la horizontal.
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{a) Componentes de velocidad inicial:}
+\begin{align*}
+    &\boxed{v_{0x} = 7.55 \text{ m/s}} \\
+    &\boxed{v_{0y} = 9.33 \text{ m/s}}
+\end{align*}
+
+\vspace{0.3cm}
+
+\textbf{b) Tiempo hasta altura máxima:}
+\begin{equation*}
+    \boxed{t_{\text{máx}} = 0.952 \text{ s}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{c) Altura máxima sobre el suelo:}
+\begin{equation*}
+    \boxed{h_{\text{máx}} = 6.44 \text{ m}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{d) Tiempo total de vuelo:}
+\begin{equation*}
+    \boxed{t_{\text{total}} = 2.10 \text{ s}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{e) Alcance horizontal:}
+\begin{equation*}
+    \boxed{R = 15.9 \text{ m}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{f) Velocidad al impactar:}
+\begin{itemize}
+    \item Componentes: $v_x = 7.55$ m/s, $v_y = -11.25$ m/s
+    \item Magnitud: $\boxed{|\vec{v}| = 13.5 \text{ m/s}}$
+    \item Dirección: $\boxed{\theta = 56.1° \text{ debajo de la horizontal}}$
+\end{itemize}
+
+\end{resultadobox}
+
+\section{Verificación}
+
+\subsection*{Conservación de energía}
+
+Verificamos usando conservación de energía mecánica:
+
+\textbf{Energía inicial (en el lanzamiento):}
+\begin{align*}
+    E_0 &= \frac{1}{2}mv_0^2 + mgh_0 \\
+    E_0 &= \frac{1}{2}m(12.0)^2 + m(9.8)(2.00) \\
+    E_0 &= 72m + 19.6m \\
+    E_0 &= 91.6m \text{ J}
+\end{align*}
+
+\textbf{Energía final (al impactar):}
+\begin{align*}
+    E_f &= \frac{1}{2}m|\vec{v}_f|^2 + mg(0) \\
+    E_f &= \frac{1}{2}m(13.5)^2 \\
+    E_f &= 91.1m \text{ J}
+\end{align*}
+
+La pequeña diferencia ($0.5\%$) se debe al redondeo. ¡La energía se conserva! $\checkmark$
+
+\subsection*{Asimetría del vuelo}
+
+A diferencia de un lanzamiento desde el suelo, aquí el tiempo de subida NO es igual al tiempo de bajada:
+
+\begin{itemize}
+    \item Tiempo de subida: $t_{\text{máx}} = 0.952$ s
+    \item Tiempo de bajada: $t_{\text{total}} - t_{\text{máx}} = 2.10 - 0.952 = 1.15$ s
+    \item Relación: $\frac{t_{\text{bajada}}}{t_{\text{subida}}} = \frac{1.15}{0.952} = 1.21$
+\end{itemize}
+
+La bala tarda más tiempo en bajar porque tiene que recorrer una mayor distancia vertical (desde 6.44 m hasta 0 m) que la que sube (desde 2.00 m hasta 6.44 m).
+
+\subsection*{Velocidad final mayor que velocidad inicial}
+
+\begin{equation}
+    |\vec{v}_f| = 13.5 \text{ m/s} > v_0 = 12.0 \text{ m/s}
+\end{equation}
+
+Esto ocurre porque la bala termina a un nivel más bajo que el punto de lanzamiento, ganando energía cinética a expensas de energía potencial gravitacional.
+
+\section{Análisis Físico}
+
+\subsection{Características del lanzamiento de bala}
+
+\begin{enumerate}
+    \item \textbf{Ventaja de la altura inicial:}
+    \begin{itemize}
+        \item La altura inicial de 2.00 m aumenta el alcance
+        \item Un lanzador más alto tiene ventaja
+        \item La bala permanece más tiempo en el aire
+    \end{itemize}
+
+    \item \textbf{Ángulo de 51°:}
+    \begin{itemize}
+        \item Ligeramente mayor que 45° (ángulo óptimo desde el suelo)
+        \item Favorece altura sobre alcance
+        \item Apropiado para lanzamiento desde altura
+    \end{itemize}
+
+    \item \textbf{Alcance de 15.9 m:}
+    \begin{itemize}
+        \item Distancia considerable para una velocidad inicial de 12 m/s
+        \item En competencia olímpica, las marcas superan los 20 m
+        \item Los atletas profesionales lanzan a velocidades de 13-14 m/s
+    \end{itemize}
+
+    \item \textbf{Velocidad de impacto mayor:}
+    \begin{itemize}
+        \item La bala gana velocidad al caer desde altura
+        \item Aterriza con más energía cinética que la inicial
+        \item Ángulo de impacto (56.1°) mayor que ángulo de lanzamiento (51.0°)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Contexto deportivo}
+
+En el lanzamiento de bala olímpico:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % Círculo de lanzamiento
+    \draw[thick, fill=gray!20] (0,0) circle (2.135);
+    \node at (0,-3) {Círculo de lanzamiento};
+    \node at (0,-3.5) {(diámetro 2.135 m)};
+
+    % Línea de lanzamiento
+    \draw[very thick, red] (-2.135,0) -- (2.135,0);
+
+    % Trayectoria
+    \draw[-{Latex[length=3mm]}, blue, very thick] (0,0.5) -- (15.9,0);
+    \node[above, blue] at (7.95,0.5) {Alcance: 15.9 m};
+
+    % Zona válida de caída
+    \draw[thick, green!50!black, dashed] (0,0) -- (11,11);
+    \draw[thick, green!50!black, dashed] (0,0) -- (11,-11);
+    \node[green!50!black] at (13,0) {Sector de 34.92°};
+
+    % Punto de impacto
+    \filldraw[red] (15.9,0) circle (0.2);
+\end{tikzpicture}
+\end{center}
+
+\textbf{Récords olímpicos:}
+\begin{itemize}
+    \item Hombres: 23.30 m (Ryan Crouser, 2021)
+    \item Mujeres: 22.41 m (Natalya Lisovskaya, 1987)
+\end{itemize}
+
+\section{Gráficas del Movimiento}
+
+\subsection{Trayectoria en el plano $xy$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=13cm,
+    height=8cm,
+    xlabel={Distancia horizontal $x$ (m)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=17,
+    ymin=0, ymax=7,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% Trayectoria: y = 2 + 1.2349*x - 0.2058*x^2
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:15.9,
+    samples=100,
+    smooth
+] {2 + 1.2349*x - 0.2058*x^2};
+\addlegendentry{Trayectoria}
+
+% Punto de lanzamiento
+\addplot[
+    mark=*,
+    mark size=4pt,
+    blue!70!black,
+    only marks
+] coordinates {(0, 2.0)};
+\addlegendentry{Lanzamiento}
+
+% Punto de altura máxima
+\addplot[
+    mark=*,
+    mark size=4pt,
+    green!50!black,
+    only marks
+] coordinates {(7.18, 6.44)};
+\addlegendentry{Altura máxima}
+
+% Punto de impacto
+\addplot[
+    mark=*,
+    mark size=4pt,
+    red!70!black,
+    only marks
+] coordinates {(15.9, 0)};
+\addlegendentry{Impacto}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Posición vertical vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=2.3,
+    ymin=0, ymax=7,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% y(t) = 2 + 9.33t - 4.9t^2
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:2.10,
+    samples=100
+] {2 + 9.33*x - 4.9*x^2};
+\addlegendentry{$y(t)$}
+
+% Punto de lanzamiento
+\addplot[
+    mark=*,
+    mark size=4pt,
+    blue!70!black,
+    only marks
+] coordinates {(0, 2.0)};
+\addlegendentry{$t=0$ s}
+
+% Punto de altura máxima
+\addplot[
+    mark=*,
+    mark size=4pt,
+    green!50!black,
+    only marks
+] coordinates {(0.952, 6.44)};
+\addlegendentry{$t_{\text{máx}}=0.952$ s}
+
+% Punto de impacto
+\addplot[
+    mark=*,
+    mark size=4pt,
+    red!70!black,
+    only marks
+] coordinates {(2.10, 0)};
+\addlegendentry{$t_{\text{total}}=2.10$ s}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Velocidad vertical vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad $v_y$ (m/s)},
+    xmin=0, xmax=2.3,
+    ymin=-12, ymax=10,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% vy(t) = 9.33 - 9.8t
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:2.10,
+    samples=50
+] {9.33 - 9.8*x};
+\addlegendentry{$v_y(t) = 9.33 - 9.8t$}
+
+% Punto inicial
+\addplot[
+    mark=*,
+    mark size=4pt,
+    blue!70!black,
+    only marks
+] coordinates {(0, 9.33)};
+\addlegendentry{$v_{0y} = 9.33$ m/s}
+
+% Punto donde vy=0
+\addplot[
+    mark=*,
+    mark size=4pt,
+    green!50!black,
+    only marks
+] coordinates {(0.952, 0)};
+\addlegendentry{$v_y=0$ en $t_{\text{máx}}$}
+
+% Punto final
+\addplot[
+    mark=*,
+    mark size=4pt,
+    red!70!black,
+    only marks
+] coordinates {(2.10, -11.25)};
+\addlegendentry{$v_y = -11.25$ m/s}
+
+% Línea y=0
+\addplot[
+    dashed,
+    black,
+    domain=0:2.10
+] {0};
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Rapidez (magnitud de velocidad) vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Rapidez $|\vec{v}|$ (m/s)},
+    xmin=0, xmax=2.3,
+    ymin=7, ymax=14,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=south east
+]
+
+% |v(t)| = sqrt(vx^2 + vy^2) = sqrt(7.55^2 + (9.33-9.8t)^2)
+\addplot[
+    blue!70!black,
+    very thick,
+    domain=0:2.10,
+    samples=100,
+    smooth
+] {sqrt(7.55^2 + (9.33 - 9.8*x)^2)};
+\addlegendentry{$|\vec{v}(t)|$}
+
+% Punto inicial
+\addplot[
+    mark=*,
+    mark size=4pt,
+    blue!70!black,
+    only marks
+] coordinates {(0, 12.0)};
+\addlegendentry{$v_0 = 12.0$ m/s}
+
+% Punto de mínima rapidez (altura máxima)
+\addplot[
+    mark=*,
+    mark size=4pt,
+    green!50!black,
+    only marks
+] coordinates {(0.952, 7.55)};
+\addlegendentry{Mínima: 7.55 m/s}
+
+% Punto final
+\addplot[
+    mark=*,
+    mark size=4pt,
+    red!70!black,
+    only marks
+] coordinates {(2.10, 13.5)};
+\addlegendentry{$v_f = 13.5$ m/s}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Observaciones Importantes}
+
+\begin{enumerate}
+    \item \textbf{Efecto de la altura inicial:} La altura de 2.00 m aumenta el alcance y el tiempo de vuelo comparado con un lanzamiento desde el suelo.
+
+    \item \textbf{Rapidez mínima en altura máxima:} La rapidez mínima es $v_x = 7.55$ m/s, que ocurre en el punto más alto.
+
+    \item \textbf{Velocidad de impacto:} La bala impacta con mayor velocidad (13.5 m/s) que la inicial (12.0 m/s) debido a la conversión de energía potencial a cinética.
+
+    \item \textbf{Ángulos de lanzamiento e impacto:} El ángulo de lanzamiento (51°) es menor que el ángulo de impacto (56.1°), mostrando la asimetría del movimiento.
+
+    \item \textbf{Asimetría temporal:} El tiempo de bajada (1.15 s) es mayor que el tiempo de subida (0.952 s).
+
+    \item \textbf{Ventaja competitiva:} En competencia, cada metro extra de altura del lanzador puede significar centímetros adicionales de alcance.
+\end{enumerate}
+
+\section{Comparación con lanzamiento desde el suelo}
+
+Si la bala se lanzara con la misma velocidad y ángulo desde el suelo ($h_0 = 0$):
+
+\textbf{Tiempo de vuelo:}
+\begin{equation}
+    t'_{\text{total}} = \frac{2v_{0y}}{g} = \frac{2 \times 9.33}{9.8} = 1.90 \text{ s}
+\end{equation}
+
+\textbf{Alcance:}
+\begin{equation}
+    R' = v_{0x} \times t'_{\text{total}} = 7.55 \times 1.90 = 14.3 \text{ m}
+\end{equation}
+
+\textbf{Ganancia por altura:}
+\begin{equation}
+    \Delta R = R - R' = 15.9 - 14.3 = 1.6 \text{ m}
+\end{equation}
+
+La altura inicial de 2.00 m proporciona 1.6 m adicionales de alcance, ¡un aumento del 11\%!
+
+\end{document}

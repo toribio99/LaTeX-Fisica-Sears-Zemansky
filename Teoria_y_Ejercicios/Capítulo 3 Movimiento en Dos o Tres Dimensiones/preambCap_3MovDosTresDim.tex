@@ -1,0 +1,189 @@
+% ================================================================================
+% PREÁMBULO DEL CAPÍTULO 3: MOVIMIENTO EN DOS O TRES DIMENSIONES
+% Física Universitaria - Sears y Zemansky
+% ================================================================================
+%
+% Este archivo contiene todas las configuraciones, paquetes y definiciones
+% necesarias para compilar los ejercicios del Capítulo 3.
+%
+% AUTOR: Generado automáticamente
+% FECHA: \today
+% VERSIÓN: 1.0
+%
+% MODO DE USO:
+%   Este archivo debe ser invocado desde main.tex usando:
+%   \input{preambCap_3MovDosTresDim}
+%
+% ================================================================================
+
+% --------------------------------------------------------------------------------
+% CLASE DEL DOCUMENTO
+% --------------------------------------------------------------------------------
+% Utilizamos la clase 'article' con tamaño de fuente 11pt y papel A4
+\documentclass[11pt,a4paper]{article}
+
+% --------------------------------------------------------------------------------
+% CODIFICACIÓN Y FUENTES
+% --------------------------------------------------------------------------------
+% Configura la codificación de entrada como UTF-8 para soportar caracteres especiales
+\usepackage[utf8]{inputenc}
+
+% Configura la codificación de fuentes como T1 para mejor renderizado
+\usepackage[T1]{fontenc}
+
+% --------------------------------------------------------------------------------
+% IDIOMA Y LOCALIZACIÓN
+% --------------------------------------------------------------------------------
+% Configura el idioma del documento como español con babel
+\usepackage[spanish]{babel}
+
+% --------------------------------------------------------------------------------
+% GEOMETRÍA DE LA PÁGINA
+% --------------------------------------------------------------------------------
+% Configura los márgenes del documento
+% Márgenes de 2.5 cm en todos los lados para mejor aprovechamiento del espacio
+\usepackage[margin=2.5cm]{geometry}
+
+% --------------------------------------------------------------------------------
+% PAQUETES MATEMÁTICOS
+% --------------------------------------------------------------------------------
+% amsmath: Proporciona entornos y comandos mejorados para matemáticas
+\usepackage{amsmath}
+
+% amssymb: Proporciona símbolos matemáticos adicionales
+\usepackage{amssymb}
+
+% --------------------------------------------------------------------------------
+% COLORES
+% --------------------------------------------------------------------------------
+% xcolor: Permite usar colores en el documento
+\usepackage{xcolor}
+
+% Definición de colores personalizados para el documento
+\definecolor{azuloscuro}{RGB}{0,51,102}      % Color para marcos de datos
+\definecolor{azulclaro}{RGB}{230,240,250}    % Color de fondo para datos
+\definecolor{verdeoscuro}{RGB}{0,100,0}      % Color para marcos de soluciones
+\definecolor{rojoclaro}{RGB}{255,230,230}    % Color de fondo para resultados
+
+% --------------------------------------------------------------------------------
+% CAJAS Y ENTORNOS PERSONALIZADOS
+% --------------------------------------------------------------------------------
+% tcolorbox: Permite crear cajas coloreadas y personalizadas
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems,skins,breakable}
+
+% Caja para presentar los datos del problema
+\newtcolorbox{datosbox}{
+    colback=azulclaro,           % Color de fondo
+    colframe=azuloscuro,         % Color del marco
+    fonttitle=\bfseries,         % Título en negrita
+    title=Datos del Problema,    % Título de la caja
+    sharp corners,               % Esquinas rectas
+    boxrule=1pt                  % Grosor del marco
+}
+
+% Caja para el desarrollo de la solución
+\newtcolorbox{solucionbox}{
+    colback=white,               % Fondo blanco
+    colframe=verdeoscuro,        % Marco verde oscuro
+    fonttitle=\bfseries,         % Título en negrita
+    title=Desarrollo de la Solución,
+    sharp corners,               % Esquinas rectas
+    boxrule=1pt,                 % Grosor del marco
+    breakable                    % Permite dividir en páginas
+}
+
+% Caja para presentar el resultado final
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,           % Fondo rojo claro
+    colframe=red!70!black,       % Marco rojo oscuro
+    fonttitle=\bfseries,         % Título en negrita
+    title=Resultado Final,       % Título de la caja
+    sharp corners,               % Esquinas rectas
+    boxrule=2pt                  % Marco más grueso para destacar
+}
+
+% --------------------------------------------------------------------------------
+% GRÁFICOS Y FIGURAS
+% --------------------------------------------------------------------------------
+% graphicx: Permite incluir imágenes
+\usepackage{graphicx}
+
+% tikz: Sistema poderoso para crear gráficos vectoriales
+\usepackage{tikz}
+
+% pgfplots: Para crear gráficas y plots científicos
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}      % Versión de compatibilidad
+
+% Librerías adicionales de TikZ
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+
+% --------------------------------------------------------------------------------
+% REFERENCIAS CRUZADAS Y ENLACES
+% --------------------------------------------------------------------------------
+% hyperref: Crea enlaces internos y externos en el documento
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,             % Enlaces coloreados en lugar de cajas
+    linkcolor=blue,              % Color de enlaces internos
+    filecolor=magenta,           % Color de enlaces a archivos
+    urlcolor=cyan,               % Color de URLs
+    citecolor=green,             % Color de citas
+    bookmarks=true,              % Crea marcadores en el PDF
+    bookmarksnumbered=true,      % Numera los marcadores
+    pdftitle={Capítulo 3: Movimiento en Dos o Tres Dimensiones},
+    pdfauthor={Física Universitaria - Sears y Zemansky},
+    pdfsubject={Ejercicios Resueltos},
+    pdfkeywords={Física, Movimiento, Cinemática, Proyectiles}
+}
+
+% --------------------------------------------------------------------------------
+% FORMATO DE TÍTULOS Y SECCIONES
+% --------------------------------------------------------------------------------
+% titlesec: Personaliza el formato de títulos
+\usepackage{titlesec}
+
+% Formato para capítulos de ejercicios
+\titleformat{\section}
+    {\normalfont\Large\bfseries\color{azuloscuro}}
+    {Ejercicio \thesection:}
+    {1em}
+    {}
+
+% --------------------------------------------------------------------------------
+% ENCABEZADOS Y PIES DE PÁGINA
+% --------------------------------------------------------------------------------
+% fancyhdr: Personaliza encabezados y pies de página
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}                       % Limpia todos los encabezados y pies
+\fancyhead[L]{\leftmark}         % Título de sección a la izquierda
+\fancyhead[R]{Capítulo 3}        % "Capítulo 3" a la derecha
+\fancyfoot[C]{\thepage}          % Número de página centrado
+\renewcommand{\headrulewidth}{0.4pt}  % Línea del encabezado
+\renewcommand{\footrulewidth}{0.4pt}  % Línea del pie de página
+
+% --------------------------------------------------------------------------------
+% COMANDOS PERSONALIZADOS
+% --------------------------------------------------------------------------------
+% Comando para vector con flecha
+\newcommand{\vect}[1]{\vec{#1}}
+
+% Comando para valor absoluto
+\newcommand{\abs}[1]{\left|#1\right|}
+
+% Comando para destacar resultados importantes
+\newcommand{\importante}[1]{\textbf{\color{red!70!black}#1}}
+
+% --------------------------------------------------------------------------------
+% CONFIGURACIÓN DE LISTAS
+% --------------------------------------------------------------------------------
+% enumitem: Personaliza listas
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*}
+\setlist[enumerate]{leftmargin=*}
+
+% --------------------------------------------------------------------------------
+% FIN DEL PREÁMBULO
+% --------------------------------------------------------------------------------

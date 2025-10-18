@@ -1,0 +1,286 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.14} \\
+\large Movimiento de Proyectiles: Canica y Cavidad}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[10]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=1.2]
+    % Plataforma
+    \draw[fill=brown!30, very thick] (0,0) rectangle (2,3);
+    \draw[fill=brown!50] (0,3) rectangle (2,3.2);
+
+    % Suelo
+    \draw[fill=gray!20, thick] (-1,-0.2) rectangle (6,0);
+    \draw[pattern=north east lines, pattern color=gray] (-1,-0.4) rectangle (6,-0.2);
+
+    % Cavidad
+    \draw[fill=white, very thick] (4,-0.2) rectangle (5.5,0);
+
+    % Canica
+    \filldraw[red!70!black] (2,3) circle (0.1);
+    \draw[-{Latex[length=3mm]},red!70!black, ultra thick] (2,3) -- (3,3) node[midway,above] {$v_0$};
+
+    % Trayectoria parabólica (ecuación física real: y = y0 - (g/(2v0^2))*(x-x0)^2)
+    % Para ilustración con v0 ≈ 3.5 m/s (intermedia): coeficiente = 0.40
+    \draw[blue!70!black, thick, dashed, -{Latex[length=2mm]}]
+        plot[domain=2:4.75, samples=50, smooth] (\x, {3 - 0.40*(\x-2)*(\x-2)});
+
+    % Cotas
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.5,0) -- (-0.5,3) node[midway,left] {2.75 m};
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (2,-0.7) -- (4,-0.7) node[midway,below] {2.00 m};
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (4,-0.9) -- (5.5,-0.9) node[midway,below] {1.50 m};
+
+    % Etiquetas
+    \node at (1,1.5) {Plataforma};
+    \node at (4.75,-.55) {\small Cavidad};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Una pequeña canica rueda horizontalmente con una rapidez $v_0$ y cae desde la parte superior de una plataforma de 2.75 m de alto, sin que sufra resistencia del aire. A nivel del piso, a 2.00 m de la base de la plataforma, hay una cavidad de 1.50 m de ancho (figura 3.40).
+
+\textbf{Pregunta:} ¿En qué intervalo de rapideces $v_0$ la canica caerá dentro de la cavidad?
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Altura de la plataforma:} $h = 2.75$ m
+    \item \textbf{Distancia horizontal a la cavidad:} $x_1 = 2.00$ m (borde cercano)
+    \item \textbf{Ancho de la cavidad:} $\Delta x = 1.50$ m
+    \item \textbf{Distancia al borde lejano:} $x_2 = 2.00 + 1.50 = 3.50$ m
+    \item \textbf{Velocidad inicial vertical:} $v_{0y} = 0$ (movimiento horizontal)
+    \item \textbf{Aceleración de la gravedad:} $g = 9.8$ m/s$^2$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Según la teoría de movimiento de proyectiles (Sección 3.3 del texto), cuando un objeto se mueve como proyectil:
+
+\subsection{Ecuaciones Fundamentales}
+
+\textbf{Movimiento horizontal (componente x):}
+\begin{equation}
+    x = x_0 + v_{0x} t
+\end{equation}
+
+Como la canica parte del borde de la plataforma ($x_0 = 0$) y rueda horizontalmente ($v_{0x} = v_0$):
+\begin{equation}
+    x = v_0 t
+\end{equation}
+
+\textbf{Movimiento vertical (componente y):}
+\begin{equation}
+    y = y_0 + v_{0y} t - \frac{1}{2}gt^2
+\end{equation}
+
+Como la velocidad inicial vertical es cero ($v_{0y} = 0$):
+\begin{equation}
+    y = y_0 - \frac{1}{2}gt^2
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Calcular el tiempo de caída}
+
+La canica cae desde una altura $y_0 = 2.75$ m hasta el nivel del suelo $y = 0$.
+
+Usando la ecuación (4):
+\begin{align*}
+    y &= y_0 - \frac{1}{2}gt^2 \\
+    0 &= 2.75 - \frac{1}{2}(9.8)t^2 \\
+    0 &= 2.75 - 4.9t^2 \\
+    4.9t^2 &= 2.75 \\
+    t^2 &= \frac{2.75}{4.9} \\
+    t^2 &= 0.5612 \\
+    t &= \sqrt{0.5612} \\
+    t &= 0.749 \text{ s}
+\end{align*}
+
+\textbf{Tiempo de caída:} $t = 0.749$ s
+
+\subsection*{Paso 2: Calcular la velocidad mínima}
+
+Para que la canica caiga dentro de la cavidad, debe recorrer horizontalmente \textit{al menos} la distancia hasta el borde cercano de la cavidad.
+
+Condición: $x \geq x_1 = 2.00$ m
+
+Para la velocidad mínima, la canica debe llegar exactamente al borde cercano:
+\begin{align*}
+    x_1 &= v_{0\text{min}} \cdot t \\
+    2.00 &= v_{0\text{min}} \cdot 0.749 \\
+    v_{0\text{min}} &= \frac{2.00}{0.749} \\
+    v_{0\text{min}} &= 2.67 \text{ m/s}
+\end{align*}
+
+\subsection*{Paso 3: Calcular la velocidad máxima}
+
+Para que la canica caiga dentro de la cavidad, no debe superar el borde lejano de la cavidad.
+
+Condición: $x \leq x_2 = 3.50$ m
+
+Para la velocidad máxima, la canica debe llegar exactamente al borde lejano:
+\begin{align*}
+    x_2 &= v_{0\text{max}} \cdot t \\
+    3.50 &= v_{0\text{max}} \cdot 0.749 \\
+    v_{0\text{max}} &= \frac{3.50}{0.749} \\
+    v_{0\text{max}} &= 4.67 \text{ m/s}
+\end{align*}
+
+\end{solucionbox}
+
+\section{Resultado Final}
+
+\begin{resultadobox}
+Para que la canica caiga dentro de la cavidad, su rapidez inicial $v_0$ debe estar en el intervalo:
+
+\begin{equation}
+    \boxed{2.67 \text{ m/s} \leq v_0 \leq 4.67 \text{ m/s}}
+\end{equation}
+
+O expresado de otra forma:
+\begin{itemize}
+    \item \textbf{Velocidad mínima:} $v_{0\text{min}} = 2.67$ m/s
+    \item \textbf{Velocidad máxima:} $v_{0\text{max}} = 4.67$ m/s
+    \item \textbf{Intervalo de velocidades:} $v_0 \in [2.67, 4.67]$ m/s
+\end{itemize}
+\end{resultadobox}
+
+\section{Verificación y Análisis}
+
+\subsection{Verificación con la velocidad mínima}
+
+Si $v_0 = 2.67$ m/s:
+\begin{align*}
+    x &= v_0 t = 2.67 \times 0.749 = 2.00 \text{ m} \quad \checkmark
+\end{align*}
+
+La canica llega exactamente al borde cercano de la cavidad.
+
+\subsection{Verificación con la velocidad máxima}
+
+Si $v_0 = 4.67$ m/s:
+\begin{align*}
+    x &= v_0 t = 4.67 \times 0.749 = 3.50 \text{ m} \quad \checkmark
+\end{align*}
+
+La canica llega exactamente al borde lejano de la cavidad.
+
+\subsection{Análisis físico}
+
+\begin{itemize}
+    \item Si $v_0 < 2.67$ m/s: La canica cae \textit{antes} de llegar a la cavidad (en el suelo sólido).
+
+    \item Si $2.67 \leq v_0 \leq 4.67$ m/s: La canica cae \textit{dentro} de la cavidad.
+
+    \item Si $v_0 > 4.67$ m/s: La canica sobrepasa la cavidad y cae \textit{después} de ella (en el suelo sólido).
+\end{itemize}
+
+\section{Conceptos Clave Aplicados}
+
+\begin{enumerate}
+    \item \textbf{Movimiento de proyectil:} La canica experimenta movimiento bidimensional con aceleración constante (gravedad).
+
+    \item \textbf{Independencia de componentes:} El movimiento horizontal (velocidad constante) y el movimiento vertical (aceleración constante) se analizan por separado.
+
+    \item \textbf{Tiempo de vuelo:} El tiempo que tarda en caer depende únicamente de la altura inicial y la gravedad, no de la velocidad horizontal.
+
+    \item \textbf{Alcance horizontal:} La distancia horizontal recorrida depende directamente de la velocidad inicial horizontal y del tiempo de vuelo.
+\end{enumerate}
+
+\section{Ecuaciones Utilizadas - Resumen}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Ecuaciones del Movimiento de Proyectiles]
+
+\textbf{Tiempo de caída (desde altura $h$):}
+\begin{equation*}
+    t = \sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Alcance horizontal:}
+\begin{equation*}
+    x = v_0 t = v_0 \sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Para este problema específico:}
+\begin{align*}
+    t &= \sqrt{\frac{2 \times 2.75}{9.8}} = 0.749 \text{ s} \\
+    v_{0\text{min}} &= \frac{x_1}{t} = \frac{2.00}{0.749} = 2.67 \text{ m/s} \\
+    v_{0\text{max}} &= \frac{x_2}{t} = \frac{3.50}{0.749} = 4.67 \text{ m/s}
+\end{align*}
+
+\end{tcolorbox}
+
+\end{document}

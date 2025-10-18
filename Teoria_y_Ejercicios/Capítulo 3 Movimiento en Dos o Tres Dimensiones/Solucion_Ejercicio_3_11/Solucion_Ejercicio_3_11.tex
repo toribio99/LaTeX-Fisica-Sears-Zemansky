@@ -1,0 +1,408 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.11} \\
+\large Movimiento de Proyectiles: Los Grillos Chirpy y Milada}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[10]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+\centering
+\vspace{-\baselineskip}
+%\begin{center}
+\begin{tikzpicture}[scale=1.1]
+    % Acantilado
+    \draw[fill=brown!50, thick] (0,-4) rectangle (1,0);
+    \draw[brown!70, thick] (1,-4) -- (1,0);
+
+    % Chirpy (caída vertical)
+    \filldraw[green!60!black] (0.3,0) circle (0.1);
+    \node[left] at (0.3,0.2) {\small Chirpy};
+    \draw[green!60!black, thick, dashed, -{Latex[length=2mm]}] (0.3,0) -- (0.3,-4);
+    \node[green!60!black, right] at (0.3,-2) {Caída vertical};
+
+    % Milada (salto horizontal)
+    \filldraw[red!70!black] (0.7,0) circle (0.1);
+    \node[right] at (0.4,-0.3) {\small Milada};
+    \draw[-{Latex[length=2mm]},red!70!black, ultra thick] (0.8,0) -- (1.3,0)
+        node[midway,above] {\tiny $v_0$};
+    % Trayectoria parabólica (ecuación física real: y = y0 - (g/(2v0^2))*x^2)
+    % Para v0 = 0.950 m/s, g = 9.8 m/s^2, con escala vertical ajustada: coeficiente = 0.362
+    \draw[red!70!black, thick, dashed, -{Latex[length=2mm]}]
+        plot[domain=0.7:4, samples=50, smooth] (\x, {0 - 0.362*(\x-0.7)*(\x-0.7)});
+    \node[red!70!black] at (4.3,-1.5) {Trayectoria parabólica};
+
+    % Suelo
+    \draw[fill=green!40!brown, thick] (-0.5,-4) rectangle (6,-4.2);
+    \draw[pattern=north east lines, pattern color=brown!50] (-0.5,-4.5) rectangle (6,-4.2);
+
+    % Puntos de impacto
+    \filldraw[green!60!black] (0.3,-4) circle (0.08);
+    \node[green!60!black, below] at (0.3,-4.2) {\tiny Chirpy};
+
+    \filldraw[red!70!black] (4,-4) circle (0.08);
+    \node[red!70!black, below] at (4,-4.2) {\tiny Milada};
+
+    % Cotas
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (-0.3,-4) -- (-0.3,0) node[midway,left] {$h = ?$};
+
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (1,-4.7) -- (4,-4.7) node[midway,below] {$d = ?$};
+
+    % Etiquetas
+    \node at (0.5,-2.5) {Acantilado};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Dos grillos, Chirpy y Milada, saltan desde lo alto de un acantilado vertical. Chirpy simplemente se deja caer y llega al suelo en 3.50 s; en tanto que Milada salta horizontalmente con una rapidez inicial de 95.0 cm/s. ¿A qué distancia de la base del acantilado tocará Milada el suelo?
+
+\vspace{10mm}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Tiempo de caída de Chirpy:} $t = 3.50$ s (caída libre vertical)
+    \item \textbf{Velocidad inicial de Milada:} $v_0 = 95.0$ cm/s $= 0.950$ m/s (horizontal)
+    \item \textbf{Velocidad inicial vertical de Milada:} $v_{0y} = 0$
+    \item \textbf{Aceleración de la gravedad:} $g = 9.8$ m/s$^2$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Análisis del Problema}
+
+\subsection{Información clave}
+
+El problema nos da información indirecta sobre la altura del acantilado a través del tiempo de caída de Chirpy. Ambos grillos:
+
+\begin{itemize}
+    \item Parten desde la misma altura (lo alto del acantilado)
+    \item Caen la misma distancia vertical
+    \item Tienen el mismo tiempo de caída (el movimiento horizontal no afecta el tiempo de caída)
+\end{itemize}
+
+\subsection{Estrategia}
+
+\begin{enumerate}
+    \item Usar el tiempo de caída de Chirpy para determinar la altura del acantilado
+    \item Usar la altura para confirmar que Milada también tarda 3.50 s en caer
+    \item Calcular la distancia horizontal recorrida por Milada
+\end{enumerate}
+
+\section{Marco Teórico}
+
+\subsection{Caída Libre Vertical (Chirpy)}
+
+Para un objeto que cae desde el reposo:
+\begin{equation}
+    h = \frac{1}{2}gt^2
+\end{equation}
+
+\subsection{Movimiento de Proyectil (Milada)}
+
+Para un objeto lanzado horizontalmente:
+
+\textbf{Horizontal:}
+\begin{equation}
+    x = v_0 t
+\end{equation}
+
+\textbf{Vertical:}
+\begin{equation}
+    y = h - \frac{1}{2}gt^2
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Determinar la altura del acantilado}
+
+Chirpy cae verticalmente desde el reposo y tarda 3.50 s en llegar al suelo.
+
+Usando la ecuación de caída libre:
+\begin{align*}
+    h &= \frac{1}{2}gt^2 \\
+    h &= \frac{1}{2}(9.8)(3.50)^2 \\
+    h &= \frac{1}{2}(9.8)(12.25) \\
+    h &= 4.9 \times 12.25 \\
+    h &= 60.025 \text{ m} \\
+    h &\approx 60.0 \text{ m}
+\end{align*}
+
+\textbf{Altura del acantilado:} $h = 60.0$ m
+
+\subsection*{Paso 2: Confirmar el tiempo de caída de Milada}
+
+Aunque Milada salta horizontalmente, el tiempo de caída vertical es el mismo que Chirpy porque:
+
+\begin{itemize}
+    \item La velocidad horizontal no afecta el movimiento vertical
+    \item Ambos caen desde la misma altura
+    \item Ambos tienen velocidad inicial vertical cero
+\end{itemize}
+
+Por lo tanto, Milada también tarda:
+\begin{equation*}
+    t = 3.50 \text{ s}
+\end{equation*}
+
+Verificación:
+\begin{align*}
+    t &= \sqrt{\frac{2h}{g}} = \sqrt{\frac{2(60.0)}{9.8}} \\
+    t &= \sqrt{\frac{120}{9.8}} = \sqrt{12.24} \\
+    t &= 3.50 \text{ s} \quad \checkmark
+\end{align*}
+
+\subsection*{Paso 3: Calcular la distancia horizontal de Milada}
+
+Milada mantiene su velocidad horizontal constante de 0.950 m/s durante los 3.50 s de caída:
+
+\begin{align*}
+    d &= v_0 t \\
+    d &= (0.950)(3.50) \\
+    d &= 3.325 \text{ m} \\
+    d &\approx 3.33 \text{ m}
+\end{align*}
+
+\textbf{Distancia horizontal:} $d = 3.33$ m = 333 cm
+
+\end{solucionbox}
+
+\section{Resultado Final}
+
+\begin{resultadobox}
+
+Milada tocará el suelo a una distancia de:
+
+\begin{equation}
+    \boxed{d = 3.33 \text{ m} = 333 \text{ cm}}
+\end{equation}
+
+desde la base del acantilado.
+
+\vspace{0.5cm}
+
+\textbf{Información adicional calculada:}
+\begin{itemize}
+    \item \textbf{Altura del acantilado:} $h = 60.0$ m
+    \item \textbf{Tiempo de caída de ambos grillos:} $t = 3.50$ s
+    \item \textbf{Distancia de Chirpy desde la base:} $d_C = 0$ m (caída vertical)
+    \item \textbf{Distancia de Milada desde la base:} $d_M = 3.33$ m
+\end{itemize}
+
+\end{resultadobox}
+
+\section{Verificación}
+
+\subsection{Verificación de la altura}
+
+Usando la altura calculada para verificar el tiempo:
+\begin{align*}
+    t &= \sqrt{\frac{2h}{g}} = \sqrt{\frac{2(60.0)}{9.8}} \\
+    t &= \sqrt{12.24} = 3.50 \text{ s} \quad \checkmark
+\end{align*}
+
+\subsection{Verificación de la distancia}
+
+\begin{align*}
+    d &= v_0 t = v_0 \sqrt{\frac{2h}{g}} \\
+    d &= 0.950 \sqrt{\frac{2(60.0)}{9.8}} \\
+    d &= 0.950 \times 3.50 \\
+    d &= 3.33 \text{ m} \quad \checkmark
+\end{align*}
+
+\section{Análisis Adicional}
+
+\subsection{Velocidades al impactar}
+
+\textbf{Chirpy (caída vertical):}
+\begin{align*}
+    v_x &= 0 \text{ m/s} \\
+    v_y &= gt = 9.8 \times 3.50 = 34.3 \text{ m/s} \\
+    v_{Chirpy} &= 34.3 \text{ m/s} \text{ (vertical)}
+\end{align*}
+
+\textbf{Milada (lanzamiento horizontal):}
+\begin{align*}
+    v_x &= 0.950 \text{ m/s} \\
+    v_y &= gt = 9.8 \times 3.50 = 34.3 \text{ m/s} \\
+    v_{Milada} &= \sqrt{(0.950)^2 + (34.3)^2} \\
+    v_{Milada} &= \sqrt{0.90 + 1176} \\
+    v_{Milada} &= \sqrt{1177} \\
+    v_{Milada} &= 34.3 \text{ m/s}
+\end{align*}
+
+\textbf{Conclusión:} Ambos grillos impactan con prácticamente la misma rapidez (34.3 m/s), ya que la componente horizontal de Milada (0.950 m/s) es despreciable comparada con la componente vertical (34.3 m/s).
+
+\subsection{Ángulo de impacto de Milada}
+
+\begin{align*}
+    \theta &= \arctan\left(\frac{v_y}{v_x}\right) \\
+    \theta &= \arctan\left(\frac{34.3}{0.950}\right) \\
+    \theta &= \arctan(36.1) \\
+    \theta &= 88.4°
+\end{align*}
+
+Milada impacta casi verticalmente, con solo 1.6° de desviación de la vertical.
+
+\subsection{Comparación de trayectorias}
+
+  \begin{wrapfigure}{r}{6cm}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{\baselineskip}
+%\begin{center}
+\begin{tikzpicture}[scale=0.08]
+    % Acantilado
+    \draw[fill=brown!40, very thick] (0,-60) rectangle (3,0);
+
+    % Chirpy
+    \filldraw[green!60!black] (1,0) circle (0.5);
+    \draw[green!60!black, very thick, dashed, -{Latex[length=3mm]}] (1,0) -- (1,-60);
+    \node[green!60!black] at (1,-40) [left] {Chirpy};
+
+    % Milada
+    \filldraw[red!70!black] (2,0) circle (0.5);
+    % Trayectoria parabólica (ecuación física real: y = y0 - (g/(2v0^2))*x^2)
+    % Para v0 = 0.950 m/s, g = 9.8 m/s^2: coeficiente = 5.43
+    \draw[red!70!black, very thick, dashed, -{Latex[length=3mm]}]
+        plot[domain=2:5.33, samples=50, smooth] (\x, {0 - 5.43*(\x-2)*(\x-2)});
+    \node[red!70!black] at (3.5,-30) [right] {Milada};
+
+    % Suelo
+    \draw[fill=green!40!brown, thick] (-1,-60) rectangle (10,-62);
+
+    % Distancias
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (3,-65) -- (5.33,-65) node[midway,below] {3.33 m};
+
+    % Altura
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (-16,-60) -- (-16,0) node[midway,left] {60.0 m};
+
+\end{tikzpicture}
+%\end{center}
+      \caption{Trayectorias de Chirpy y Milada}
+      \vspace{-\baselineskip}
+\end{wrapfigure}
+
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item \textbf{Independencia de movimientos:} La velocidad horizontal no afecta el tiempo de caída vertical.
+
+    \item \textbf{Mismo tiempo de caída:} Objetos que caen desde la misma altura tardan el mismo tiempo en caer, independientemente de su velocidad horizontal inicial.
+
+    \item \textbf{Información indirecta:} El tiempo de caída de Chirpy nos permite calcular la altura del acantilado.
+
+    \item \textbf{Velocidad pequeña:} La velocidad horizontal de Milada (95 cm/s) es muy pequeña comparada con la velocidad vertical final (34.3 m/s), por lo que su trayectoria es casi vertical.
+
+    \item \textbf{Distancia proporcional:} La distancia horizontal es directamente proporcional a la velocidad horizontal inicial y al tiempo de caída.
+\end{enumerate}
+
+\section{Resumen de Fórmulas}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Fórmulas Utilizadas]
+
+\textbf{Altura desde tiempo de caída libre:}
+\begin{equation*}
+    h = \frac{1}{2}gt^2
+\end{equation*}
+
+\textbf{Tiempo de caída desde altura conocida:}
+\begin{equation*}
+    t = \sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Alcance horizontal (lanzamiento horizontal):}
+\begin{equation*}
+    d = v_0 t = v_0 \sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Para este problema:}
+\begin{align*}
+    t &= 3.50 \text{ s} \\
+    h &= 60.0 \text{ m} \\
+    v_0 &= 0.950 \text{ m/s} \\
+    d &= 3.33 \text{ m}
+\end{align*}
+
+\end{tcolorbox}
+
+\section{Interpretación Biológica}
+
+Este problema ilustra una realidad interesante:
+
+\begin{itemize}
+    \item \textbf{Estrategia de Chirpy:} Caída vertical directa, llega a la base del acantilado.
+
+    \item \textbf{Estrategia de Milada:} Salto horizontal, aterriza 3.33 m más lejos, potencialmente evitando obstáculos o depredadores en la base del acantilado.
+
+    \item \textbf{Velocidad de impacto similar:} Ambos impactan con la misma rapidez (≈34 m/s), por lo que el riesgo es similar.
+
+    \item \textbf{Ventaja de Milada:} El pequeño impulso horizontal le permite alejarse de la base, lo que puede ser ventajoso para escapar.
+\end{itemize}
+
+\end{document}

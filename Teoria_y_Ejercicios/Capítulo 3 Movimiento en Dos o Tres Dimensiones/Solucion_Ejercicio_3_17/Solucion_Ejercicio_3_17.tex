@@ -1,0 +1,608 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.17} \\
+\large Movimiento de Proyectiles: Lanzamiento a 60°}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[10]{r}{.7\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=.74]
+    % Escala: 1 unidad = 50 m horizontal, 1 unidad = 50 m vertical
+    % R = 565.7 m → 11.314 unidades
+    % h_max = 245 m → 4.9 unidades
+    % x_max = 282.85 m → 5.657 unidades
+
+    % Suelo
+    \draw[fill=brown!20, thick] (-0.5,0) rectangle (12,-0.6);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,-0.6) rectangle (12,-0.4);
+
+    % Punto de lanzamiento
+    \filldraw[blue!70!black] (0,0) circle (0.1);
+    \node[below left] at (0,0.5) {O};
+
+    % Vector velocidad inicial (proporcional pero escalado para visualización)
+    \draw[-{Latex[length=3mm]},blue!70!black, ultra thick] (0,0) -- (1.2,2.078);
+    \node[blue!70!black, above left] at (0.6,1.3) {$\vec{v}_0 = 80$ m/s};
+
+    % Componentes de velocidad
+    \draw[-{Latex[length=2mm]},red, ultra thick, dashed] (0,0) -- (1.2,0);
+    \node[red, below] at (1.3,0.1) {$v_{0x}=40$ m/s};
+    \draw[-{Latex[length=2mm]},red, very thick, dashed] (1.2,0) -- (1.2,2.078);
+    \node[red, right] at (1.2,1) {$v_{0y}=69.3$ m/s};
+
+    % Ángulo
+    \draw[thick] (0.5,0) arc (0:60:0.5);
+    \node at (0.8,0.25) {$60°$};
+
+    % Trayectoria parabólica con escala consistente
+    % Ecuación en metros: y = tan(60°)*x - (g/(2*v0^2*cos^2(60°)))*x^2
+    % y = 1.732*x - 0.0030625*x^2
+    % Coeficiente: b = 9.8/(2*80^2*0.5^2) = 9.8/3200 = 0.0030625
+    % Con escala 1 unidad = 50 m, donde x_graf = x_m/50 y y_graf = y_m/50:
+    % y_graf = 1.732*x_graf - 0.0030625*2500*x_graf^2 = 1.732*x_graf - 0.153125*x_graf^2
+    \draw[red!70!black, very thick, -{Latex[length=3mm]}]
+        plot[domain=0:11.314, samples=100, smooth] (\x, {1.732*\x - 0.153125*\x*\x});
+
+    % Punto de altura máxima (x_max = 5.657, y_max = 4.9)
+    \filldraw[violet!80!black] (5.657,4.9) circle (0.1);
+    \node[violet!80!black, above right] at (5.657,4.9) {$h_{\text{máx}}=245$ m};
+
+    % Línea vertical de altura máxima (punteada)
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, violet!80!black,  thick] (5.657,4.9) -- (5.657,0);
+
+    % Flecha indicando altura máxima
+    %\draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.8,0) -- (-0.8,4.9);
+    %\node[left, align=center] at (-0.8,2.45) {\small $h_{\text{máx}}$\\\small $245$ m};
+
+    % Punto final
+    \filldraw[green!50!black] (11.314,0) circle (0.08);
+
+    % Alcance horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.8) -- (11.314,-0.8);
+    \node[below, align=center] at (5.657,-0.8) {$R = 566$ m};
+
+    % Etiquetas de distancia
+    \node[below] at (5.657,-1.5) {\small Escala: 1 cm $\approx$ 50 m};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Se dispara un proyectil desde el nivel del suelo con una velocidad inicial de 80.0 m/s a 60.0° por encima de la horizontal. Calcule:
+
+\begin{enumerate}
+	\item[a)] Las componentes $x$ e $y$ de la velocidad inicial del proyectil.
+	\item[b)] El tiempo que tarda el proyectil en alcanzar su altura máxima.
+\end{enumerate}
+
+\begin{enumerate}
+	\item[c)] La altura máxima que alcanza el proyectil.
+	\item[d)] El alcance horizontal del proyectil.
+	\item[e)] La velocidad y la aceleración del proyectil cuando alcanza su altura máxima.
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad inicial:} $v_0 = 80.0$ m/s
+    \item \textbf{Ángulo de lanzamiento:} $\theta = 60.0°$
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Altura inicial:} $y_0 = 0$ (nivel del suelo)
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un proyectil lanzado con velocidad inicial $v_0$ a un ángulo $\theta$ desde el nivel del suelo:
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align}
+    v_{0x} &= v_0 \cos\theta \\
+    v_{0y} &= v_0 \sin\theta
+\end{align}
+
+\textbf{Tiempo de vuelo hasta altura máxima:}
+\begin{equation}
+    t_{\text{máx}} = \frac{v_{0y}}{g}
+\end{equation}
+
+\textbf{Altura máxima:}
+\begin{equation}
+    h_{\text{máx}} = \frac{v_{0y}^2}{2g}
+\end{equation}
+
+\textbf{Alcance horizontal:}
+\begin{equation}
+    R = \frac{v_0^2 \sin(2\theta)}{g}
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Componentes de velocidad inicial}
+
+Calculamos las componentes horizontal y vertical:
+
+\textbf{Componente horizontal:}
+\begin{align}
+    v_{0x} &= v_0 \cos\theta \\
+    v_{0x} &= 80.0 \cos(60.0°) \\
+    v_{0x} &= 80.0 \times 0.5 \\
+    v_{0x} &= 40.0 \text{ m/s}
+\end{align}
+
+\textbf{Componente vertical:}
+\begin{align}
+    v_{0y} &= v_0 \sin\theta \\
+    v_{0y} &= 80.0 \sin(60.0°) \\
+    v_{0y} &= 80.0 \times 0.8660 \\
+    v_{0y} &= 69.3 \text{ m/s}
+\end{align}
+
+\subsection*{Parte b) Tiempo hasta altura máxima}
+
+En el punto más alto, la componente vertical de velocidad es cero. Usando:
+\begin{equation}
+    v_y = v_{0y} - gt
+\end{equation}
+
+En el punto máximo, $v_y = 0$:
+\begin{align}
+    0 &= v_{0y} - gt_{\text{máx}} \\
+    t_{\text{máx}} &= \frac{v_{0y}}{g} \\
+    t_{\text{máx}} &= \frac{69.3}{9.8} \\
+    t_{\text{máx}} &= 7.07 \text{ s}
+\end{align}
+
+\subsection*{Parte c) Altura máxima}
+
+Usando la ecuación de posición vertical:
+\begin{equation}
+    y = v_{0y}t - \frac{1}{2}gt^2
+\end{equation}
+
+En $t = t_{\text{máx}}$:
+\begin{align}
+    h_{\text{máx}} &= v_{0y}t_{\text{máx}} - \frac{1}{2}g t_{\text{máx}}^2 \\
+    h_{\text{máx}} &= 69.3 \times 7.07 - \frac{1}{2} \times 9.8 \times (7.07)^2 \\
+    h_{\text{máx}} &= 489.95 - 245.0 \\
+    h_{\text{máx}} &= 245 \text{ m}
+\end{align}
+
+\textbf{Forma alternativa:}
+\begin{equation}
+    h_{\text{máx}} = \frac{v_{0y}^2}{2g} = \frac{(69.3)^2}{2 \times 9.8} = \frac{4802.49}{19.6} = 245 \text{ m}
+\end{equation}
+
+\subsection*{Parte d) Alcance horizontal}
+
+El tiempo total de vuelo es el doble del tiempo hasta la altura máxima:
+\begin{equation}
+    t_{\text{total}} = 2t_{\text{máx}} = 2 \times 7.07 = 14.14 \text{ s}
+\end{equation}
+
+El alcance horizontal es:
+\begin{align}
+    R &= v_{0x} \times t_{\text{total}} \\
+    R &= 40.0 \times 14.14 \\
+    R &= 565.6 \text{ m}
+\end{align}
+
+\textbf{Forma alternativa usando la fórmula directa:}
+\begin{align}
+    R &= \frac{v_0^2 \sin(2\theta)}{g} \\
+    R &= \frac{(80.0)^2 \sin(2 \times 60°)}{9.8} \\
+    R &= \frac{6400 \times \sin(120°)}{9.8} \\
+    R &= \frac{6400 \times 0.8660}{9.8} \\
+    R &= \frac{5542.4}{9.8} \\
+    R &= 565.6 \text{ m}
+\end{align}
+
+\subsection*{Parte e) Velocidad y aceleración en la altura máxima}
+
+\textbf{Velocidad en la altura máxima:}
+
+En el punto más alto, la componente vertical de velocidad es cero:
+\begin{equation}
+    v_y = 0
+\end{equation}
+
+La componente horizontal permanece constante:
+\begin{equation}
+    v_x = v_{0x} = 40.0 \text{ m/s}
+\end{equation}
+
+Por lo tanto, la velocidad en el punto más alto es:
+\begin{equation}
+    \vec{v}_{\text{máx}} = (40.0 \text{ m/s}, 0)
+\end{equation}
+
+La magnitud es:
+\begin{equation}
+    |\vec{v}_{\text{máx}}| = 40.0 \text{ m/s}
+\end{equation}
+
+\textbf{Aceleración en la altura máxima:}
+
+La aceleración es constante durante todo el vuelo y siempre apunta hacia abajo:
+\begin{equation}
+    \vec{a} = (0, -g) = (0, -9.8 \text{ m/s}^2)
+\end{equation}
+
+La magnitud es:
+\begin{equation}
+    |\vec{a}| = 9.8 \text{ m/s}^2 \text{ (hacia abajo)}
+\end{equation}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+\textbf{a) Componentes de velocidad inicial:}
+\begin{align*}
+    \boxed{v_{0x} = 40.0 \text{ m/s}} \\
+    \boxed{v_{0y} = 69.3 \text{ m/s}}
+\end{align*}
+
+\vspace{0.3cm}
+
+\textbf{b) Tiempo hasta altura máxima:}
+\begin{equation*}
+    \boxed{t_{\text{máx}} = 7.07 \text{ s}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{c) Altura máxima:}
+\begin{equation*}
+    \boxed{h_{\text{máx}} = 245 \text{ m}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{d) Alcance horizontal:}
+\begin{equation*}
+    \boxed{R = 566 \text{ m}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{e) En la altura máxima:}
+\begin{itemize}
+    \item Velocidad: $\boxed{\vec{v} = 40.0 \text{ m/s (horizontal)}}$
+    \item Aceleración: $\boxed{\vec{a} = 9.8 \text{ m/s}^2 \text{ (hacia abajo)}}$
+\end{itemize}
+\end{resultadobox}
+
+\section{Verificación}
+
+Podemos verificar nuestros resultados usando las relaciones conocidas:
+
+\subsection*{Verificación de altura máxima}
+
+Usando la fórmula alternativa:
+\begin{align*}
+    h_{\text{máx}} &= \frac{v_{0y}^2}{2g} = \frac{(69.3)^2}{2 \times 9.8} \\
+    &= \frac{4802.49}{19.6} = 245 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection*{Verificación del alcance}
+
+Método 1 (cinemática):
+\begin{equation*}
+    R = v_{0x} \times t_{\text{total}} = 40.0 \times 14.14 = 565.6 \text{ m}
+\end{equation*}
+
+Método 2 (fórmula directa):
+\begin{equation*}
+    R = \frac{v_0^2 \sin(2\theta)}{g} = \frac{6400 \times 0.8660}{9.8} = 565.6 \text{ m} \quad \checkmark
+\end{equation*}
+
+\subsection*{Simetría del movimiento}
+
+El tiempo de subida es igual al tiempo de bajada:
+\begin{equation*}
+    t_{\text{subida}} = t_{\text{bajada}} = 7.07 \text{ s}
+\end{equation*}
+
+\begin{equation*}
+    t_{\text{total}} = 2 \times t_{\text{máx}} = 14.14 \text{ s} \quad \checkmark
+\end{equation*}
+
+\section{Análisis Físico}
+
+\subsection{Características del movimiento}
+
+\begin{enumerate}
+    \item \textbf{Movimiento horizontal:} Es uniforme (MRU) con velocidad constante $v_x = 40.0$ m/s.
+
+    \item \textbf{Movimiento vertical:} Es uniformemente acelerado (MRUA) con aceleración $a_y = -g = -9.8$ m/s$^2$.
+
+    \item \textbf{En la altura máxima:}
+    \begin{itemize}
+        \item La velocidad vertical es cero
+        \item La velocidad horizontal permanece constante
+        \item La aceleración sigue siendo $g$ hacia abajo
+    \end{itemize}
+
+    \item \textbf{Simetría:} El tiempo de subida es igual al tiempo de bajada.
+
+    \item \textbf{Alcance máximo:} Para un ángulo de 60°, el alcance no es máximo. El ángulo óptimo para máximo alcance es 45°.
+\end{enumerate}
+
+\subsection{Comparación con otros ángulos}
+
+Si se lanzara el proyectil con la misma velocidad inicial pero a 45°:
+\begin{equation*}
+    R_{45°} = \frac{v_0^2}{g} = \frac{6400}{9.8} = 653 \text{ m} > 566 \text{ m}
+\end{equation*}
+
+El ángulo de 60° favorece la altura máxima sobre el alcance horizontal.
+
+\section{Gráficas del Movimiento}
+
+\subsection{Trayectoria en el plano $xy$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Distancia horizontal $x$ (m)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=600,
+    ymin=0, ymax=260,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% Trayectoria
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:565.7,
+    samples=100,
+    smooth
+] {1.732*x - 0.001225*x^2};
+\addlegendentry{$y(x)$}
+
+% Punto de altura máxima
+\addplot[
+    mark=*,
+    mark size=3pt,
+    green!50!black,
+    only marks
+] coordinates {(282.85, 245)};
+\addlegendentry{Altura máxima}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Posición horizontal vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=6cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición $x$ (m)},
+    xmin=0, xmax=15,
+    ymin=0, ymax=600,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north west
+]
+
+% x(t) = v0x * t
+\addplot[
+    blue!70!black,
+    very thick,
+    domain=0:14.14,
+    samples=50
+] {40*x};
+\addlegendentry{$x(t) = v_{0x}t$}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Posición vertical vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=15,
+    ymin=0, ymax=260,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% y(t) = v0y*t - 0.5*g*t^2
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:14.14,
+    samples=100
+] {69.3*x - 4.9*x^2};
+\addlegendentry{$y(t) = v_{0y}t - \frac{1}{2}gt^2$}
+
+% Altura máxima
+\addplot[
+    mark=*,
+    mark size=3pt,
+    green!50!black,
+    only marks
+] coordinates {(7.07, 245)};
+\addlegendentry{$h_{\text{máx}}$ en $t = 7.07$ s}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Velocidad horizontal vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=6cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad $v_x$ (m/s)},
+    xmin=0, xmax=15,
+    ymin=0, ymax=50,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=south east
+]
+
+% vx(t) = constante
+\addplot[
+    blue!70!black,
+    very thick,
+    domain=0:14.14,
+    samples=10
+] {40};
+\addlegendentry{$v_x(t) = v_{0x}$ (constante)}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Velocidad vertical vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad $v_y$ (m/s)},
+    xmin=0, xmax=15,
+    ymin=-80, ymax=80,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% vy(t) = v0y - g*t
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:14.14,
+    samples=50
+] {69.3 - 9.8*x};
+\addlegendentry{$v_y(t) = v_{0y} - gt$}
+
+% Punto donde vy = 0
+\addplot[
+    mark=*,
+    mark size=3pt,
+    green!50!black,
+    only marks
+] coordinates {(7.07, 0)};
+\addlegendentry{$v_y = 0$ en $t_{\text{máx}}$}
+
+% Línea de referencia y = 0
+\addplot[
+    dashed,
+    black,
+    domain=0:14.14
+] {0};
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Observaciones Importantes}
+
+\begin{enumerate}
+    \item La aceleración es constante durante todo el vuelo y vale $9.8$ m/s$^2$ hacia abajo, incluso en la altura máxima.
+
+    \item La velocidad horizontal permanece constante durante todo el vuelo.
+
+    \item La velocidad vertical cambia linealmente con el tiempo, desde $+69.3$ m/s (hacia arriba) hasta $-69.3$ m/s (hacia abajo).
+
+    \item El movimiento es completamente simétrico: lo que sube debe bajar de la misma manera.
+
+    \item En la altura máxima, el proyectil no está "en reposo", solo tiene velocidad horizontal.
+\end{enumerate}
+
+\end{document}

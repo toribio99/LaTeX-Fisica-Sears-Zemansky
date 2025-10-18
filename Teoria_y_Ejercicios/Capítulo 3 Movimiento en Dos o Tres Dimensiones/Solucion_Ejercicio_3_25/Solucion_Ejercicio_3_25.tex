@@ -1,0 +1,344 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.25} \\
+\large Piedra Lanzada desde un Globo en Descenso}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[16]{r}{.65\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.65]
+    % Suelo
+    \draw[fill=brown!20, thick] (-2,0) rectangle (12,-0.3);
+    \draw[pattern=north east lines, pattern color=brown] (-2,-0.3) rectangle (12,-0.5);
+
+    % Globo inicial (arriba)
+    \draw[fill=red!30, thick] (0,10) circle (0.4);
+    \draw[fill=brown!40, thick] (-0.3,9.3) rectangle (0.3,9.6);
+    \node[above, font=\scriptsize] at (0,10.5) {Globo (inicial)};
+    \node[left, font=\scriptsize] at (-0.5,10) {$h_0=296.4$ m};
+
+    % Vector velocidad del globo
+    \draw[-{Latex[length=2mm]}, blue, very thick] (0,9.3) -- (0,8.5);
+    \node[right, font=\scriptsize] at (0.2,8.9) {$v_{globo}=20$ m/s};
+
+    % Globo final (cuando piedra toca suelo)
+    \draw[fill=red!30, thick, dashed] (0,6) circle (0.4);
+    \draw[fill=brown!40, thick, dashed] (-0.3,5.3) rectangle (0.3,5.6);
+    \node[left, font=\scriptsize] at (3.5,6) {Globo (final)};
+    \node[left, font=\scriptsize] at (-0.5,5.5) {$h=176.4$ m};
+
+    % Línea de descenso del globo
+    \draw[blue, dashed, thick] (0,9.3) -- (0,5.6);
+
+    % Vector velocidad inicial de la piedra
+    \draw[-{Latex[length=3mm]}, red!70!black, ultra thick] (0,10) -- (1.5,10);
+    \node[above, font=\scriptsize] at (0.75,10.2) {$v_{rel}=15$ m/s};
+
+    % Trayectoria parabólica de la piedra
+    % y = h0 - 20t - 4.9t²
+    % x = 15t
+    % Eliminando t: t = x/15
+    % y = 296.4 - 20(x/15) - 4.9(x/15)²
+    % y = 296.4 - 1.333x - 0.0218x²
+    % Conversión a coordenadas del diagrama:
+    % x_diag = x_real/10, y_diag = y_real/29.64
+    % y_diag = (296.4 - 1.333*(10*x_diag) - 0.0218*(10*x_diag)²)/29.64
+    % y_diag = 10 - 0.4497*x_diag - 0.0736*x_diag²
+    \draw[red!70!black, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:9, samples=100, smooth] (\x, {10 - 0.4497*\x - 0.0736*\x*\x});
+
+    % Punto de impacto
+    \filldraw[green!60!black] (9,0) circle (0.15);
+    \node[below, font=\small] at (9,-0.7) {Impacto};
+    \node[below, font=\scriptsize] at (9,-1.1) {$t=6$ s};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-1.5) -- (9,-1.5);
+    \node[below, font=\small] at (4.5,-1.5) {$x = 90.0$ m};
+
+    % Altura inicial
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-1.5,0) -- (-1.5,10);
+    \node[left, font=\small, rotate=90] at (-1.9,5) {$h_0 = 296.4$ m};
+
+    % Altura final del globo
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick, dashed] (11,0) -- (11,6);
+    \node[right, font=\scriptsize] at (11,3) {$176.4$ m};
+
+    % Distancia piedra-canasta
+    \draw[purple, thick, dotted] (9,0) -- (0,6);
+    \node[purple, above, font=\scriptsize, rotate=33] at (4.5,3) {$d = 198.0$ m};
+
+    % Ejes de referencia
+    \draw[-{Latex[length=2mm]}, thick] (-1.8,0) -- (-1.8,1.5);
+    \node[left, font=\scriptsize] at (-1.8,1.5) {$+y$};
+    \draw[-{Latex[length=2mm]}, thick] (-1.8,0) -- (-0.3,0);
+    \node[below, font=\scriptsize] at (-0.3,0) {$+x$};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un globo de 124 kg que lleva una canastilla de 22 kg desciende con rapidez constante hacia abajo de 20.0 m/s. Una piedra de 1.0 kg se lanza desde la canastilla con una velocidad inicial de 15.0 m/s perpendicular a la trayectoria del globo en descenso, medida relativa a una persona en reposo en la canasta. Esa persona ve que la piedra choca contra el suelo 6.00 s después de lanzarse. Suponga que el globo continúa su descenso a los 20.0 m/s constantes.
+
+\begin{enumerate}
+	\item[a)] ¿A qué altura estaba el globo cuando se lanzó la piedra?
+\end{enumerate}
+
+\begin{enumerate}
+	\item[b)] ¿Y cuando chocó contra el suelo?
+	\item[c)] En el instante en que la piedra tocó el suelo, ¿a qué distancia estaba de la canastilla?
+	\item[d)] Determine las componentes horizontal y vertical de la velocidad de la piedra justo antes de chocar contra el suelo, relativas a un observador:
+	\begin{itemize}
+		\item[i)] en reposo en la canastilla
+		\item[ii)] en reposo en el suelo
+	\end{itemize}
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Masa del globo:} $m_{globo} = 124$ kg
+    \item \textbf{Masa de la canastilla:} $m_{canasta} = 22$ kg
+    \item \textbf{Masa de la piedra:} $m_{piedra} = 1.0$ kg
+    \item \textbf{Velocidad de descenso del globo:} $v_{globo} = 20.0$ m/s (constante, hacia abajo)
+    \item \textbf{Velocidad de lanzamiento (relativa a la canasta):} $v_{rel} = 15.0$ m/s (horizontal)
+    \item \textbf{Tiempo de vuelo:} $t = 6.00$ s
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\textbf{Velocidad relativa:} La piedra se lanza horizontalmente con 15.0 m/s relativo a la canasta. Desde el suelo, la piedra tiene:
+\begin{itemize}
+    \item Componente horizontal: $v_{0x} = 15.0$ m/s
+    \item Componente vertical: $v_{0y} = -20.0$ m/s (hereda la velocidad descendente del globo)
+\end{itemize}
+
+\textbf{Ecuaciones desde el marco de referencia del suelo:}
+\begin{align}
+    x(t) &= v_{0x}t = 15.0t \\
+    y(t) &= h_0 + v_{0y}t - \frac{1}{2}gt^2 = h_0 - 20.0t - 4.9t^2 \\
+    v_x(t) &= v_{0x} = 15.0 \text{ m/s (constante)} \\
+    v_y(t) &= v_{0y} - gt = -20.0 - 9.8t
+\end{align}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a): Altura inicial del globo}
+
+La piedra golpea el suelo cuando $y = 0$ en $t = 6.00$ s:
+
+\begin{equation}
+    0 = h_0 - 20.0(6.00) - 4.9(6.00)^2
+\end{equation}
+
+\begin{align}
+    h_0 &= 20.0(6.00) + 4.9(36.00) \\
+    h_0 &= 120.0 + 176.4 \\
+    h_0 &= 296.4 \text{ m}
+\end{align}
+
+El globo estaba a una altura de \textbf{296.4 metros} cuando se lanzó la piedra.
+
+\subsection*{Parte b): Altura del globo cuando la piedra toca el suelo}
+
+El globo continúa descendiendo a 20.0 m/s durante 6.00 s:
+
+\begin{align}
+    h_{globo} &= h_0 - v_{globo} \cdot t \\
+    h_{globo} &= 296.4 - 20.0(6.00) \\
+    h_{globo} &= 296.4 - 120.0 \\
+    h_{globo} &= 176.4 \text{ m}
+\end{align}
+
+El globo está a \textbf{176.4 metros} cuando la piedra toca el suelo.
+
+\subsection*{Parte c): Distancia de la piedra a la canastilla}
+
+En $t = 6.00$ s:
+
+\textbf{Posición de la piedra:}
+\begin{align}
+    x_{piedra} &= 15.0(6.00) = 90.0 \text{ m (horizontal)} \\
+    y_{piedra} &= 0 \text{ m (en el suelo)}
+\end{align}
+
+\textbf{Posición de la canastilla:}
+\begin{align}
+    x_{canasta} &= 0 \text{ m (cae verticalmente)} \\
+    y_{canasta} &= 176.4 \text{ m}
+\end{align}
+
+\textbf{Distancia:}
+\begin{align}
+    d &= \sqrt{(x_{piedra} - x_{canasta})^2 + (y_{piedra} - y_{canasta})^2} \\
+    d &= \sqrt{(90.0)^2 + (0 - 176.4)^2} \\
+    d &= \sqrt{8100 + 31117} \\
+    d &= \sqrt{39217} = 198.0 \text{ m}
+\end{align}
+
+La piedra está a \textbf{198.0 metros} de la canastilla.
+
+\subsection*{Parte d): Velocidad de la piedra justo antes del impacto}
+
+\textbf{Velocidad desde el marco del suelo:}
+
+Componente horizontal:
+\begin{equation}
+    v_x = 15.0 \text{ m/s}
+\end{equation}
+
+Componente vertical:
+\begin{align}
+    v_y &= -20.0 - 9.8(6.00) \\
+    v_y &= -20.0 - 58.8 \\
+    v_y &= -78.8 \text{ m/s}
+\end{align}
+
+Magnitud:
+\begin{equation}
+    v = \sqrt{(15.0)^2 + (-78.8)^2} = \sqrt{225 + 6209} = \sqrt{6434} = 80.2 \text{ m/s}
+\end{equation}
+
+\textbf{i) Relativa a un observador en la canastilla:}
+
+La canastilla desciende a 20.0 m/s constante. Relativa a la canasta:
+
+\begin{align}
+    v_{x,rel} &= v_x - v_{canasta,x} = 15.0 - 0 = 15.0 \text{ m/s} \\
+    v_{y,rel} &= v_y - v_{canasta,y} = -78.8 - (-20.0) = -58.8 \text{ m/s}
+\end{align}
+
+\begin{equation}
+    \boxed{v_{rel,canasta} = (15.0\hat{i} - 58.8\hat{j}) \text{ m/s}}
+\end{equation}
+
+\textbf{ii) Relativa a un observador en el suelo:}
+
+\begin{equation}
+    \boxed{v_{rel,suelo} = (15.0\hat{i} - 78.8\hat{j}) \text{ m/s}}
+\end{equation}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{Parte a) Altura inicial del globo:}
+\begin{equation}
+    \boxed{h_0 = 296.4 \text{ m}}
+\end{equation}
+
+\textbf{Parte b) Altura del globo al impacto:}
+\begin{equation}
+    \boxed{h_{globo} = 176.4 \text{ m}}
+\end{equation}
+
+\textbf{Parte c) Distancia piedra-canastilla:}
+\begin{equation}
+    \boxed{d = 198.0 \text{ m}}
+\end{equation}
+
+\textbf{Parte d) Velocidad de la piedra:}
+
+\textbf{i) Relativa a la canastilla:}
+\begin{equation}
+    \boxed{\vec{v}_{canasta} = (15.0\hat{i} - 58.8\hat{j}) \text{ m/s}, \quad |\vec{v}| = 60.7 \text{ m/s}}
+\end{equation}
+
+\textbf{ii) Relativa al suelo:}
+\begin{equation}
+    \boxed{\vec{v}_{suelo} = (15.0\hat{i} - 78.8\hat{j}) \text{ m/s}, \quad |\vec{v}| = 80.2 \text{ m/s}}
+\end{equation}
+
+\end{resultadobox}
+
+\section{Análisis y Conclusión}
+
+Este problema ilustra el movimiento relativo y cómo las velocidades dependen del marco de referencia:
+
+\begin{enumerate}
+    \item \textbf{Movimiento desde el suelo:} La piedra tiene velocidad inicial horizontal (15 m/s) y vertical descendente (-20 m/s, heredada del globo).
+
+    \item \textbf{Gran altura inicial:} 296.4 m es necesaria para que la piedra tarde 6 s en caer, considerando su velocidad vertical inicial descendente.
+
+    \item \textbf{El globo continúa bajando:} Durante los 6 s, el globo desciende 120 m, quedando a 176.4 m.
+
+    \item \textbf{Diferencia en velocidades:}
+    \begin{itemize}
+        \item Desde la canasta: $v = 60.7$ m/s (solo considera velocidad relativa)
+        \item Desde el suelo: $v = 80.2$ m/s (incluye movimiento del globo)
+    \end{itemize}
+\end{enumerate}
+
+\end{document}

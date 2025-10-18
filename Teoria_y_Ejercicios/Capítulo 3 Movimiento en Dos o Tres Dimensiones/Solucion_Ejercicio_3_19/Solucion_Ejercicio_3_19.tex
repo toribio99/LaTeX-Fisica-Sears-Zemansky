@@ -1,0 +1,707 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.19} \\
+\large Pelota de Béisbol Bateada}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[7]{r}{.65\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=.85]
+    % Escala: 1 unidad = 10 m
+    % R = 88.2 m → 8.82 unidades
+    % h_max = 16.5 m → 1.65 unidades en x = 4.41 unidades
+
+    % Suelo (campo de béisbol)
+    \draw[fill=green!20, thick] (-0.5,0) rectangle (9.5,-0.6);
+    \draw[pattern=north east lines, pattern color=green!50] (-0.5,-0.6) rectangle (9.5,-0.8);
+
+    % Punto de lanzamiento (bateador)
+    \filldraw[blue!70!black] (0,0) circle (0.12);
+    \node[below left, font=\small] at (0,0.5) {O};
+
+    % Vector velocidad inicial y componentes
+    \draw[-{Latex[length=3mm]},blue!70!black, ultra thick] (0,0) -- (1.2,0.9);
+    \node[blue!70!black, above left, font=\small] at (0.75,0.6) {$\vec{v}_0=30$ m/s};
+
+    % Componente horizontal
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (0,0) -- (1.2,0);
+    \node[red, below, font=\scriptsize] at (1.3,0) {$v_{0x}=24$ m/s};
+
+    % Componente vertical
+    \draw[-{Latex[length=2mm]},red, thick, dashed] (1.2,0) -- (1.2,0.9);
+    \node[red, right, font=\scriptsize] at (1.2,0.45) {$v_{0y}=18$ m/s};
+
+    % Ángulo
+    \draw[thick] (0.6,0) arc (0:36.9:0.6);
+    \node[font=\small] at (0.95,0.22) {$36.9°$};
+
+    % Trayectoria parabólica correcta
+    % Ecuación: y = 0.75*x - 0.0085*x^2 (en metros)
+    % Coeficiente: b = g/(2*v0x^2) = 9.8/(2*24^2) = 9.8/1152 = 0.0085
+    % Con escala 1:10, donde x_graf = x_m/10 y y_graf = y_m/10:
+    % y_m = 0.75*(10*x_graf) - 0.0085*(10*x_graf)^2 = 7.5*x_graf - 0.85*x_graf^2
+    % y_graf = y_m/10 = 0.75*x_graf - 0.085*x_graf^2
+    \draw[red!70!black, very thick, -{Latex[length=3mm]}]
+        plot[domain=0:8.82, samples=100, smooth] (\x, {0.75*\x - 0.085*\x*\x});
+
+    % Punto de altura máxima (x=44.1m=4.41 unid, y=16.5m=1.65 unid)
+    \filldraw[green!50!black] (4.41,1.65) circle (0.1);
+    \node[green!50!black, above right, font=\small] at (2,1.65) {$h_{\text{máx}}=16.5$ m};
+    \draw[green!50!black, dotted, thick] (4.41,1.65) -- (4.41,0);
+
+    % Punto en t=2.00s (x=48m=4.8 unid, y=16.4m=1.64 unid)
+    \filldraw[orange!70!black] (4.8,1.64) circle (0.1);
+    \node[orange!70!black, above, font=\small] at (5.6,1.65) {$t_{s}=2.00$ s};
+    \node[orange!70!black, below, font=\scriptsize] at (5.5,1.2) {$(48, 16.4)$ m};
+
+    % Vector velocidad en t=2s (casi horizontal, ligeramente hacia abajo)
+    \draw[-{Latex[length=2.5mm]}, orange!70!black, thick] (4.8,1.64) -- (5.8,1.56);
+    \node[orange!70!black, right, font=\scriptsize] at (4.6,1.2) {$\vec{v}(2.00)$};
+
+    % Punto final
+    \filldraw[blue!50!black] (8.82,0) circle (0.08);
+
+    % Alcance horizontal con valor correcto
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.9) -- (8.82,-0.9);
+    \node[below, font=\small] at (4.41,-0.9) {$R = 88.2$ m};
+
+    % Etiqueta inferior
+    \node[below, font=\small] at (4.5,-1.5) {Campo de béisbol};
+
+    % Etiqueta "Bateador"
+    \node[below, font=\small] at (0,-0.9) {Bateador};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Se batea una pelota de béisbol de modo que su velocidad inicial es de $v_0 = 30.0$ m/s a un ángulo de $\theta_0 = 36.9°$ sobre la horizontal. Calcule:
+
+\begin{enumerate}
+	\item[a)] La posición de la pelota y la magnitud y dirección de su velocidad cuando $t = 2.00$ s.
+\end{enumerate}
+
+\begin{enumerate}
+	\item[b)] El tiempo que tarda la pelota en llegar al punto más alto de su trayectoria.
+	\item[c)] La altura máxima de la pelota.
+	\item[d)] El alcance horizontal de la pelota.
+	\item[e)] Los componentes de aceleración de la pelota durante su vuelo.
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad inicial:} $v_0 = 30.0$ m/s
+    \item \textbf{Ángulo de lanzamiento:} $\theta_0 = 36.9°$
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Posición inicial:} $x_0 = 0$, $y_0 = 0$ (nivel del suelo)
+    \item \textbf{Resistencia del aire:} despreciable
+    \item \textbf{Tiempo específico:} $t = 2.00$ s
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un proyectil lanzado desde el nivel del suelo con velocidad inicial $v_0$ a un ángulo $\theta_0$:
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align*}
+    v_{0x} &= v_0 \cos\theta_0 \\
+    v_{0y} &= v_0 \sin\theta_0
+\end{align*}
+
+\textbf{Ecuaciones de posición:}
+\begin{align*}
+    x(t) &= v_{0x}t \\
+    y(t) &= v_{0y}t - \frac{1}{2}gt^2
+\end{align*}
+
+\textbf{Ecuaciones de velocidad:}
+\begin{align*}
+    v_x(t) &= v_{0x} \quad \text{(constante)} \\
+    v_y(t) &= v_{0y} - gt
+\end{align*}
+
+\textbf{Tiempo hasta altura máxima:}
+\begin{equation*}
+    t_{\text{máx}} = \frac{v_{0y}}{g}
+\end{equation*}
+
+\textbf{Altura máxima:}
+\begin{equation*}
+    h_{\text{máx}} = \frac{v_{0y}^2}{2g}
+\end{equation*}
+
+\textbf{Alcance horizontal:}
+\begin{equation*}
+    R = \frac{v_0^2 \sin(2\theta_0)}{g}
+\end{equation*}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Cálculos preliminares}
+
+\textbf{Componentes de velocidad inicial:}
+
+\begin{align*}
+    v_{0x} &= v_0 \cos\theta_0 = 30.0 \times \cos(36.9°) \\
+    v_{0x} &= 30.0 \times 0.8 = 24.0 \text{ m/s}
+\end{align*}
+
+\begin{align*}
+    v_{0y} &= v_0 \sin\theta_0 = 30.0 \times \sin(36.9°) \\
+    v_{0y} &= 30.0 \times 0.6 = 18.0 \text{ m/s}
+\end{align*}
+
+\subsection*{Parte a) Posición y velocidad en $t = 2.00$ s}
+
+\textbf{Posición en $t = 2.00$ s:}
+
+Posición horizontal:
+\begin{align*}
+    x(2.00) &= v_{0x}t = 24.0 \times 2.00 \\
+    x(2.00) &= 48.0 \text{ m}
+\end{align*}
+
+Posición vertical:
+\begin{align*}
+    y(2.00) &= v_{0y}t - \frac{1}{2}gt^2 \\
+    y(2.00) &= 18.0 \times 2.00 - \frac{1}{2} \times 9.8 \times (2.00)^2 \\
+    y(2.00) &= 36.0 - 19.6 \\
+    y(2.00) &= 16.4 \text{ m}
+\end{align*}
+
+\textbf{Posición:} $(x, y) = (48.0 \text{ m}, 16.4 \text{ m})$
+
+\vspace{0.3cm}
+
+\textbf{Velocidad en $t = 2.00$ s:}
+
+Componente horizontal (constante):
+\begin{equation}
+    v_x(2.00) = v_{0x} = 24.0 \text{ m/s}
+\end{equation}
+
+Componente vertical:
+\begin{align*}
+    v_y(2.00) &= v_{0y} - gt \\
+    v_y(2.00) &= 18.0 - 9.8 \times 2.00 \\
+    v_y(2.00) &= 18.0 - 19.6 \\
+    v_y(2.00) &= -1.6 \text{ m/s}
+\end{align*}
+
+El signo negativo indica que la pelota está descendiendo.
+
+\textbf{Magnitud de la velocidad:}
+\begin{align*}
+    |\vec{v}(2.00)| &= \sqrt{v_x^2 + v_y^2} \\
+    |\vec{v}(2.00)| &= \sqrt{(24.0)^2 + (-1.6)^2} \\
+    |\vec{v}(2.00)| &= \sqrt{576 + 2.56} \\
+    |\vec{v}(2.00)| &= \sqrt{578.56} \\
+    |\vec{v}(2.00)| &= 24.1 \text{ m/s}
+\end{align*}
+
+\textbf{Dirección de la velocidad:}
+\begin{align*}
+    \theta &= \arctan\left(\frac{v_y}{v_x}\right) \\
+    \theta &= \arctan\left(\frac{-1.6}{24.0}\right) \\
+    \theta &= \arctan(-0.0667) \\
+    \theta &= -3.8°
+\end{align*}
+
+El ángulo negativo significa que la velocidad apunta $3.8°$ debajo de la horizontal.
+
+\subsection*{Parte b) Tiempo hasta la altura máxima}
+
+En la altura máxima, $v_y = 0$:
+\begin{align*}
+    0 &= v_{0y} - gt_{\text{máx}} \\
+    t_{\text{máx}} &= \frac{v_{0y}}{g} \\
+    t_{\text{máx}} &= \frac{18.0}{9.8} \\
+    t_{\text{máx}} &= 1.84 \text{ s}
+\end{align*}
+
+\subsection*{Parte c) Altura máxima}
+
+Usando la ecuación de altura máxima:
+\begin{align*}
+    h_{\text{máx}} &= \frac{v_{0y}^2}{2g} \\
+    h_{\text{máx}} &= \frac{(18.0)^2}{2 \times 9.8} \\
+    h_{\text{máx}} &= \frac{324}{19.6} \\
+    h_{\text{máx}} &= 16.5 \text{ m}
+\end{align*}
+
+\textbf{Verificación usando la ecuación de posición:}
+\begin{align*}
+    h_{\text{máx}} &= v_{0y}t_{\text{máx}} - \frac{1}{2}g t_{\text{máx}}^2 \\
+    h_{\text{máx}} &= 18.0 \times 1.84 - \frac{1}{2} \times 9.8 \times (1.84)^2 \\
+    h_{\text{máx}} &= 33.12 - 16.6 \\
+    h_{\text{máx}} &= 16.5 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection*{Parte d) Alcance horizontal}
+
+El tiempo total de vuelo es el doble del tiempo hasta la altura máxima:
+\begin{equation}
+    t_{\text{total}} = 2t_{\text{máx}} = 2 \times 1.84 = 3.68 \text{ s}
+\end{equation}
+
+El alcance horizontal es:
+\begin{align*}
+    R &= v_{0x} \times t_{\text{total}} \\
+    R &= 24.0 \times 3.68 \\
+    R &= 88.3 \text{ m}
+\end{align*}
+
+\textbf{Verificación usando la fórmula directa:}
+\begin{align*}
+    R &= \frac{v_0^2 \sin(2\theta_0)}{g} \\
+    R &= \frac{(30.0)^2 \sin(2 \times 36.9°)}{9.8} \\
+    R &= \frac{900 \times \sin(73.8°)}{9.8} \\
+    R &= \frac{900 \times 0.9604}{9.8} \\
+    R &= \frac{864.4}{9.8} \\
+    R &= 88.2 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection*{Parte e) Componentes de aceleración}
+
+Durante todo el vuelo, la única aceleración es la gravedad:
+
+\begin{equation}
+    \vec{a} = (0, -g)
+\end{equation}
+
+Por lo tanto:
+\begin{align*}
+    a_x &= 0 \text{ m/s}^2 \\
+    a_y &= -9.8 \text{ m/s}^2
+\end{align*}
+
+Esta aceleración es constante durante todo el vuelo, incluso en el punto más alto de la trayectoria.
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{a) En $t = 2.00$ s:}
+\begin{itemize}
+    \item Posición: $\boxed{(x, y) = (48.0 \text{ m}, 16.4 \text{ m})}$
+    \item Magnitud de velocidad: $\boxed{|\vec{v}| = 24.1 \text{ m/s}}$
+    \item Dirección: $\boxed{\theta = -3.8° \text{ (debajo de la horizontal)}}$
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{b) Tiempo hasta altura máxima:}
+\begin{equation*}
+    \boxed{t_{\text{máx}} = 1.84 \text{ s}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{c) Altura máxima:}
+\begin{equation*}
+    \boxed{h_{\text{máx}} = 16.5 \text{ m}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{d) Alcance horizontal:}
+\begin{equation*}
+    \boxed{R = 88.2 \text{ m}}
+\end{equation*}
+
+\vspace{0.3cm}
+
+\textbf{e) Componentes de aceleración:}
+\begin{align*}
+    &\boxed{a_x = 0 \text{ m/s}^2} \\
+    &\boxed{a_y = -9.8 \text{ m/s}^2}
+\end{align*}
+
+\end{resultadobox}
+
+\section{Verificación}
+
+\subsection*{Posición en $t = 2.00$ s}
+
+Verificamos que la posición $(48.0, 16.4)$ m está sobre la trayectoria parabólica:
+
+Ecuación de la trayectoria:
+\begin{equation}
+    y = \frac{v_{0y}}{v_{0x}}x - \frac{g}{2v_{0x}^2}x^2
+\end{equation}
+
+Sustituyendo $x = 48.0$ m:
+\begin{align*}
+    y &= \frac{18.0}{24.0} \times 48.0 - \frac{9.8}{2 \times (24.0)^2} \times (48.0)^2 \\
+    y &= 0.75 \times 48.0 - 0.0085 \times 2304 \\
+    y &= 36.0 - 19.6 \\
+    y &= 16.4 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection*{Simetría del movimiento}
+
+El tiempo total de vuelo debe ser el doble del tiempo hasta la altura máxima:
+\begin{equation}
+    t_{\text{total}} = 2t_{\text{máx}} = 2 \times 1.84 = 3.68 \text{ s} \quad \checkmark
+\end{equation}
+
+\subsection*{Energía}
+
+Podemos verificar usando conservación de energía. En $t = 2.00$ s, la energía total debe ser igual a la energía inicial:
+
+\textbf{Energía inicial (en el suelo):}
+\begin{equation}
+    E_0 = \frac{1}{2}mv_0^2 = \frac{1}{2}m(30.0)^2 = 450m \text{ J}
+\end{equation}
+
+\textbf{Energía en $t = 2.00$ s:}
+\begin{align*}
+    E &= \frac{1}{2}m|\vec{v}|^2 + mgy \\
+    E &= \frac{1}{2}m(24.1)^2 + m \times 9.8 \times 16.4 \\
+    E &= 290.4m + 160.7m \\
+    E &= 451m \text{ J} \quad \checkmark
+\end{align*}
+
+La pequeña diferencia se debe al redondeo.
+
+\section{Análisis Físico}
+
+\subsection{Interpretación de los resultados}
+
+\begin{enumerate}
+    \item \textbf{En $t = 2.00$ s:}
+    \begin{itemize}
+        \item La pelota ha superado ya el punto más alto (que ocurre en $t = 1.84$ s)
+        \item Está descendiendo ($v_y < 0$)
+        \item Ha recorrido más de la mitad del alcance total
+        \item Su velocidad es casi horizontal (solo $3.8°$ de inclinación)
+    \end{itemize}
+
+    \item \textbf{Altura máxima de 16.5 m:}
+    \begin{itemize}
+        \item Equivalente a un edificio de 5 pisos
+        \item Suficiente para pasar sobre la cerca de un campo típico
+        \item Alcanzada en menos de 2 segundos
+    \end{itemize}
+
+    \item \textbf{Alcance de 88.2 m:}
+    \begin{itemize}
+        \item Distancia considerable en béisbol
+        \item La pelota recorre casi todo el cuadro interior (27.4 m entre bases) más allá del jardín
+        \item Un buen batazo que probablemente sería un hit
+    \end{itemize}
+
+    \item \textbf{Aceleración constante:}
+    \begin{itemize}
+        \item La única fuerza es la gravedad
+        \item La aceleración no cambia en ningún punto de la trayectoria
+        \item Incluso en el punto más alto, $a_y = -9.8$ m/s$^2$
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Contexto deportivo}
+
+En un campo de béisbol real:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6]
+    % Campo de béisbol simplificado
+    \draw[thick, fill=brown!30] (0,0) -- (27.4,0) -- (27.4,27.4) -- (0,27.4) -- cycle;
+    \node at (13.7,13.7) {Cuadro};
+
+    % Bases
+    \filldraw[black] (0,0) circle (0.3) node[below] {Home};
+    \filldraw[black] (27.4,0) circle (0.3) node[right] {1B};
+    \filldraw[black] (27.4,27.4) circle (0.3) node[above] {2B};
+    \filldraw[black] (0,27.4) circle (0.3) node[left] {3B};
+
+    % Alcance de la pelota
+    \draw[-{Latex[length=3mm]}, red, very thick] (0,0) -- (88.2,0);
+    \node[below, red] at (88.2,0) {88.2 m};
+
+    % Jardín
+    \draw[thick, green!50!black] (0,27.4) -- (88.2,27.4);
+    \node at (44,35) {Jardín exterior};
+\end{tikzpicture}
+\end{center}
+
+La pelota aterriza bien en el jardín exterior, ¡probablemente un doble o triple!
+
+\section{Gráficas del Movimiento}
+
+\subsection{Trayectoria en el plano $xy$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=13cm,
+    height=8cm,
+    xlabel={Distancia horizontal $x$ (m)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=95,
+    ymin=0, ymax=18,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% Trayectoria (y = 0.75x - 0.0204x^2)
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:88.2,
+    samples=100,
+    smooth
+] {0.75*x - 0.0204*x^2};
+\addlegendentry{Trayectoria}
+
+% Punto en t=2.00s
+\addplot[
+    mark=*,
+    mark size=4pt,
+    orange!70!black,
+    only marks
+] coordinates {(48.0, 16.4)};
+\addlegendentry{$t=2.00$ s}
+
+% Punto de altura máxima
+\addplot[
+    mark=*,
+    mark size=4pt,
+    green!50!black,
+    only marks
+] coordinates {(44.1, 16.5)};
+\addlegendentry{Altura máxima}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Posición horizontal vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición $x$ (m)},
+    xmin=0, xmax=4,
+    ymin=0, ymax=95,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north west
+]
+
+% x(t) = 24t
+\addplot[
+    blue!70!black,
+    very thick,
+    domain=0:3.68,
+    samples=50
+] {24*x};
+\addlegendentry{$x(t) = 24.0t$}
+
+% Punto en t=2.00s
+\addplot[
+    mark=*,
+    mark size=4pt,
+    orange!70!black,
+    only marks
+] coordinates {(2.0, 48.0)};
+\addlegendentry{$t=2.00$ s}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Posición vertical vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=4,
+    ymin=0, ymax=18,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% y(t) = 18t - 4.9t^2
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:3.68,
+    samples=100
+] {18*x - 4.9*x^2};
+\addlegendentry{$y(t) = 18.0t - 4.9t^2$}
+
+% Punto en t=2.00s
+\addplot[
+    mark=*,
+    mark size=4pt,
+    orange!70!black,
+    only marks
+] coordinates {(2.0, 16.4)};
+\addlegendentry{$t=2.00$ s}
+
+% Punto de altura máxima
+\addplot[
+    mark=*,
+    mark size=4pt,
+    green!50!black,
+    only marks
+] coordinates {(1.84, 16.5)};
+\addlegendentry{$t_{\text{máx}}=1.84$ s}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Velocidad vertical vs. tiempo}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm,
+    height=8cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad $v_y$ (m/s)},
+    xmin=0, xmax=4,
+    ymin=-20, ymax=20,
+    grid=major,
+    grid style={dashed,gray!30},
+    legend pos=north east
+]
+
+% vy(t) = 18 - 9.8t
+\addplot[
+    red!70!black,
+    very thick,
+    domain=0:3.68,
+    samples=50
+] {18 - 9.8*x};
+\addlegendentry{$v_y(t) = 18.0 - 9.8t$}
+
+% Punto en t=2.00s
+\addplot[
+    mark=*,
+    mark size=4pt,
+    orange!70!black,
+    only marks
+] coordinates {(2.0, -1.6)};
+\addlegendentry{$t=2.00$ s}
+
+% Punto donde vy=0
+\addplot[
+    mark=*,
+    mark size=4pt,
+    green!50!black,
+    only marks
+] coordinates {(1.84, 0)};
+\addlegendentry{$v_y=0$ en $t_{\text{máx}}$}
+
+% Línea y=0
+\addplot[
+    dashed,
+    black,
+    domain=0:3.68
+] {0};
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Observaciones Importantes}
+
+\begin{enumerate}
+    \item \textbf{Movimiento simétrico:} El tiempo de subida es igual al tiempo de bajada.
+
+    \item \textbf{Velocidad horizontal constante:} $v_x = 24.0$ m/s durante todo el vuelo.
+
+    \item \textbf{Velocidad en $t = 2.00$ s:} La pelota está descendiendo pero todavía tiene una velocidad considerable de 24.1 m/s.
+
+    \item \textbf{Ángulo de 36.9°:} Este es un ángulo típico en béisbol, cercano al ángulo óptimo de 45° para máximo alcance pero más bajo para evitar que la pelota sea atrapada fácilmente.
+
+    \item \textbf{Aceleración:} Es constante e independiente del movimiento horizontal. Solo afecta la componente vertical.
+
+    \item \textbf{Comparación con 45°:} Si se bateara con el mismo $v_0$ pero a 45°, el alcance sería máximo: $R_{45°} = v_0^2/g = 900/9.8 = 91.8$ m, solo 3.6 m más lejos.
+\end{enumerate}
+
+\end{document}

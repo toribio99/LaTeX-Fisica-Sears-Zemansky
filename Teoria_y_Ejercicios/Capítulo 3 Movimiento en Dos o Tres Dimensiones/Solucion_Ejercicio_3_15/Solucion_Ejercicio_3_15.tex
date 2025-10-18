@@ -1,0 +1,291 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.15} \\
+\large Movimiento de Proyectiles: Gravedad en el Planeta X}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+Dentro de una nave espacial en reposo sobre la Tierra, una pelota rueda desde la parte superior de una mesa horizontal y cae al piso a una distancia $D$ de la pata de la mesa. Esta nave espacial ahora desciende en el inexplorado Planeta X. El comandante, el Capitán Curioso, hace rodar la misma pelota desde la misma mesa con la misma rapidez inicial que en la Tierra, y se da cuenta de que la pelota cae al piso a una distancia $2.76D$ de la pata de la mesa. ¿Cuál es la aceleración debida a la gravedad en el Planeta X?
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    % TIERRA
+    \node[above] at (3,4.5) {\Large \textbf{EN LA TIERRA}};
+
+    % Mesa en Tierra
+    \draw[fill=brown!30, thick] (0,2) rectangle (2,2.3);
+    \draw[thick] (0.3,0) -- (0.3,2);
+    \draw[thick] (1.7,0) -- (1.7,2);
+
+    % Suelo Tierra
+    \draw[fill=gray!20, thick] (-1,0) rectangle (6,-0.2);
+    \draw[pattern=north east lines, pattern color=gray] (-1,-0.2) rectangle (6,-0.4);
+
+    % Pelota Tierra
+    \filldraw[blue!70!black] (2,2.3) circle (0.1);
+    \draw[-{Latex[length=2mm]},blue!70!black, thick] (2,2.3) -- (2.8,2.3) node[midway,above] {\small $v_0$};
+
+    % Trayectoria Tierra (ecuación física: y = y0 - (g/(2v0^2))*x^2)
+    \draw[red!70!black, thick, dashed, -{Latex[length=2mm]}]
+        plot[domain=2:3.5, samples=50, smooth] (\x, {2.3 - 1.2*(\x-2)*(\x-2)});
+
+    % Distancia D
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (2,-0.7) -- (3.5,-0.7) node[midway,below] {$D$};
+
+    % Etiqueta gravedad
+    \node[below] at (3,-1.2) {$g_{\text{Tierra}} = 9.8$ m/s$^2$};
+
+    % PLANETA X
+    \node[above] at (11,4.5) {\Large \textbf{EN EL PLANETA X}};
+
+    % Mesa en Planeta X
+    \draw[fill=brown!30, thick] (8,2) rectangle (10,2.3);
+    \draw[thick] (8.3,0) -- (8.3,2);
+    \draw[thick] (9.7,0) -- (9.7,2);
+
+    % Suelo Planeta X
+    \draw[fill=green!20, thick] (7,0) rectangle (14.14,-0.2);
+    \draw[pattern=north east lines, pattern color=green!50] (7,-0.2) rectangle (14.14,-0.4);
+
+    % Pelota Planeta X
+    \filldraw[blue!70!black] (10,2.3) circle (0.1);
+    \draw[-{Latex[length=2mm]},blue!70!black, thick] (10,2.3) -- (10.8,2.3) node[midway,above] {\small $v_0$};
+
+    % Trayectoria Planeta X (más larga porque g es menor)
+    \draw[red!70!black, thick, dashed, -{Latex[length=2mm]}]
+        plot[domain=10:14.14, samples=50, smooth] (\x, {2.3 - 0.157*(\x-10)*(\x-10)});
+
+    % Distancia 2.76D
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (10,-0.7) -- (14.14,-0.7) node[midway,below] {$2.76D$};
+
+    % Etiqueta gravedad
+    \node[below] at (12,-1.2) {$g_X = ?$};
+
+\end{tikzpicture}
+\end{center}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Altura de la mesa:} $h$ (la misma en Tierra y Planeta X)
+    \item \textbf{Velocidad inicial de la pelota:} $v_0$ (la misma en ambos casos)
+    \item \textbf{Distancia horizontal en la Tierra:} $D$
+    \item \textbf{Distancia horizontal en el Planeta X:} $2.76D$
+    \item \textbf{Gravedad en la Tierra:} $g_{\text{Tierra}} = 9.8$ m/s$^2$
+    \item \textbf{Gravedad en el Planeta X:} $g_X = ?$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un lanzamiento horizontal desde una altura $h$:
+
+\textbf{Tiempo de caída:}
+\begin{equation}
+    t = \sqrt{\frac{2h}{g}}
+\end{equation}
+
+\textbf{Alcance horizontal:}
+\begin{equation}
+    x = v_0 t = v_0 \sqrt{\frac{2h}{g}}
+\end{equation}
+
+De la ecuación (2), vemos que el alcance horizontal es inversamente proporcional a la raíz cuadrada de la gravedad:
+\begin{equation}
+    x \propto \frac{1}{\sqrt{g}}
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Ecuación para la Tierra}
+
+En la Tierra, la pelota cae a una distancia $D$:
+\begin{equation}
+    D = v_0 \sqrt{\frac{2h}{g_{\text{Tierra}}}}
+\end{equation}
+
+\subsection*{Paso 2: Ecuación para el Planeta X}
+
+En el Planeta X, la pelota cae a una distancia $2.76D$:
+\begin{equation}
+    2.76D = v_0 \sqrt{\frac{2h}{g_X}}
+\end{equation}
+
+\subsection*{Paso 3: Dividir las ecuaciones}
+
+Dividiendo la ecuación (5) entre la ecuación (4):
+\begin{align}
+    \frac{2.76D}{D} &= \frac{v_0 \sqrt{\frac{2h}{g_X}}}{v_0 \sqrt{\frac{2h}{g_{\text{Tierra}}}}} \\
+    2.76 &= \frac{\sqrt{\frac{2h}{g_X}}}{\sqrt{\frac{2h}{g_{\text{Tierra}}}}} \\
+    2.76 &= \sqrt{\frac{g_{\text{Tierra}}}{g_X}}
+\end{align}
+
+\subsection*{Paso 4: Despejar $g_X$}
+
+Elevando al cuadrado ambos lados:
+\begin{align}
+    (2.76)^2 &= \frac{g_{\text{Tierra}}}{g_X} \\
+    7.6176 &= \frac{g_{\text{Tierra}}}{g_X} \\
+    g_X &= \frac{g_{\text{Tierra}}}{7.6176} \\
+    g_X &= \frac{9.8}{7.6176} \\
+    g_X &= 1.287 \text{ m/s}^2
+\end{align}
+
+\end{solucionbox}
+
+\section{Resultado Final}
+
+\begin{resultadobox}
+La aceleración debida a la gravedad en el Planeta X es:
+
+\begin{equation}
+    \boxed{g_X = 1.29 \text{ m/s}^2}
+\end{equation}
+
+\vspace{0.3cm}
+
+\textbf{Comparación:}
+\begin{itemize}
+    \item $g_X \approx \frac{g_{\text{Tierra}}}{7.62} \approx 0.131 \times g_{\text{Tierra}}$
+    \item La gravedad en el Planeta X es aproximadamente el 13.1\% de la gravedad terrestre
+    \item El Planeta X tiene una gravedad muy baja, similar a la de la Luna (que es $\approx 1.62$ m/s$^2$)
+\end{itemize}
+\end{resultadobox}
+
+\section{Verificación}
+
+Podemos verificar nuestro resultado calculando la relación de distancias:
+
+\begin{align*}
+    \frac{x_X}{x_{\text{Tierra}}} &= \sqrt{\frac{g_{\text{Tierra}}}{g_X}} \\
+    &= \sqrt{\frac{9.8}{1.287}} \\
+    &= \sqrt{7.614} \\
+    &= 2.76 \quad \checkmark
+\end{align*}
+
+Efectivamente, la pelota cae $2.76$ veces más lejos en el Planeta X que en la Tierra.
+
+\section{Análisis Físico}
+
+\subsection{¿Por qué la pelota llega más lejos en el Planeta X?}
+
+\begin{enumerate}
+    \item \textbf{Menor gravedad significa menor aceleración hacia abajo:} En el Planeta X, la pelota cae más lentamente.
+
+    \item \textbf{Mayor tiempo en el aire:} Como la gravedad es menor, la pelota tarda más tiempo en caer desde la misma altura.
+
+    \item \textbf{Mayor alcance horizontal:} Al estar más tiempo en el aire, la pelota recorre mayor distancia horizontal.
+\end{enumerate}
+
+\subsection{Tiempos de caída}
+
+Si definimos el tiempo de caída en la Tierra como $t_{\text{Tierra}}$:
+
+\begin{align*}
+    t_{\text{Tierra}} &= \sqrt{\frac{2h}{g_{\text{Tierra}}}} \\
+    t_X &= \sqrt{\frac{2h}{g_X}} = \sqrt{\frac{2h}{g_{\text{Tierra}}/7.6176}} \\
+    t_X &= \sqrt{7.6176} \times \sqrt{\frac{2h}{g_{\text{Tierra}}}} \\
+    t_X &= 2.76 \times t_{\text{Tierra}}
+\end{align*}
+
+La pelota está en el aire 2.76 veces más tiempo en el Planeta X.
+
+\section{Contexto Astronómico}
+
+Una gravedad de $1.29$ m/s$^2$ es característica de:
+
+\begin{itemize}
+    \item \textbf{Cuerpos celestes pequeños:} Asteroides grandes o lunas pequeñas
+    \item \textbf{Comparación con la Luna:} La Luna tiene $g = 1.62$ m/s$^2$, así que el Planeta X tiene aproximadamente el 80\% de la gravedad lunar
+    \item \textbf{Implicaciones:} Los astronautas podrían saltar mucho más alto y los objetos caerían muy lentamente
+\end{itemize}
+
+\section{Fórmula General}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Relación entre Gravedad y Alcance]
+
+Si el mismo objeto se lanza horizontalmente con la misma velocidad desde la misma altura en dos planetas diferentes:
+
+\begin{equation}
+    \frac{x_2}{x_1} = \sqrt{\frac{g_1}{g_2}}
+\end{equation}
+
+O equivalentemente:
+
+\begin{equation}
+    g_2 = g_1 \left(\frac{x_1}{x_2}\right)^2
+\end{equation}
+
+\textbf{Para este problema:}
+\begin{equation*}
+    g_X = g_{\text{Tierra}} \left(\frac{D}{2.76D}\right)^2 = \frac{9.8}{(2.76)^2} = 1.29 \text{ m/s}^2
+\end{equation*}
+
+\end{tcolorbox}
+
+\end{document}

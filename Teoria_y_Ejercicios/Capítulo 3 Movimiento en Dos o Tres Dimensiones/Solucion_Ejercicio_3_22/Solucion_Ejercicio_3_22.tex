@@ -1,0 +1,486 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+\definecolor{naranja}{RGB}{255,140,0}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.22} \\
+\large El Dardo y el Mono - Análisis de Tres Casos}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+Suponga que el ángulo inicial $\alpha_0$ de la figura 3.26 es de 42.0° y la distancia $d$ es de 3.00 m. ¿Dónde se encontrarán el dardo y el mono, si la rapidez inicial del dardo es:
+
+\begin{enumerate}
+    \item[a)] 12.0 m/s?
+    \item[b)] 8.0 m/s?
+    \item[c)] ¿Qué sucederá si la rapidez inicial del dardo es de 4.0 m/s? Dibuje la trayectoria en cada caso.
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Ángulo de lanzamiento del dardo:} $\alpha_0 = 42.0°$
+    \item \textbf{Distancia horizontal al mono:} $d = 3.00$ m
+    \item \textbf{Altura inicial del mono:} $h_0 = d \tan\alpha_0 = 3.00 \times \tan(42.0°) = 2.70$ m
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Velocidades iniciales a analizar:}
+    \begin{itemize}
+        \item Caso a): $v_0 = 12.0$ m/s
+        \item Caso b): $v_0 = 8.0$ m/s
+        \item Caso c): $v_0 = 4.0$ m/s
+    \end{itemize}
+    \item \textbf{Condición:} El mono se suelta en el instante en que se dispara el dardo
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection*{El problema del dardo y el mono}
+
+Este es un problema clásico de movimiento de proyectiles. Un mono está colgado de una rama a una distancia horizontal $d$ y altura $h_0 = d\tan\alpha_0$. En el instante en que se dispara el dardo (apuntando directamente al mono), el mono se suelta y cae libremente.
+
+\textbf{Principio fundamental:} El dardo siempre golpeará al mono, independientemente de la velocidad inicial, porque ambos caen la misma distancia vertical bajo la acción de la gravedad.
+
+\textbf{Ecuaciones del dardo (proyectil):}
+\begin{align}
+    x_d(t) &= v_0 \cos\alpha_0 \cdot t \\
+    y_d(t) &= v_0 \sin\alpha_0 \cdot t - \frac{1}{2}gt^2
+\end{align}
+
+\textbf{Ecuaciones del mono (caída libre):}
+\begin{align}
+    x_m &= d \quad \text{(constante)} \\
+    y_m(t) &= h_0 - \frac{1}{2}gt^2 = d\tan\alpha_0 - \frac{1}{2}gt^2
+\end{align}
+
+\textbf{Encuentro:} Ocurre cuando $x_d = x_m = d$, lo que sucede en el tiempo:
+\begin{equation}
+    t_{enc} = \frac{d}{v_0 \cos\alpha_0}
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Cálculos previos}
+
+Calculamos las componentes de la velocidad inicial para cada caso:
+
+\begin{align}
+    v_{0x} &= v_0 \cos(42.0°) = v_0 \times 0.7431 \\
+    v_{0y} &= v_0 \sin(42.0°) = v_0 \times 0.6691
+\end{align}
+
+Altura inicial del mono:
+\begin{equation}
+    h_0 = d \tan(42.0°) = 3.00 \times 0.9004 = 2.70 \text{ m}
+\end{equation}
+
+\subsection*{Caso a): $v_0 = 12.0$ m/s}
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align}
+    v_{0x} &= 12.0 \times 0.7431 = 8.917 \text{ m/s} \\
+    v_{0y} &= 12.0 \times 0.6691 = 8.029 \text{ m/s}
+\end{align}
+
+\textbf{Tiempo de encuentro:}
+
+El dardo alcanza la posición horizontal $x = d = 3.00$ m en el tiempo:
+\begin{equation}
+    t_{enc} = \frac{d}{v_{0x}} = \frac{3.00}{8.917} = 0.3365 \text{ s}
+\end{equation}
+
+\textbf{Altura del encuentro:}
+
+Para el dardo:
+\begin{align}
+    y_d &= v_{0y}t - \frac{1}{2}gt^2 \\
+    &= 8.029(0.3365) - \frac{1}{2}(9.8)(0.3365)^2 \\
+    &= 2.702 - 0.555 \\
+    &= 2.15 \text{ m}
+\end{align}
+
+Para el mono (verificación):
+\begin{align}
+    y_m &= h_0 - \frac{1}{2}gt^2 \\
+    &= 2.70 - \frac{1}{2}(9.8)(0.3365)^2 \\
+    &= 2.70 - 0.555 \\
+    &= 2.15 \text{ m} \quad \checkmark
+\end{align}
+
+\textbf{Conclusión:} El dardo golpea al mono en la posición $(3.00, 2.15)$ m, a una altura de 2.15 m sobre el suelo, después de 0.337 s.
+
+\subsection*{Caso b): $v_0 = 8.0$ m/s}
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align}
+    v_{0x} &= 8.0 \times 0.7431 = 5.945 \text{ m/s} \\
+    v_{0y} &= 8.0 \times 0.6691 = 5.353 \text{ m/s}
+\end{align}
+
+\textbf{Tiempo de encuentro:}
+\begin{equation}
+    t_{enc} = \frac{3.00}{5.945} = 0.5046 \text{ s}
+\end{equation}
+
+\textbf{Altura del encuentro:}
+
+Para el dardo:
+\begin{align}
+    y_d &= 5.353(0.5046) - \frac{1}{2}(9.8)(0.5046)^2 \\
+    &= 2.701 - 1.248 \\
+    &= 1.45 \text{ m}
+\end{align}
+
+Para el mono (verificación):
+\begin{align}
+    y_m &= 2.70 - \frac{1}{2}(9.8)(0.5046)^2 \\
+    &= 2.70 - 1.248 \\
+    &= 1.45 \text{ m} \quad \checkmark
+\end{align}
+
+\textbf{Conclusión:} El dardo golpea al mono en la posición $(3.00, 1.45)$ m, a una altura de 1.45 m sobre el suelo, después de 0.505 s.
+
+\subsection*{Caso c): $v_0 = 4.0$ m/s}
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align}
+    v_{0x} &= 4.0 \times 0.7431 = 2.972 \text{ m/s} \\
+    v_{0y} &= 4.0 \times 0.6691 = 2.676 \text{ m/s}
+\end{align}
+
+\textbf{Tiempo para alcanzar $x = 3.00$ m:}
+\begin{equation}
+    t = \frac{3.00}{2.972} = 1.009 \text{ s}
+\end{equation}
+
+\textbf{Altura del dardo en ese instante:}
+\begin{align}
+    y_d &= 2.676(1.009) - \frac{1}{2}(9.8)(1.009)^2 \\
+    &= 2.700 - 4.986 \\
+    &= -2.29 \text{ m}
+\end{align}
+
+\textbf{¡El dardo está por debajo del suelo!} Esto significa que el dardo cae al suelo antes de alcanzar la posición horizontal del mono.
+
+\textbf{¿Cuándo cae el dardo al suelo?} Cuando $y_d = 0$:
+\begin{equation}
+    0 = v_{0y}t - \frac{1}{2}gt^2 = t\left(v_{0y} - \frac{1}{2}gt\right)
+\end{equation}
+
+Las soluciones son $t = 0$ (lanzamiento) y:
+\begin{equation}
+    t = \frac{2v_{0y}}{g} = \frac{2(2.676)}{9.8} = 0.546 \text{ s}
+\end{equation}
+
+\textbf{Posición horizontal donde cae:}
+\begin{equation}
+    x = v_{0x}t = 2.972(0.546) = 1.62 \text{ m}
+\end{equation}
+
+\textbf{¿Dónde está el mono cuando el dardo cae al suelo?}
+
+En $t = 0.546$ s:
+\begin{align}
+    x_m &= 3.00 \text{ m} \\
+    y_m &= 2.70 - \frac{1}{2}(9.8)(0.546)^2 = 2.70 - 1.46 = 1.24 \text{ m}
+\end{align}
+
+\textbf{Conclusión:} Con $v_0 = 4.0$ m/s, el dardo no tiene suficiente velocidad inicial. Cae al suelo en $x = 1.62$ m, mientras el mono todavía está cayendo y se encuentra a 3.00 m horizontalmente y 1.24 m verticalmente. \textbf{El dardo no alcanza al mono.}
+
+\subsection*{Verificación: ¿Cuándo cae el mono al suelo?}
+
+El mono cae al suelo cuando $y_m = 0$:
+\begin{equation}
+    0 = h_0 - \frac{1}{2}gt^2 \quad \Rightarrow \quad t = \sqrt{\frac{2h_0}{g}} = \sqrt{\frac{2(2.70)}{9.8}} = 0.742 \text{ s}
+\end{equation}
+
+El mono cae al suelo después de 0.742 s, mientras que el dardo con $v_0 = 4.0$ m/s cae después de 0.546 s.
+
+\end{solucionbox}
+
+\section{Diagramas de las Trayectorias}
+
+\subsection*{Caso a): $v_0 = 12.0$ m/s (Encuentro a 2.15 m de altura)}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.8]
+    % Suelo
+    \draw[fill=brown!20, thick] (-0.5,0) rectangle (4,-.3);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,-0.3) rectangle (4,-0.45);
+
+    % Lanzador
+    \draw[fill=blue!20, thick] (0,0) circle (0.08);
+    \node[below, font=\small] at (0,0) {Lanzador};
+
+    % Posición inicial del mono
+    \draw[fill=yellow!40, thick] (3,2.7) circle (0.1);
+    \node[right, font=\scriptsize] at (3.15,2.7) {Mono (inicial)};
+
+    % Línea punteada desde lanzador al mono
+    \draw[dashed, gray] (0,0) -- (3,2.7);
+    \node[above, font=\scriptsize, rotate=42] at (1.5,1.35) {$\alpha_0=42°$};
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0,0) -- (0.7,0.528);
+    \node[blue!70!black, above right, font=\scriptsize] at (0.7,0.4) {$v_0=12$ m/s};
+
+    % Trayectoria del dardo - Ecuación: y = 0.9004x - 0.0616x²
+    % La trayectoria completa hasta el suelo (x = 14.62 m donde y = 0)
+    \draw[red!70!black, very thick]
+        plot[domain=0:3, samples=100, smooth] (\x, {0.9004*\x - 0.0616*\x*\x});
+    \draw[red!70!black, very thick, dashed, -{Latex[length=2.5mm]}]
+        plot[domain=3:4, samples=50, smooth] (\x, {0.9004*\x - 0.0616*\x*\x});
+
+    % Caída del mono (línea vertical)
+    \draw[orange!80!black, very thick, dashed] (3,2.7) -- (3,2.15);
+
+    % Punto de encuentro
+    \filldraw[green!60!black] (3,2.15) circle (0.08);
+    \node[green!60!black, right, font=\small] at (3.15,2.15) {Encuentro};
+    \node[green!60!black, right, font=\scriptsize] at (3.15,1.95) {$(3.00, 2.15)$ m};
+    \node[green!60!black, right, font=\scriptsize] at (3.15,1.75) {$t=0.337$ s};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.6) -- (3,-0.6);
+    \node[below, font=\small] at (1.5,-0.6) {$d = 3.00$ m};
+
+    % Altura inicial del mono
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.3,0) -- (-0.3,2.7);
+    \node[left, font=\scriptsize] at (-0.3,1.35) {$h_0=2.70$ m};
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Caso b): $v_0 = 8.0$ m/s (Encuentro a 1.45 m de altura)}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.8]
+    % Suelo
+    \draw[fill=brown!20, thick] (-0.5,0) rectangle (4,-0.3);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,-0.3) rectangle (4,-0.45);
+
+    % Lanzador
+    \draw[fill=blue!20, thick] (0,0) circle (0.08);
+    \node[below, font=\small] at (0,0) {Lanzador};
+
+    % Posición inicial del mono
+    \draw[fill=yellow!40, thick] (3,2.7) circle (0.1);
+    \node[right, font=\scriptsize] at (3.15,2.7) {Mono (inicial)};
+
+    % Línea punteada desde lanzador al mono
+    \draw[dashed, gray] (0,0) -- (3,2.7);
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0,0) -- (0.5,0.358);
+    \node[blue!70!black, above right, font=\scriptsize] at (0.5,0.2) {$v_0=8$ m/s};
+
+    % Trayectoria del dardo - Ecuación: y = 0.9004x - 0.1386x²
+    % La trayectoria completa hasta el suelo (x = 6.50 m donde y = 0)
+    \draw[red!70!black, very thick]
+        plot[domain=0:3, samples=100, smooth] (\x, {0.9004*\x - 0.1386*\x*\x});
+    \draw[red!70!black, very thick, dashed, -{Latex[length=2.5mm]}]
+        plot[domain=3:4, samples=50, smooth] (\x, {0.9004*\x - 0.1386*\x*\x});
+
+    % Caída del mono
+    \draw[orange!80!black, very thick, dashed] (3,2.7) -- (3,1.45);
+
+    % Punto de encuentro
+    \filldraw[green!60!black] (3,1.45) circle (0.08);
+    \node[green!60!black, right, font=\small] at (3.15,1.45) {Encuentro};
+    \node[green!60!black, right, font=\scriptsize] at (3.15,1.25) {$(3.00, 1.45)$ m};
+    \node[green!60!black, right, font=\scriptsize] at (3.15,1.05) {$t=0.505$ s};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.6) -- (3,-0.6);
+    \node[below, font=\small] at (1.5,-0.6) {$d = 3.00$ m};
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Caso c): $v_0 = 4.0$ m/s (El dardo no alcanza al mono)}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.8]
+    % Suelo
+    \draw[fill=brown!20, thick] (-0.5,0) rectangle (4,-0.5);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,-0.5) rectangle (4,-0.65);
+
+    % Lanzador
+    \draw[fill=blue!20, thick] (0,0) circle (0.08);
+    \node[below, font=\small] at (0,-0.1) {Lanzador};
+
+    % Posición inicial del mono
+    \draw[fill=yellow!40, thick] (3,2.7) circle (0.1);
+    \node[right, font=\scriptsize] at (3.15,2.7) {Mono (inicial)};
+
+    % Línea punteada desde lanzador al mono
+    \draw[dashed, gray] (0,0) -- (3,2.7);
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0,0) -- (0.3,0.215);
+    \node[blue!70!black, above right, font=\scriptsize] at (0.2,0) {$v_0=4$ m/s};
+
+    % Trayectoria del dardo - Ecuación: y = 0.9004x - 0.5545x²
+    % El dardo cae al suelo en x = 1.62 m
+    \draw[red!70!black, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:1.62, samples=100, smooth] (\x, {0.9004*\x - 0.5545*\x*\x});
+
+    % Punto donde cae el dardo
+    \filldraw[red!70!black] (1.62,0) circle (0.08);
+    \node[red!70!black, below, font=\small] at (0.65,-0.7) {Dardo cae};
+    \node[red!70!black, below, font=\scriptsize] at (1.62,-0.7) {$x=1.62$ m};
+    \node[red!70!black, below, font=\scriptsize] at (2.62,-0.7) {$t=0.546$ s};
+
+    % Posición del mono cuando el dardo cae
+    \draw[orange!80!black, very thick, dashed] (3,2.7) -- (3,1.24);
+    \filldraw[orange!80!black] (3,1.24) circle (0.08);
+    \node[orange!80!black, right, font=\small] at (3.15,1.24) {Mono en $t=0.546$ s};
+    \node[orange!80!black, right, font=\scriptsize] at (3.15,1.04) {$(3.00, 1.24)$ m};
+
+    % Línea mostrando la separación
+    \draw[purple, thick, dotted] (1.62,0) -- (3,1.24);
+    \node[purple, above, font=\scriptsize] at (2.3,0.62) {NO se encuentran};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.95) -- (3,-0.95);
+    \node[below, font=\small] at (1.5,-0.95) {$d = 3.00$ m};
+\end{tikzpicture}
+\end{center}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Caso a): $v_0 = 12.0$ m/s}
+\begin{equation}
+    \boxed{\text{Encuentro en: } (x, y) = (3.00, 2.15) \text{ m en } t = 0.337 \text{ s}}
+\end{equation}
+
+El dardo golpea al mono a una altura de \textbf{2.15 metros} sobre el suelo. El mono ha caído $2.70 - 2.15 = 0.55$ m desde su posición inicial.
+
+\subsection*{Caso b): $v_0 = 8.0$ m/s}
+\begin{equation}
+    \boxed{\text{Encuentro en: } (x, y) = (3.00, 1.45) \text{ m en } t = 0.505 \text{ s}}
+\end{equation}
+
+El dardo golpea al mono a una altura de \textbf{1.45 metros} sobre el suelo. El mono ha caído $2.70 - 1.45 = 1.25$ m desde su posición inicial.
+
+\subsection*{Caso c): $v_0 = 4.0$ m/s}
+\begin{equation}
+    \boxed{\text{NO HAY ENCUENTRO - El dardo cae al suelo antes}}
+\end{equation}
+
+\textbf{Dardo:} Cae al suelo en $x = 1.62$ m después de $t = 0.546$ s
+
+\textbf{Mono:} En ese instante está en $(3.00, 1.24)$ m, todavía cayendo
+
+\textbf{Distancia de separación:} El mono está 1.38 m más lejos horizontalmente cuando el dardo cae al suelo.
+
+\vspace{0.3cm}
+
+\textbf{Velocidad mínima necesaria:}
+
+Para que el dardo alcance la posición horizontal $x = d = 3.00$ m antes de caer al suelo ($y = 0$), necesitamos:
+
+\begin{equation}
+    v_{0,\text{min}} = \sqrt{\frac{gd^2}{2d\sin\alpha_0\cos\alpha_0}} = \sqrt{\frac{9.8(3.00)^2}{2(3.00)\sin(42°)\cos(42°)}} = 5.74 \text{ m/s}
+\end{equation}
+
+Como $4.0 < 5.74$ m/s, el dardo no tiene suficiente velocidad inicial.
+
+\end{resultadobox}
+
+\section{Análisis y Conclusión}
+
+Este problema ilustra varios aspectos importantes del movimiento de proyectiles y el problema clásico del "dardo y el mono":
+
+\begin{enumerate}
+    \item \textbf{Principio del dardo y el mono:} Cuando la velocidad inicial es suficiente (casos a y b), el dardo \textit{siempre} golpea al mono, sin importar la rapidez inicial. Esto se debe a que ambos objetos caen la misma distancia vertical bajo la acción de la gravedad en el mismo tiempo.
+
+    \item \textbf{Efecto de la velocidad inicial:}
+    \begin{itemize}
+        \item A mayor velocidad, el encuentro ocurre más rápido y a mayor altura
+        \item Caso a ($v_0 = 12$ m/s): Encuentro a 2.15 m (79.6\% de la altura inicial)
+        \item Caso b ($v_0 = 8$ m/s): Encuentro a 1.45 m (53.7\% de la altura inicial)
+        \item Caso c ($v_0 = 4$ m/s): No hay encuentro
+    \end{itemize}
+
+    \item \textbf{Velocidad mínima requerida:} Existe una velocidad mínima ($v_{0,\text{min}} = 5.74$ m/s) por debajo de la cual el dardo cae al suelo antes de alcanzar la posición horizontal del mono. Esta velocidad mínima depende de:
+    \begin{itemize}
+        \item La distancia horizontal $d$
+        \item El ángulo de lanzamiento $\alpha_0$
+        \item La aceleración gravitacional $g$
+    \end{itemize}
+
+    \item \textbf{Verificación matemática:} En los casos a) y b), verificamos que $y_d = y_m$ en el tiempo de encuentro, confirmando que el dardo golpea al mono en el mismo instante en que ambos están a la misma altura.
+
+    \item \textbf{Trayectorias parabólicas:} Las tres trayectorias son parabólicas, pero difieren en:
+    \begin{itemize}
+        \item El alcance horizontal (mayor con mayor $v_0$)
+        \item La altura máxima (mayor con mayor $v_0$)
+        \item El tiempo de vuelo (mayor con menor $v_0$)
+    \end{itemize}
+
+    \item \textbf{Aplicación práctica:} Este problema modela situaciones reales como el disparo de proyectiles a objetivos en movimiento, donde es necesario "apuntar directamente" al objetivo (no por debajo ni por encima), siempre que la velocidad sea suficiente.
+\end{enumerate}
+
+\end{document}

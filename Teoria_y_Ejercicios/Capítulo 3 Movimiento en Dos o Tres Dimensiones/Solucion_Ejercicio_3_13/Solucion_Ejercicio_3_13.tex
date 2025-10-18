@@ -1,0 +1,434 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.13} \\
+\large Movimiento de Proyectiles: Salto del Río I}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\textbf{Preguntas:}
+\begin{enumerate}
+    \item[a)] ¿Qué tan rápido deberá ir el auto cuando llegue a la orilla para librar el río y llegar a salvo al otro lado?
+    \item[b)] ¿Qué rapidez tendrá el auto justo antes de que aterrice en la orilla opuesta?
+\end{enumerate}
+
+\begin{wrapfigure}[7]{r}{.75\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.08]
+    % Orilla izquierda (alta)
+    \draw[fill=green!40!brown, thick] (0,0) -- (0,21.3) -- (15,21.3) -- (15,0) -- cycle;
+
+    % Orilla derecha (baja)
+    \draw[fill=green!40!brown, thick] (76,0) -- (76,1.8) -- (91,1.8) -- (91,0) -- cycle;
+
+    % Río
+    \draw[fill=blue!40, pattern=north west lines, pattern color=blue!60]
+        (15,0) rectangle (76,0.5);
+    \draw[blue!70, thick, decorate, decoration={snake, amplitude=1mm, segment length=5mm}]
+        (15,0) -- (76,0);
+
+    % Suelo bajo el río
+    \draw[fill=brown!60, pattern=north east lines, pattern color=brown!40]
+        (0,-3) rectangle (91,0);
+
+    % Automóvil
+    \draw[fill=red!70, rounded corners=2pt] (13,21.3) rectangle (17,23);
+    \draw[fill=gray!50] (14,20.8) circle (0.8);
+    \draw[fill=gray!50] (16,20.8) circle (0.8);
+    \node at (15,22) {\scriptsize AUTO};
+
+    % Flecha de velocidad
+    \draw[-{Latex[length=4mm]},red!70!black, ultra thick] (17,22.15) -- (23,22.15)
+        node[midway,above] {$v_0$};
+
+    % Trayectoria parabólica (ecuación física real: y = y0 - (g/(2v0^2))*(x-x0)^2)
+    % Para v0 = 30.6 m/s, ajustado al diagrama: coeficiente = 0.0056
+    \draw[blue!70!black, thick, dashed, -{Latex[length=3mm]}]
+        plot[domain=17:76, samples=100, smooth] (\x, {21.3 - 0.0056*(\x-17)*(\x-17)});
+
+    % Cotas verticales
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (-3,0) -- (-3,21.3) node[midway,left] {21.3 m};
+
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (94,0) -- (94,1.8) node[midway,right] {1.8 m};
+
+    % Cota horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (15,-6) -- (76,-6) node[midway,below] {61.0 m};
+
+    % Etiquetas
+    \node at (11,5) {Orilla};
+    \node at (10.5,2) {inicial};
+    \node at (80.5,8) {Orilla};
+    \node at (81,3.5) {opuesta};
+    \node[blue!70!black] at (45.5,-1.4) {Río};
+
+    % Nivel de referencia y=0
+    \draw[red, dashed, thick] (-5,0) -- (95,0);
+    \node[red, left] at (12,-6) {$y=0$ (nivel del río)};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+\textbf{Salto del río I.} Un automóvil llega a un puente durante una tormenta y el conductor descubre que las aguas se lo han llevado. El conductor debe llegar al otro lado, así que decide intentar saltar la brecha con su auto. La orilla en la que se encuentra está 21.3 m arriba del río, mientras que la orilla opuesta está a sólo 1.8 m sobre las aguas. El río es un torrente embravecido con una anchura de 61.0 m.
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Altura de la orilla inicial:} $h_1 = 21.3$ m (sobre el río)
+    \item \textbf{Altura de la orilla opuesta:} $h_2 = 1.8$ m (sobre el río)
+    \item \textbf{Anchura del río:} $d = 61.0$ m
+    \item \textbf{Diferencia de altura:} $\Delta h = h_1 - h_2 = 21.3 - 1.8 = 19.5$ m
+    \item \textbf{Velocidad inicial:} horizontal, $v_{0y} = 0$
+    \item \textbf{Aceleración de la gravedad:} $g = 9.8$ m/s$^2$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Ecuaciones del Movimiento de Proyectiles}
+
+Para un objeto lanzado horizontalmente desde una altura:
+
+\textbf{Movimiento horizontal (componente x):}
+\begin{equation}
+    x = v_0 t
+\end{equation}
+
+\textbf{Movimiento vertical (componente y):}
+\begin{equation}
+    y = y_0 - \frac{1}{2}gt^2
+\end{equation}
+
+\textbf{Velocidad vertical en cualquier instante:}
+\begin{equation}
+    v_y = -gt
+\end{equation}
+
+\section{Análisis del Problema}
+
+\subsection{Sistema de Coordenadas}
+
+Tomamos como origen el nivel del río ($y = 0$), con:
+\begin{itemize}
+    \item Posición inicial: $x_0 = 0$, $y_0 = 21.3$ m
+    \item Posición final: $x_f = 61.0$ m, $y_f = 1.8$ m
+    \item Desplazamiento vertical: $\Delta y = y_f - y_0 = 1.8 - 21.3 = -19.5$ m
+\end{itemize}
+
+\subsection{Estrategia de Solución}
+
+\begin{enumerate}
+    \item Calcular el tiempo de vuelo usando el movimiento vertical.
+    \item Calcular la velocidad inicial necesaria usando el movimiento horizontal.
+    \item Calcular la velocidad final (magnitud y dirección).
+\end{enumerate}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Velocidad mínima necesaria}
+
+\subsubsection*{Paso 1: Calcular el tiempo de vuelo}
+
+Usando la ecuación del movimiento vertical:
+\begin{align*}
+    y_f &= y_0 - \frac{1}{2}gt^2 \\
+    1.8 &= 21.3 - \frac{1}{2}(9.8)t^2 \\
+    1.8 &= 21.3 - 4.9t^2 \\
+    4.9t^2 &= 21.3 - 1.8 \\
+    4.9t^2 &= 19.5 \\
+    t^2 &= \frac{19.5}{4.9} \\
+    t^2 &= 3.9796 \\
+    t &= \sqrt{3.9796} \\
+    t &= 1.995 \text{ s}
+\end{align*}
+
+También podemos usar la fórmula con la diferencia de altura:
+\begin{align*}
+    \Delta y &= -\frac{1}{2}gt^2 \\
+    -19.5 &= -\frac{1}{2}(9.8)t^2 \\
+    19.5 &= 4.9t^2 \\
+    t &= \sqrt{\frac{19.5}{4.9}} = \sqrt{3.9796} = 1.995 \text{ s}
+\end{align*}
+
+O usando la fórmula directa:
+\begin{equation*}
+    t = \sqrt{\frac{2\Delta h}{g}} = \sqrt{\frac{2(19.5)}{9.8}} = \sqrt{\frac{39.0}{9.8}} = 1.995 \text{ s}
+\end{equation*}
+
+\textbf{Tiempo de vuelo:} $t = 1.995$ s $\approx 2.00$ s
+
+\subsubsection*{Paso 2: Calcular la velocidad inicial}
+
+El auto debe recorrer horizontalmente 61.0 m en 1.995 s:
+
+\begin{align*}
+    x &= v_0 t \\
+    61.0 &= v_0 \cdot 1.995 \\
+    v_0 &= \frac{61.0}{1.995} \\
+    v_0 &= 30.58 \text{ m/s}
+\end{align*}
+
+También podemos usar la fórmula directa:
+\begin{align*}
+    v_0 &= \frac{d}{\sqrt{\frac{2\Delta h}{g}}} = d\sqrt{\frac{g}{2\Delta h}} \\
+    v_0 &= 61.0 \sqrt{\frac{9.8}{2(19.5)}} \\
+    v_0 &= 61.0 \sqrt{\frac{9.8}{39.0}} \\
+    v_0 &= 61.0 \sqrt{0.2513} \\
+    v_0 &= 61.0 \times 0.5013 \\
+    v_0 &= 30.58 \text{ m/s}
+\end{align*}
+
+\subsection*{Parte b) Rapidez al aterrizar}
+
+\subsubsection*{Paso 3: Componente horizontal de la velocidad}
+
+La velocidad horizontal permanece constante:
+\begin{equation*}
+    v_x = v_0 = 30.58 \text{ m/s}
+\end{equation*}
+
+\subsubsection*{Paso 4: Componente vertical de la velocidad}
+
+Usando la ecuación de velocidad vertical:
+\begin{align*}
+    v_y &= -gt = -(9.8)(1.995) \\
+    v_y &= -19.55 \text{ m/s}
+\end{align*}
+
+(El signo negativo indica que la velocidad es hacia abajo)
+
+También podemos calcularlo usando cinemática:
+\begin{align*}
+    v_y^2 &= v_{0y}^2 + 2g\Delta y \\
+    v_y^2 &= 0 + 2(9.8)(19.5) \\
+    v_y^2 &= 382.2 \\
+    v_y &= -\sqrt{382.2} = -19.55 \text{ m/s}
+\end{align*}
+
+\subsubsection*{Paso 5: Magnitud de la velocidad}
+
+\begin{align*}
+    v &= \sqrt{v_x^2 + v_y^2} \\
+    v &= \sqrt{(30.58)^2 + (19.55)^2} \\
+    v &= \sqrt{935.1 + 382.2} \\
+    v &= \sqrt{1317.3} \\
+    v &= 36.3 \text{ m/s}
+\end{align*}
+
+\subsubsection*{Paso 6: Dirección de la velocidad}
+
+El ángulo con respecto a la horizontal:
+\begin{align*}
+    \theta &= \arctan\left(\frac{|v_y|}{v_x}\right) \\
+    \theta &= \arctan\left(\frac{19.55}{30.58}\right) \\
+    \theta &= \arctan(0.6392) \\
+    \theta &= 32.6°
+\end{align*}
+
+El auto aterriza con un ángulo de 32.6° por debajo de la horizontal.
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Parte a) Velocidad inicial necesaria}
+
+El auto debe ir a una rapidez mínima de:
+\begin{equation}
+    \boxed{v_0 = 30.6 \text{ m/s} \approx 110 \text{ km/h}}
+\end{equation}
+
+\subsection*{Parte b) Rapidez al aterrizar}
+
+El auto aterrizará con una rapidez de:
+\begin{equation}
+    \boxed{v = 36.3 \text{ m/s} \approx 131 \text{ km/h}}
+\end{equation}
+
+Con un ángulo de:
+\begin{equation}
+    \boxed{\theta = 32.6° \text{ por debajo de la horizontal}}
+\end{equation}
+
+\vspace{0.3cm}
+
+\textbf{Componentes de la velocidad al aterrizar:}
+\begin{itemize}
+    \item Horizontal: $v_x = 30.6$ m/s
+    \item Vertical: $v_y = 19.6$ m/s (hacia abajo)
+\end{itemize}
+
+\end{resultadobox}
+
+\section{Verificación}
+
+\subsection{Comprobación del alcance horizontal}
+
+Con $v_0 = 30.58$ m/s y $t = 1.995$ s:
+\begin{align*}
+    x &= v_0 t = 30.58 \times 1.995 = 61.0 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection{Comprobación de la altura final}
+
+Con $y_0 = 21.3$ m y $t = 1.995$ s:
+\begin{align*}
+    y_f &= y_0 - \frac{1}{2}gt^2 \\
+    y_f &= 21.3 - \frac{1}{2}(9.8)(1.995)^2 \\
+    y_f &= 21.3 - 4.9(3.98) \\
+    y_f &= 21.3 - 19.5 \\
+    y_f &= 1.8 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection{Comprobación de la velocidad}
+
+Verificación alternativa usando energía:
+\begin{align*}
+    \frac{1}{2}mv_f^2 &= \frac{1}{2}mv_0^2 + mg\Delta h \\
+    v_f^2 &= v_0^2 + 2g\Delta h \\
+    v_f^2 &= (30.58)^2 + 2(9.8)(19.5) \\
+    v_f^2 &= 935.1 + 382.2 = 1317.3 \\
+    v_f &= 36.3 \text{ m/s} \quad \checkmark
+\end{align*}
+
+\section{Análisis y Comentarios}
+
+\subsection{Conversión de unidades}
+
+\textbf{Velocidad inicial:}
+\begin{align*}
+    v_0 &= 30.6 \text{ m/s} \times \frac{3.6 \text{ km/h}}{1 \text{ m/s}} = 110 \text{ km/h}
+\end{align*}
+
+\textbf{Velocidad final:}
+\begin{align*}
+    v_f &= 36.3 \text{ m/s} \times \frac{3.6 \text{ km/h}}{1 \text{ m/s}} = 131 \text{ km/h}
+\end{align*}
+
+\subsection{Realismo del problema}
+
+\begin{itemize}
+    \item \textbf{Velocidad requerida:} 110 km/h es una velocidad alta pero alcanzable para un automóvil.
+
+    \item \textbf{Impacto:} El aterrizaje a 131 km/h con un ángulo de 32.6° sería \textit{extremadamente peligroso} y probablemente destructivo para el vehículo y fatal para los ocupantes.
+
+    \item \textbf{Factores ignorados:} En la realidad, la resistencia del aire, la rotación del vehículo en el aire, y el hecho de que el auto no es un punto material harían este salto virtualmente imposible.
+
+    \item \textbf{Conclusión práctica:} ¡El conductor debería buscar otra ruta!
+\end{itemize}
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item \textbf{Diferencia de altura:} Cuando las alturas inicial y final son diferentes, se debe usar $\Delta h = h_1 - h_2$ para calcular el tiempo de vuelo.
+
+    \item \textbf{Independencia de componentes:} El movimiento horizontal y vertical se analizan por separado.
+
+    \item \textbf{Velocidad aumenta al caer:} Aunque la velocidad horizontal es constante, la componente vertical aumenta continuamente, incrementando la rapidez total.
+
+    \item \textbf{Conservación de energía:} La velocidad final también se puede calcular usando conservación de energía mecánica.
+\end{enumerate}
+
+\section{Fórmulas Generales}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Fórmulas para Salto con Diferencia de Altura]
+
+\textbf{Tiempo de vuelo:}
+\begin{equation*}
+    t = \sqrt{\frac{2\Delta h}{g}}
+\end{equation*}
+
+\textbf{Velocidad inicial necesaria:}
+\begin{equation*}
+    v_0 = d\sqrt{\frac{g}{2\Delta h}}
+\end{equation*}
+
+\textbf{Velocidad vertical al aterrizar:}
+\begin{equation*}
+    v_y = \sqrt{2g\Delta h}
+\end{equation*}
+
+\textbf{Rapidez al aterrizar:}
+\begin{equation*}
+    v = \sqrt{v_0^2 + 2g\Delta h}
+\end{equation*}
+
+\textbf{Para este problema:}
+\begin{align*}
+    \Delta h &= 19.5 \text{ m}, \quad d = 61.0 \text{ m} \\
+    v_0 &= 30.6 \text{ m/s}, \quad v = 36.3 \text{ m/s}
+\end{align*}
+
+\end{tcolorbox}
+
+\end{document}

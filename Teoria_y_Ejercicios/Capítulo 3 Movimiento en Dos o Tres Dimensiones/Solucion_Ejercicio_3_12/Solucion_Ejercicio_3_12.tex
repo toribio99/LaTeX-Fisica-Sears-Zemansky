@@ -1,0 +1,329 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.12} \\
+\large Movimiento de Proyectiles: La Nadadora Osada}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+
+\begin{wrapfigure}[10]{r}{.65\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.75]
+    % Risco principal
+    \draw[fill=brown!40, thick] (0,0) -- (0,6) -- (2,6) -- (2,0) -- cycle;
+
+    % Saliente
+    \draw[fill=brown!60, thick] (2,0) -- (2,1) -- (3.75,1) -- (3.75,0) -- cycle;
+
+    % Agua
+    \draw[fill=blue!30, pattern=north east lines, pattern color=blue!50]
+        (3.75,-0.5) rectangle (10,0);
+    \draw[blue!70, thick, decorate, decoration={snake, amplitude=0.5mm, segment length=3mm}]
+        (3.75,0) -- (10,0);
+
+    % Suelo bajo el agua
+    \draw[fill=brown!70, pattern=north east lines, pattern color=brown!50]
+        (0,-0.8) rectangle (10,-0.5);
+
+    % Nadadora
+    \filldraw[red!70!black] (2,6) circle (0.15);
+    \draw[-{Latex[length=3mm]},red!70!black, ultra thick] (2,6) -- (3.5,6)
+        node[midway,above] {$v_0$};
+
+    % Trayectoria parabólica (exitosa)
+    % Ecuación física real: y = y0 - (g/(2v0^2))*(x-x0)^2
+    % Para esta ilustración: coeficiente = 0.296
+    \draw[blue!70!black, thick, dashed, -{Latex[length=2mm]}]
+        plot[domain=2:6.5, samples=50, smooth] (\x, {6 - 0.296*(\x-2)*(\x-2)});
+
+    % Cotas verticales
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (-0.7,0) -- (-0.7,6) node[midway,left] {\color{red!70}9.00 m};
+
+    % Cotas horizontales
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (2,-1.2) -- (3.75,-1.2) node[midway,below] {\color{red!70}1.75 m};
+
+    % Etiquetas
+    \node at (1,3) {Risco};
+    \node at (2.8,0.5) {\small Saliente};
+    \node[blue!70!black] at (7.3,-0.3) {Agua};
+    \node at (1.3,6.4) {\small Nadadora};
+
+    % Punto crítico
+    \filldraw[red] (3.75,1) circle (0.1);
+    \node[red, below right] at (3.5,1.7) {\small Punto crítico};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Una osada nadadora de 510 N se lanza desde un risco con un impulso horizontal, como se muestra en la figura 3.39. ¿Qué rapidez mínima debe tener al saltar de lo alto del risco para no chocar con la saliente en la base, que tiene una anchura de 1.75 m y está 9.00 m abajo del borde superior del risco?
+
+\vspace{8mm}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Peso de la nadadora:} $W = 510$ N (no es necesario para el cálculo)
+    \item \textbf{Altura del risco:} $h = 9.00$ m
+    \item \textbf{Anchura de la saliente:} $d = 1.75$ m
+    \item \textbf{Velocidad inicial:} horizontal, $v_{0y} = 0$
+    \item \textbf{Aceleración de la gravedad:} $g = 9.8$ m/s$^2$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Ecuaciones del Movimiento de Proyectiles}
+
+Para un objeto lanzado horizontalmente desde una altura $h$:
+
+\textbf{Movimiento horizontal (componente x):}
+\begin{equation}
+    x = v_0 t
+\end{equation}
+
+\textbf{Movimiento vertical (componente y):}
+\begin{equation}
+    y = y_0 - \frac{1}{2}gt^2
+\end{equation}
+
+\textbf{Tiempo de caída desde altura $h$:}
+\begin{equation}
+    t = \sqrt{\frac{2h}{g}}
+\end{equation}
+
+\textbf{Alcance horizontal:}
+\begin{equation}
+    x = v_0 \sqrt{\frac{2h}{g}}
+\end{equation}
+
+\section{Análisis del Problema}
+
+La nadadora debe \textbf{librar} la saliente, es decir, su alcance horizontal debe ser \textit{mayor} que la anchura de la saliente cuando llegue a la altura de la saliente (9.00 m debajo del punto de lanzamiento).
+
+\textbf{Condición para no chocar:}
+\begin{equation}
+    x \geq d = 1.75 \text{ m}
+\end{equation}
+
+Para la velocidad mínima, la nadadora debe llegar exactamente al borde de la saliente:
+\begin{equation}
+    x_{\text{min}} = d = 1.75 \text{ m}
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Calcular el tiempo de caída}
+
+La nadadora cae desde una altura $h = 9.00$ m hasta el nivel de la saliente (o el agua).
+
+Usando la ecuación del movimiento vertical:
+\begin{align*}
+    y &= y_0 - \frac{1}{2}gt^2 \\
+    0 &= 9.00 - \frac{1}{2}(9.8)t^2 \\
+    0 &= 9.00 - 4.9t^2 \\
+    4.9t^2 &= 9.00 \\
+    t^2 &= \frac{9.00}{4.9} \\
+    t^2 &= 1.8367 \\
+    t &= \sqrt{1.8367} \\
+    t &= 1.355 \text{ s}
+\end{align*}
+
+También podemos usar la fórmula directa:
+\begin{align*}
+    t &= \sqrt{\frac{2h}{g}} = \sqrt{\frac{2(9.00)}{9.8}} \\
+    t &= \sqrt{\frac{18.0}{9.8}} = \sqrt{1.8367} \\
+    t &= 1.355 \text{ s}
+\end{align*}
+
+\textbf{Tiempo de caída:} $t = 1.355$ s (o $1.36$ s redondeado)
+
+\subsection*{Paso 2: Calcular la velocidad mínima}
+
+Para que la nadadora libre exactamente la saliente, debe recorrer horizontalmente una distancia igual a la anchura de la saliente:
+
+\begin{align*}
+    x_{\text{min}} &= v_{0\text{min}} \cdot t \\
+    1.75 &= v_{0\text{min}} \cdot 1.355 \\
+    v_{0\text{min}} &= \frac{1.75}{1.355} \\
+    v_{0\text{min}} &= 1.29 \text{ m/s}
+\end{align*}
+
+También podemos usar la fórmula directa:
+\begin{align*}
+    v_{0\text{min}} &= \frac{d}{\sqrt{\frac{2h}{g}}} = d\sqrt{\frac{g}{2h}} \\
+    v_{0\text{min}} &= 1.75 \sqrt{\frac{9.8}{2(9.00)}} \\
+    v_{0\text{min}} &= 1.75 \sqrt{\frac{9.8}{18.0}} \\
+    v_{0\text{min}} &= 1.75 \sqrt{0.5444} \\
+    v_{0\text{min}} &= 1.75 \times 0.7379 \\
+    v_{0\text{min}} &= 1.29 \text{ m/s}
+\end{align*}
+
+\end{solucionbox}
+
+\section{Resultado Final}
+
+\begin{resultadobox}
+La nadadora debe tener una rapidez mínima al saltar del risco de:
+
+\begin{equation}
+    \boxed{v_{0\text{min}} = 1.29 \text{ m/s}}
+\end{equation}
+
+\vspace{0.3cm}
+
+\textbf{Interpretación:}
+\begin{itemize}
+    \item Si $v_0 < 1.29$ m/s: La nadadora chocará con la saliente.
+    \item Si $v_0 = 1.29$ m/s: La nadadora pasará exactamente por el borde de la saliente.
+    \item Si $v_0 > 1.29$ m/s: La nadadora librará la saliente sin problemas.
+\end{itemize}
+\end{resultadobox}
+
+\section{Verificación}
+
+Vamos a verificar nuestro resultado calculando la posición donde la nadadora toca el agua (o el nivel de la saliente) con $v_0 = 1.29$ m/s:
+
+\subsection{Distancia horizontal recorrida}
+
+\begin{align*}
+    x &= v_0 t = 1.29 \times 1.355 \\
+    x &= 1.75 \text{ m} \quad \checkmark
+\end{align*}
+
+Efectivamente, con esta velocidad la nadadora recorre exactamente 1.75 m horizontalmente, justo la anchura de la saliente.
+
+\subsection{Velocidad al llegar al agua}
+
+Aunque no lo pide el problema, es interesante calcular la velocidad con la que la nadadora llega al agua:
+
+\textbf{Componente horizontal:}
+\begin{align*}
+    v_x &= v_0 = 1.29 \text{ m/s}
+\end{align*}
+
+\textbf{Componente vertical:}
+\begin{align*}
+    v_y &= gt = 9.8 \times 1.355 = 13.3 \text{ m/s}
+\end{align*}
+
+\textbf{Magnitud de la velocidad:}
+\begin{align*}
+    v &= \sqrt{v_x^2 + v_y^2} = \sqrt{(1.29)^2 + (13.3)^2} \\
+    v &= \sqrt{1.66 + 176.9} = \sqrt{178.6} \\
+    v &= 13.4 \text{ m/s}
+\end{align*}
+
+\textbf{Ángulo con la horizontal:}
+\begin{align*}
+    \theta &= \arctan\left(\frac{v_y}{v_x}\right) = \arctan\left(\frac{13.3}{1.29}\right) \\
+    \theta &= \arctan(10.3) = 84.4°
+\end{align*}
+
+La nadadora entra al agua casi verticalmente, con un ángulo de 84.4° respecto a la horizontal.
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item \textbf{Lanzamiento horizontal:} La velocidad inicial es completamente horizontal ($v_{0y} = 0$).
+
+    \item \textbf{Independencia de movimientos:} El tiempo de caída no depende de la velocidad horizontal.
+
+    \item \textbf{Condición crítica:} Para problemas de "librar un obstáculo", se busca la velocidad que permite llegar exactamente al borde del obstáculo.
+
+    \item \textbf{Peso vs. Masa:} El peso de la nadadora (510 N) es información adicional que no afecta el cálculo cinemático (todos los objetos caen con la misma aceleración en ausencia de resistencia del aire).
+\end{enumerate}
+
+\section{Fórmula General}
+
+Para un objeto lanzado horizontalmente desde altura $h$ que debe librar un obstáculo a distancia horizontal $d$:
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Fórmula de Velocidad Mínima]
+
+\begin{equation}
+    v_{0\text{min}} = d\sqrt{\frac{g}{2h}}
+\end{equation}
+
+\textbf{Donde:}
+\begin{itemize}
+    \item $d$ = distancia horizontal a librar
+    \item $h$ = altura de caída
+    \item $g$ = aceleración de la gravedad
+\end{itemize}
+
+\textbf{Para este problema:}
+\begin{equation*}
+    v_{0\text{min}} = 1.75\sqrt{\frac{9.8}{2(9.00)}} = 1.29 \text{ m/s}
+\end{equation*}
+
+\end{tcolorbox}
+
+\end{document}

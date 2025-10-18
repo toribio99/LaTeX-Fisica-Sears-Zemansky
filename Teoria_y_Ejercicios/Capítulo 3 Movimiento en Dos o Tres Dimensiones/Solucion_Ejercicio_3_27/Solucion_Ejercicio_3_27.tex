@@ -1,0 +1,368 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.27} \\
+\large Maleta que Cae de un Avión}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[7]{r}{.45\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.4]
+    % Suelo
+    \draw[fill=brown!20, thick] (-1,0) rectangle (12,-0.3);
+    \draw[pattern=north east lines, pattern color=brown] (-1,-0.3) rectangle (12,-0.5);
+
+    % Perro
+    \draw[fill=brown!60, thick] (0,0) ellipse (0.2 and 0.1);
+    \draw[fill=brown!60, thick] (-0.1,0) -- (-0.15,0.15) -- (-0.05,0.15) -- cycle;
+    \draw[fill=brown!60, thick] (0.1,0) -- (0.15,0.15) -- (0.05,0.15) -- cycle;
+    \node[below, font=\scriptsize] at (0,-0.18) {Perro};
+
+    % Avión (posición inicial)
+    \draw[fill=gray!40, thick] (-0.3,7.6) -- (0.5,7.8) -- (0.6,7.7) -- (0.5,7.55) -- cycle;
+    \draw[fill=gray!50, thick] (-0.1,7.65) -- (-0.1,7.85) -- (0.15,7.85) -- (0.15,7.65) -- cycle;
+    \draw[fill=blue!30, thick] (0.1,7.75) circle (0.06);
+    \node[above, font=\scriptsize] at (0,7.95) {Avión};
+
+    % Línea vertical punteada
+    \draw[dashed, thick] (0,0) -- (0,7.6);
+    \node[left, font=\scriptsize] at (-0.1,3.8) {$114$ m};
+
+    % Vector velocidad del avión
+    \draw[-{Latex[length=2.5mm]},red!70!black, ultra thick] (0,7.6) -- (1.5,8.2);
+    \node[red!70!black, above, font=\scriptsize] at (0.75,8.3) {$\vec{v}=90$ m/s};
+    \node[red!70!black, below, font=\scriptsize] at (0.75,7.9) {$23°$};
+
+    % Trayectoria parabólica de la maleta
+    % y = 7.6 + 0.424x - 0.1014x² (ajustado para tocar el suelo en x=11)
+    \draw[cyan!70!blue, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:11, samples=100, smooth] (\x, {7.6 + 0.424*\x - 0.1014*\x*\x});
+
+    % Maleta cayendo en diferentes posiciones
+    %\filldraw[orange!80!black] (3,8.2) circle (0.08);
+    %\filldraw[orange!80!black] (6,8.1) circle (0.08);
+    %\filldraw[orange!80!black] (9,6.5) circle (0.08);
+
+    % Punto de impacto
+    \filldraw[green!60!black] (11,0) circle (0.1);
+    \node[green!60!black, below, font=\scriptsize] at (11,-0.2) {Impacto};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-1.2) -- (11,-1.2);
+    \node[below, font=\small] at (5.5,-1.2) {$d = ?$};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un avión vuela con una velocidad de 90.0 m/s a un ángulo de 23.0° arriba de la horizontal. Cuando está 114 m directamente arriba de un perro parado en suelo plano, se cae una maleta del compartimiento de equipaje. ¿A qué distancia del perro caerá la maleta? Ignore la resistencia del aire.
+
+\vspace{6mm}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad del avión:} $v_{avión} = 90.0$ m/s a $23.0°$ arriba de la horizontal
+    \item \textbf{Altura inicial:} $h_0 = 114$ m (directamente arriba del perro)
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Velocidad inicial de la maleta:} Igual a la velocidad del avión
+    \item \textbf{Resistencia del aire:} despreciable
+    \item \textbf{Incógnita:} Distancia horizontal desde el perro hasta donde cae la maleta
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Cuando un objeto se suelta desde un vehículo en movimiento, hereda la velocidad del vehículo. En este caso, la maleta tiene la misma velocidad inicial que el avión.
+
+\textbf{Componentes de la velocidad inicial de la maleta:}
+\begin{align}
+    v_{0x} &= v_{avión} \cos\theta \\
+    v_{0y} &= v_{avión} \sin\theta
+\end{align}
+
+\textbf{Ecuaciones de posición:}
+\begin{align}
+    x(t) &= v_{0x}t \\
+    y(t) &= h_0 + v_{0y}t - \frac{1}{2}gt^2
+\end{align}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Componentes de la velocidad inicial}
+
+La maleta hereda la velocidad del avión en el momento de caer:
+
+\begin{align}
+    v_{0x} &= v_{avión} \cos(23.0°) = 90.0 \times 0.9205 = 82.85 \text{ m/s} \\
+    v_{0y} &= v_{avión} \sin(23.0°) = 90.0 \times 0.3907 = 35.16 \text{ m/s}
+\end{align}
+
+\subsection*{Paso 2: Tiempo de caída}
+
+La maleta cae al suelo cuando $y = 0$. Tomando el punto inicial como $y_0 = h_0 = 114$ m:
+
+\begin{equation}
+    y = h_0 + v_{0y}t - \frac{1}{2}gt^2
+\end{equation}
+
+Cuando $y = 0$:
+
+\begin{align}
+    0 &= 114 + 35.16t - 4.9t^2 \\
+    4.9t^2 - 35.16t - 114 &= 0
+\end{align}
+
+Usando la fórmula cuadrática:
+
+\begin{align}
+    t &= \frac{35.16 \pm \sqrt{(35.16)^2 + 4(4.9)(114)}}{2(4.9)} \\
+    t &= \frac{35.16 \pm \sqrt{1236.23 + 2234.4}}{9.8} \\
+    t &= \frac{35.16 \pm \sqrt{3470.63}}{9.8} \\
+    t &= \frac{35.16 \pm 58.91}{9.8}
+\end{align}
+
+Tomando la raíz positiva:
+
+\begin{equation}
+    t = \frac{94.07}{9.8} = 9.60 \text{ s}
+\end{equation}
+
+\subsection*{Paso 3: Distancia horizontal}
+
+La distancia horizontal que recorre la maleta es:
+
+\begin{align}
+    d &= v_{0x} \cdot t \\
+    d &= 82.85 \times 9.60 \\
+    d &= 795.4 \text{ m}
+\end{align}
+
+La maleta cae a \textbf{795.4 metros} de distancia del perro.
+
+\subsection*{Verificación y análisis adicional}
+
+\textbf{Velocidad al impactar el suelo:}
+
+Componente horizontal (constante):
+\begin{equation}
+    v_x = v_{0x} = 82.85 \text{ m/s}
+\end{equation}
+
+Componente vertical:
+\begin{align}
+    v_y &= v_{0y} - gt \\
+    v_y &= 35.16 - 9.8(9.60) \\
+    v_y &= 35.16 - 94.08 \\
+    v_y &= -58.92 \text{ m/s}
+\end{align}
+
+Magnitud de la velocidad:
+\begin{align}
+    v &= \sqrt{v_x^2 + v_y^2} \\
+    v &= \sqrt{(82.85)^2 + (-58.92)^2} \\
+    v &= \sqrt{6864.12 + 3471.57} \\
+    v &= \sqrt{10335.69} = 101.66 \text{ m/s}
+\end{align}
+
+\textbf{Altura máxima alcanzada:}
+
+La maleta alcanza su altura máxima cuando $v_y = 0$:
+
+\begin{equation}
+    t_{max} = \frac{v_{0y}}{g} = \frac{35.16}{9.8} = 3.59 \text{ s}
+\end{equation}
+
+Altura máxima:
+\begin{align}
+    h_{max} &= h_0 + v_{0y}t_{max} - \frac{1}{2}gt_{max}^2 \\
+    &= 114 + 35.16(3.59) - \frac{1}{2}(9.8)(3.59)^2 \\
+    &= 114 + 126.22 - 63.11 \\
+    &= 177.11 \text{ m}
+\end{align}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{Distancia del perro:}
+\begin{equation}
+    \boxed{d = 795.4 \text{ m} \approx 795 \text{ m}}
+\end{equation}
+
+La maleta cae a \textbf{795 metros} (casi 0.8 km) de distancia del perro.
+
+\vspace{0.3cm}
+
+\textbf{Información adicional:}
+\begin{itemize}
+    \item Tiempo de caída: $t = 9.60$ s
+    \item Velocidad inicial de la maleta: $v_0 = 90.0$ m/s a $23.0°$
+    \item Componentes de velocidad inicial: $v_{0x} = 82.85$ m/s, $v_{0y} = 35.16$ m/s
+    \item Altura máxima alcanzada: $h_{max} = 177.11$ m (sobre el suelo)
+    \item Tiempo para alcanzar altura máxima: $t_{max} = 3.59$ s
+    \item Velocidad al impactar: $v = 101.66$ m/s
+    \item Componentes de velocidad al impactar: $v_x = 82.85$ m/s, $v_y = -58.92$ m/s
+    \item Ángulo de impacto: $\theta = \arctan(-58.92/82.85) = -35.4°$ (bajo la horizontal)
+\end{itemize}
+
+\end{resultadobox}
+
+\section{Diagrama de la Trayectoria}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=14cm, height=9cm,
+    xlabel={Posición horizontal $x$ (m)},
+    ylabel={Altura $y$ (m)},
+    xmin=0, xmax=850,
+    ymin=0, ymax=190,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos=north east
+]
+    % Trayectoria: y = 114 + 0.424x - 0.000714x²
+    % Coeficiente correcto: g/(2v₀x²) = 9.8/(2×82.85²) = 0.000714
+    \addplot[domain=0:795.4, samples=100, cyan!70!blue, very thick] {114 + 0.424*x - 0.000714*x^2};
+
+    % Punto inicial (avión)
+    \addplot[only marks, mark=*, mark size=3pt, blue] coordinates {(0, 114)};
+    \node[blue, left] at (axis cs:0,114) {Avión};
+
+    % Altura máxima
+    \addplot[only marks, mark=*, mark size=3pt, orange] coordinates {(297.1, 177.11)};
+    \node[orange, above] at (axis cs:297.1,177.11) {Altura máxima};
+
+    % Punto de impacto
+    \addplot[only marks, mark=*, mark size=3pt, green!60!black] coordinates {(795.4, 0)};
+    \node[green!60!black, below right] at (axis cs:795.4,0) {Impacto};
+
+    % Posición del perro
+    \addplot[only marks, mark=*, mark size=3pt, brown] coordinates {(0, 0)};
+    \node[brown, below] at (axis cs:0,0) {Perro};
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=3mm]}, red!70!black, ultra thick] (axis cs:0,114) -- (axis cs:100,152);
+    \node[red!70!black, above right] at (axis cs:50,140) {$\vec{v}_0$};
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Análisis y Conclusión}
+
+Este problema ilustra el movimiento de proyectiles desde una plataforma móvil. Las conclusiones principales son:
+
+\begin{enumerate}
+    \item \textbf{Herencia de velocidad:} La maleta hereda completamente la velocidad del avión en el momento de caer. Esto significa que tiene componentes de velocidad tanto horizontal (82.85 m/s) como vertical (35.16 m/s hacia arriba).
+
+    \item \textbf{Larga distancia horizontal:} La maleta cae a 795 m del perro, casi 0.8 km. Esto se debe a:
+    \begin{itemize}
+        \item La alta velocidad horizontal heredada del avión
+        \item El largo tiempo de vuelo (9.6 s)
+        \item La velocidad vertical inicial hacia arriba que aumenta el tiempo en el aire
+    \end{itemize}
+
+    \item \textbf{Trayectoria ascendente inicial:} A pesar de "caer", la maleta inicialmente sube durante los primeros 3.59 s, alcanzando una altura máxima de 177.11 m (63 m por encima del avión). Esto se debe a la componente vertical positiva de la velocidad inicial.
+
+    \item \textbf{Fases del movimiento:}
+    \begin{itemize}
+        \item Fase 1 (0 a 3.59 s): Movimiento ascendente, alcanza 177.11 m
+        \item Fase 2 (3.59 a 9.60 s): Movimiento descendente hasta el suelo
+        \item Tiempo total: 9.60 s
+    \end{itemize}
+
+    \item \textbf{Velocidad de impacto:} La maleta golpea el suelo con 101.66 m/s, mayor que la velocidad inicial de 90.0 m/s. Esto se debe a la conversión de energía potencial en cinética durante la caída desde 114 m de altura.
+
+    \item \textbf{Referencia del avión:} Desde la perspectiva de alguien en el avión, la maleta parece caer verticalmente. Pero desde el suelo, sigue una parábola.
+
+    \item \textbf{Consideración de resistencia del aire:} En la realidad, la resistencia del aire reduciría significativamente la distancia horizontal. Una maleta tiene un área frontal grande y caería mucho más cerca del perro que los 795 m calculados.
+
+    \item \textbf{Ecuación de la trayectoria:} La trayectoria parabólica es:
+    \begin{equation}
+        y = 114 + 0.424x - 0.000714x^2
+    \end{equation}
+    donde el coeficiente del término cuadrático es $g/(2v_{0x}^2) = 9.8/(2 \times 82.85^2) = 0.000714$.
+
+\end{enumerate}
+
+\textbf{Aplicaciones prácticas:} Este tipo de problema es relevante para:
+\begin{itemize}
+    \item Suministro aéreo de ayuda humanitaria
+    \item Bombardeo aéreo (aplicaciones militares)
+    \item Análisis de accidentes aéreos
+    \item Entender el movimiento relativo entre sistemas de referencia
+\end{itemize}
+
+\end{document}

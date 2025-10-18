@@ -1,0 +1,465 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.24} \\
+\large Bomberos y Chorro de Agua}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[12]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=1.2]
+    % Suelo
+    \draw[fill=brown!20, thick] (-0.5,0) rectangle (7,-0.2);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,-0.2) rectangle (7,-0.35);
+
+    % Bombero con manguera
+    \draw[fill=blue!20, thick] (0,0) circle (0.08);
+    \node[below, font=\scriptsize] at (0,-0.25) {Bombero};
+
+    % Manguera
+    \draw[blue!70, ultra thick] (0,0) -- (0.5,0.4);
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0,0) -- (0.75,1.0);
+    \node[blue!70!black, above right, font=\scriptsize] at (0.4,0.7) {$v_0=25$ m/s};
+
+    % Ángulo
+    \draw[thick] (0.3,0) arc (0:53:0.3);
+    \node[font=\scriptsize] at (0.45,0.15) {$\alpha=?$};
+
+    % Trayectoria del agua - parabola con coef 0.178
+    % y = 1.333x - 0.178x²
+    \draw[cyan!70!blue, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:6.3, samples=100, smooth] (\x, {1.333*\x - 0.178*\x*\x});
+
+    % Edificio en llamas
+    \draw[fill=gray!40, thick] (6.3,0) rectangle (7,2.5);
+    \draw[fill=orange!60, opacity=0.5] (6.5,2.3) ellipse (0.15 and 0.2);
+    \draw[fill=red!60, opacity=0.5] (6.8,2.4) ellipse (0.1 and 0.15);
+    \node[rotate=90, font=\scriptsize] at (6.65,1.25) {Edificio};
+
+    % Punto de impacto en el edificio
+    \filldraw[green!60!black] (6.3,2.22) circle (0.08);
+    \node[green!60!black, left, font=\scriptsize] at (6.2,2.22) {Impacto};
+    \node[green!60!black, left, font=\scriptsize] at (6.2,2.0) {$h=?$};
+
+    % Punto más alto de la trayectoria
+    \filldraw[orange!80!black] (3.75,2.5) circle (0.08);
+    \node[orange!80!black, above, font=\scriptsize] at (3.75,2.6) {Altura máx.};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (0,-0.6) -- (6.3,-0.6);
+    \node[below, font=\small] at (3.15,-0.6) {$x = 45.0$ m};
+
+    % Tiempo
+    \node[above, font=\small, blue!70!black] at (3.15,3) {$t = 3.00$ s};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Los bomberos están lanzando un chorro de agua a un edificio en llamas, utilizando una manguera de alta presión que imprime al agua una rapidez de 25.0 m/s al salir por la boquilla. Una vez que sale de la manguera, el agua se mueve con movimiento de proyectil. Los bomberos ajustan el ángulo de elevación de la manguera hasta que el agua tarda 3.00 s en llegar a un edificio que está a 45.0 m de distancia. Ignore la resistencia del aire y suponga que la boquilla de la manguera está a nivel del suelo.
+
+\begin{enumerate}
+	\item[a)] Calcule el ángulo de elevación $\alpha$
+	\item[b)] Determine la rapidez y aceleración del agua en el punto más alto de su trayectoria
+	\item[c)] ¿A qué altura sobre el suelo incide el agua sobre el edificio, y con qué rapidez lo hace?
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad inicial del agua:} $v_0 = 25.0$ m/s
+    \item \textbf{Distancia horizontal al edificio:} $x = 45.0$ m
+    \item \textbf{Tiempo de vuelo al edificio:} $t = 3.00$ s
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Posición inicial:} $x_0 = 0$, $y_0 = 0$ (nivel del suelo)
+    \item \textbf{Resistencia del aire:} despreciable
+    \item \textbf{Incógnita principal:} Ángulo de elevación $\alpha$
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un proyectil con movimiento en dos dimensiones:
+
+\textbf{Ecuaciones de posición:}
+\begin{align}
+    x(t) &= v_0 \cos\alpha \cdot t \\
+    y(t) &= v_0 \sin\alpha \cdot t - \frac{1}{2}gt^2
+\end{align}
+
+\textbf{Ecuaciones de velocidad:}
+\begin{align}
+    v_x(t) &= v_0 \cos\alpha \quad \text{(constante)} \\
+    v_y(t) &= v_0 \sin\alpha - gt
+\end{align}
+
+\textbf{En el punto más alto:} $v_y = 0$ y $v = v_x = v_0 \cos\alpha$
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a): Ángulo de elevación}
+
+Sabemos que el agua recorre una distancia horizontal de 45.0 m en 3.00 s. Usando la ecuación de posición horizontal:
+
+\begin{equation}
+    x = v_0 \cos\alpha \cdot t
+\end{equation}
+
+Sustituyendo los valores conocidos:
+
+\begin{align}
+    45.0 &= 25.0 \cos\alpha \cdot 3.00 \\
+    45.0 &= 75.0 \cos\alpha \\
+    \cos\alpha &= \frac{45.0}{75.0} = 0.600
+\end{align}
+
+Por lo tanto:
+
+\begin{equation}
+    \alpha = \arccos(0.600) = 53.13° \approx 53.1°
+\end{equation}
+
+\textbf{Componentes de la velocidad inicial:}
+
+\begin{align}
+    v_{0x} &= v_0 \cos\alpha = 25.0 \times 0.600 = 15.0 \text{ m/s} \\
+    v_{0y} &= v_0 \sin\alpha = 25.0 \times 0.800 = 20.0 \text{ m/s}
+\end{align}
+
+donde $\sin(53.13°) = 0.800$.
+
+\subsection*{Parte b): Rapidez y aceleración en el punto más alto}
+
+En el punto más alto de la trayectoria, la velocidad vertical es cero:
+
+\begin{equation}
+    v_y = 0
+\end{equation}
+
+La velocidad horizontal permanece constante:
+
+\begin{equation}
+    v_x = v_{0x} = 15.0 \text{ m/s}
+\end{equation}
+
+Por lo tanto, la \textbf{rapidez en el punto más alto} es:
+
+\begin{equation}
+    v_{max} = \sqrt{v_x^2 + v_y^2} = \sqrt{(15.0)^2 + 0^2} = 15.0 \text{ m/s}
+\end{equation}
+
+La \textbf{aceleración} en el punto más alto (y en todo momento durante el vuelo) es:
+
+\begin{equation}
+    \vec{a} = -g\hat{j} = -9.8 \text{ m/s}^2 \hat{j}
+\end{equation}
+
+La magnitud de la aceleración es:
+
+\begin{equation}
+    a = g = 9.8 \text{ m/s}^2 \quad \text{(dirigida verticalmente hacia abajo)}
+\end{equation}
+
+\textbf{¿Cuándo alcanza el punto más alto?}
+
+El agua alcanza su altura máxima cuando $v_y = 0$:
+
+\begin{align}
+    0 &= v_{0y} - gt_{max} \\
+    t_{max} &= \frac{v_{0y}}{g} = \frac{20.0}{9.8} = 2.041 \text{ s}
+\end{align}
+
+\textbf{Altura máxima:}
+
+\begin{align}
+    h_{max} &= v_{0y}t_{max} - \frac{1}{2}gt_{max}^2 \\
+    &= 20.0(2.041) - \frac{1}{2}(9.8)(2.041)^2 \\
+    &= 40.82 - 20.41 \\
+    &= 20.41 \text{ m}
+\end{align}
+
+\subsection*{Parte c): Altura de impacto y rapidez}
+
+\textbf{Altura en el edificio (en $t = 3.00$ s):}
+
+Usamos la ecuación de posición vertical:
+
+\begin{align}
+    y &= v_{0y}t - \frac{1}{2}gt^2 \\
+    y &= 20.0(3.00) - \frac{1}{2}(9.8)(3.00)^2 \\
+    y &= 60.0 - \frac{1}{2}(9.8)(9.00) \\
+    y &= 60.0 - 44.1 \\
+    y &= 15.9 \text{ m}
+\end{align}
+
+El agua incide sobre el edificio a una altura de \textbf{15.9 metros}.
+
+\textbf{Rapidez en el momento del impacto:}
+
+Componente horizontal (constante):
+\begin{equation}
+    v_x = v_{0x} = 15.0 \text{ m/s}
+\end{equation}
+
+Componente vertical en $t = 3.00$ s:
+\begin{align}
+    v_y &= v_{0y} - gt \\
+    v_y &= 20.0 - 9.8(3.00) \\
+    v_y &= 20.0 - 29.4 \\
+    v_y &= -9.4 \text{ m/s}
+\end{align}
+
+El signo negativo indica que la velocidad vertical apunta hacia abajo.
+
+Magnitud de la velocidad:
+\begin{align}
+    v &= \sqrt{v_x^2 + v_y^2} \\
+    v &= \sqrt{(15.0)^2 + (-9.4)^2} \\
+    v &= \sqrt{225.0 + 88.36} \\
+    v &= \sqrt{313.36} = 17.70 \text{ m/s}
+\end{align}
+
+Ángulo de incidencia:
+\begin{equation}
+    \theta = \arctan\left(\frac{v_y}{v_x}\right) = \arctan\left(\frac{-9.4}{15.0}\right) = -32.1°
+\end{equation}
+
+El agua impacta con una velocidad de \textbf{17.70 m/s} a un ángulo de \textbf{32.1° bajo la horizontal}.
+
+\subsection*{Verificación: Ecuación de la trayectoria}
+
+La trayectoria parabólica tiene la forma:
+
+\begin{equation}
+    y = x\tan\alpha - \frac{g}{2v_0^2\cos^2\alpha}x^2
+\end{equation}
+
+Sustituyendo valores:
+
+\begin{align}
+    y &= x\tan(53.13°) - \frac{9.8}{2(25.0)^2\cos^2(53.13°)}x^2 \\
+    y &= 1.333x - \frac{9.8}{2(625)(0.36)}x^2 \\
+    y &= 1.333x - \frac{9.8}{450}x^2 \\
+    y &= 1.333x - 0.0218x^2
+\end{align}
+
+Verificación en $x = 45.0$ m:
+\begin{equation}
+    y = 1.333(45.0) - 0.0218(45.0)^2 = 60.0 - 44.1 = 15.9 \text{ m} \quad \checkmark
+\end{equation}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{Parte a) Ángulo de elevación:}
+\begin{equation}
+    \boxed{\alpha = 53.1°}
+\end{equation}
+
+Los bomberos deben ajustar la manguera a un ángulo de \textbf{53.1°} sobre la horizontal.
+
+\vspace{0.3cm}
+
+\textbf{Parte b) En el punto más alto:}
+\begin{align}
+    \boxed{\text{Rapidez: } v = 15.0 \text{ m/s}} \\
+    \boxed{\text{Aceleración: } a = 9.8 \text{ m/s}^2 \text{ (hacia abajo)}}
+\end{align}
+
+\begin{itemize}
+    \item La rapidez es igual a la componente horizontal de la velocidad inicial
+    \item La aceleración siempre es $g$ dirigida verticalmente hacia abajo
+    \item Altura máxima alcanzada: $h_{max} = 20.41$ m
+    \item Tiempo para alcanzar la altura máxima: $t_{max} = 2.041$ s
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Parte c) Impacto en el edificio:}
+\begin{align}
+    \boxed{\text{Altura: } h = 15.9 \text{ m}} \\
+    \boxed{\text{Rapidez: } v = 17.70 \text{ m/s a } 32.1° \text{ bajo la horizontal}}
+\end{align}
+
+El agua golpea el edificio a una altura de \textbf{15.9 metros} con una rapidez de \textbf{17.70 m/s}.
+
+\vspace{0.3cm}
+
+\textbf{Resumen de valores importantes:}
+\begin{itemize}
+    \item Componentes de velocidad inicial: $v_{0x} = 15.0$ m/s, $v_{0y} = 20.0$ m/s
+    \item Tiempo total: $t = 3.00$ s
+    \item Alcance horizontal: $x = 45.0$ m
+    \item Altura de impacto: $y = 15.9$ m
+    \item Componentes de velocidad en el impacto: $v_x = 15.0$ m/s, $v_y = -9.4$ m/s
+\end{itemize}
+
+\end{resultadobox}
+
+\section{Gráficas del Movimiento}
+
+\subsection*{Trayectoria del chorro de agua}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=13cm, height=9cm,
+    xlabel={Posición horizontal $x$ (m)},
+    ylabel={Posición vertical $y$ (m)},
+    xmin=0, xmax=50,
+    ymin=0, ymax=22,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos=north east
+]
+    % Trayectoria: y = 1.333x - 0.0218x²
+    \addplot[domain=0:45, samples=100, cyan!70!blue, very thick] {1.333*x - 0.0218*x^2};
+
+    % Punto de lanzamiento
+    \addplot[only marks, mark=*, mark size=3pt, blue] coordinates {(0, 0)};
+    \node[blue, above left] at (axis cs:0,0) {Lanzamiento};
+
+    % Altura máxima
+    \addplot[only marks, mark=*, mark size=3pt, orange] coordinates {(30.6, 20.41)};
+    \node[orange, above] at (axis cs:30.6,20.41) {Altura máxima};
+    \node[orange, below] at (axis cs:30.6,19.5) {$(30.6, 20.4)$ m};
+    \node[orange, below] at (axis cs:30.6,18.7) {$t=2.04$ s};
+
+    % Impacto en el edificio
+    \addplot[only marks, mark=*, mark size=3pt, green!60!black] coordinates {(45, 15.9)};
+    \node[green!60!black, right] at (axis cs:45,15.9) {Impacto};
+    \node[green!60!black, right] at (axis cs:45,15.0) {$(45.0, 15.9)$ m};
+    \node[green!60!black, right] at (axis cs:45,14.1) {$t=3.00$ s};
+
+    % Edificio
+    \draw[fill=gray!30, thick] (axis cs:45,0) rectangle (axis cs:48,21);
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=3mm]}, blue!70!black, ultra thick] (axis cs:0,0) -- (axis cs:6,8);
+    \node[blue!70!black, above right] at (axis cs:3,5) {$\vec{v}_0$};
+    \node[blue!70!black, below] at (axis cs:3,3.5) {$25$ m/s, $53.1°$};
+
+    % Vector velocidad en el impacto
+    \draw[-{Latex[length=3mm]}, red!70!black, ultra thick] (axis cs:45,15.9) -- (axis cs:48.4,14.1);
+    \node[red!70!black, right] at (axis cs:48.4,14.6) {$\vec{v}_f$};
+    \node[red!70!black, right] at (axis cs:48.4,14.0) {$17.7$ m/s};
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Análisis y Conclusión}
+
+Este problema ilustra un caso especial de movimiento de proyectiles donde se conoce el alcance horizontal y el tiempo de vuelo, y se debe determinar el ángulo de lanzamiento. Las conclusiones principales son:
+
+\begin{enumerate}
+    \item \textbf{Método de solución:} El ángulo se determina usando la ecuación horizontal $x = v_0 \cos\alpha \cdot t$, ya que conocemos $x$, $v_0$ y $t$.
+
+    \item \textbf{Ángulo de 53.1°:} Este ángulo es mayor que 45°, lo que significa que el chorro tiene una trayectoria más "alta" que "larga". Los ángulos mayores a 45° privilegian la altura sobre el alcance.
+
+    \item \textbf{En el punto más alto:}
+    \begin{itemize}
+        \item La velocidad es puramente horizontal ($v = v_x = 15.0$ m/s)
+        \item La aceleración siempre es $g = 9.8$ m/s² hacia abajo
+        \item Se alcanza en $t = 2.04$ s, a una altura de $20.4$ m
+    \end{itemize}
+
+    \item \textbf{Impacto en el edificio:}
+    \begin{itemize}
+        \item Ocurre después de pasar el punto más alto (en la fase descendente)
+        \item La altura de impacto (15.9 m) es menor que la altura máxima (20.4 m)
+        \item La velocidad de impacto (17.7 m/s) es menor que la velocidad inicial (25.0 m/s)
+    \end{itemize}
+
+    \item \textbf{Componentes de velocidad:}
+    \begin{itemize}
+        \item Horizontal: constante en $v_x = 15.0$ m/s durante todo el vuelo
+        \item Vertical: varía de $+20.0$ m/s (inicio) a $0$ m/s (altura máxima) a $-9.4$ m/s (impacto)
+    \end{itemize}
+
+    \item \textbf{Aplicación práctica:} Los bomberos deben ajustar cuidadosamente el ángulo de la manguera para que el agua alcance la altura y distancia deseadas. Un ángulo mayor daría más altura pero menos alcance; un ángulo menor daría más alcance pero menos altura.
+
+    \item \textbf{Verificación:} La ecuación de la trayectoria parabólica $y = 1.333x - 0.0218x^2$ confirma que en $x = 45$ m, la altura es $y = 15.9$ m.
+
+    \item \textbf{Energía cinética:} La energía cinética en el impacto es menor que al inicio:
+    \begin{itemize}
+        \item Inicial: $KE_0 = \frac{1}{2}m(25.0)^2 = 312.5m$ J/kg
+        \item Final: $KE_f = \frac{1}{2}m(17.7)^2 = 156.6m$ J/kg
+        \item La diferencia se convierte en energía potencial gravitacional: $\Delta PE = mg(15.9)$
+    \end{itemize}
+\end{enumerate}
+
+\end{document}

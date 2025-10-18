@@ -1,0 +1,443 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.9} \\
+\large Movimiento de Proyectiles: Libro que Cae de una Mesa}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[8]{r}{.6\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=1.3]
+    % Mesa
+    \draw[fill=brown!40, thick] (0,0) rectangle (4,0.3);
+    \draw[fill=brown!60, thick] (-0.2,-2) rectangle (0,0);
+
+    % Piso
+    \draw[fill=gray!30, thick] (-1,-2) rectangle (6,-2.4);
+    \draw[pattern=north east lines, pattern color=gray!50] (-1,-2.6) rectangle (6,-2.4);
+
+    % Libro sobre la mesa
+    \filldraw[blue!70, thick] (3.5,0.3) rectangle (4,0.6);
+    \node at (3.75,0.45) {\tiny Libro};
+
+    % Flecha de velocidad
+    \draw[-{Latex[length=3mm]},red!70!black, ultra thick] (4,0.5) -- (5,0.5)
+        node[midway,above] {$v_0 = 1.10$ m/s};
+
+    % Trayectoria parabólica (ecuación física ajustada al diagrama)
+    % La parábola debe ir desde (4, 0.45) hasta (4.385, -2)
+    % Coeficiente calculado: k = 2.45/0.385^2 = 16.55
+    \draw[blue!70!black, thick, dashed, -{Latex[length=2mm]}]
+        plot[domain=4:4.385, samples=50, smooth] (\x, {0.45 - 16.55*(\x-4)*(\x-4)});
+
+    % Punto de impacto
+    \filldraw[red] (4.385,-2) circle (0.08);
+
+    % Cotas
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (4,-2) -- (4,0.3) node[midway,left] {$h = ?$};
+
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick]
+        (4,-2) -- (4.385,-2) node[midway,below] {$d = ?$};
+
+    % Etiquetas
+    \node at (2,0.15) {Mesa};
+    \node at (5,-2.2) {Piso};
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un libro de física que se desliza sobre una mesa horizontal a 1.10 m/s cae al piso en 0.350 s. Ignore la resistencia del aire. Calcule:
+
+\begin{enumerate}
+	\item[a)] La altura de la mesa.
+	\item[b)] La distancia horizontal del borde de la mesa al punto donde cae el libro.
+\end{enumerate}
+
+\begin{enumerate}
+	\item[c)] Las componentes horizontal y vertical, y la magnitud y dirección, de la velocidad del libro justo antes de tocar el piso.
+	\item[d)] Dibuje gráficas $x$-$t$, $y$-$t$, $v_x$-$t$ y $v_y$-$t$ para el movimiento.
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Velocidad inicial horizontal:} $v_0 = 1.10$ m/s
+    \item \textbf{Velocidad inicial vertical:} $v_{0y} = 0$ (movimiento horizontal)
+    \item \textbf{Tiempo de caída:} $t = 0.350$ s
+    \item \textbf{Aceleración de la gravedad:} $g = 9.8$ m/s$^2$
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+\subsection{Ecuaciones del Movimiento de Proyectiles}
+
+Para un objeto lanzado horizontalmente:
+
+\textbf{Movimiento horizontal (velocidad constante):}
+\begin{equation}
+    x = v_0 t
+\end{equation}
+\begin{equation}
+    v_x = v_0 = \text{constante}
+\end{equation}
+
+\textbf{Movimiento vertical (caída libre):}
+\begin{equation}
+    y = y_0 - \frac{1}{2}gt^2
+\end{equation}
+\begin{equation}
+    v_y = -gt
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Parte a) Altura de la mesa}
+
+El libro cae desde el reposo vertical (sin velocidad inicial vertical) y tarda 0.350 s en llegar al suelo.
+
+Usando la ecuación del movimiento vertical:
+\begin{align*}
+    h &= \frac{1}{2}gt^2 \\
+    h &= \frac{1}{2}(9.8)(0.350)^2 \\
+    h &= \frac{1}{2}(9.8)(0.1225) \\
+    h &= 4.9 \times 0.1225 \\
+    h &= 0.600 \text{ m}
+\end{align*}
+
+\textbf{Altura de la mesa:} $h = 0.600$ m = 60.0 cm
+
+\subsection*{Parte b) Distancia horizontal}
+
+El libro mantiene su velocidad horizontal constante de 1.10 m/s durante los 0.350 s de caída.
+
+\begin{align*}
+    d &= v_0 t \\
+    d &= (1.10)(0.350) \\
+    d &= 0.385 \text{ m}
+\end{align*}
+
+\textbf{Distancia horizontal:} $d = 0.385$ m = 38.5 cm
+
+\subsection*{Parte c) Velocidad justo antes de tocar el piso}
+
+\subsubsection*{Componente horizontal:}
+La velocidad horizontal permanece constante:
+\begin{equation*}
+    v_x = v_0 = 1.10 \text{ m/s}
+\end{equation*}
+
+\subsubsection*{Componente vertical:}
+\begin{align*}
+    v_y &= -gt \\
+    v_y &= -(9.8)(0.350) \\
+    v_y &= -3.43 \text{ m/s}
+\end{align*}
+
+(El signo negativo indica movimiento hacia abajo)
+
+\subsubsection*{Magnitud de la velocidad:}
+\begin{align*}
+    v &= \sqrt{v_x^2 + v_y^2} \\
+    v &= \sqrt{(1.10)^2 + (3.43)^2} \\
+    v &= \sqrt{1.21 + 11.76} \\
+    v &= \sqrt{12.97} \\
+    v &= 3.60 \text{ m/s}
+\end{align*}
+
+\subsubsection*{Dirección de la velocidad:}
+\begin{align*}
+    \theta &= \arctan\left(\frac{|v_y|}{v_x}\right) \\
+    \theta &= \arctan\left(\frac{3.43}{1.10}\right) \\
+    \theta &= \arctan(3.118) \\
+    \theta &= 72.2°
+\end{align*}
+
+El libro impacta el piso con un ángulo de 72.2° por debajo de la horizontal.
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\subsection*{Parte a) Altura de la mesa}
+\begin{equation}
+    \boxed{h = 0.600 \text{ m} = 60.0 \text{ cm}}
+\end{equation}
+
+\subsection*{Parte b) Distancia horizontal}
+\begin{equation}
+    \boxed{d = 0.385 \text{ m} = 38.5 \text{ cm}}
+\end{equation}
+
+\subsection*{Parte c) Velocidad justo antes del impacto}
+
+\textbf{Componentes:}
+\begin{itemize}
+    \item Horizontal: $v_x = 1.10$ m/s
+    \item Vertical: $v_y = 3.43$ m/s (hacia abajo)
+\end{itemize}
+
+\textbf{Magnitud:}
+\begin{equation}
+    \boxed{v = 3.60 \text{ m/s}}
+\end{equation}
+
+\textbf{Dirección:}
+\begin{equation}
+    \boxed{\theta = 72.2° \text{ por debajo de la horizontal}}
+\end{equation}
+
+\end{resultadobox}
+
+\section{Parte d) Gráficas del Movimiento}
+
+\subsection{Gráfica $x$ vs $t$}
+
+La posición horizontal aumenta linealmente con el tiempo:
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.8\textwidth,
+    height=6cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición $x$ (m)},
+    xmin=0, xmax=0.4,
+    ymin=0, ymax=0.5,
+    grid=major,
+    title={Posición horizontal vs tiempo}
+]
+\addplot[blue, thick, domain=0:0.35] {1.10*x};
+\addplot[red, only marks, mark=*] coordinates {(0.35,0.385)};
+\node[above right] at (axis cs:0.3,0.385) {$(0.350, 0.385)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $y$ vs $t$}
+
+La posición vertical desciende parabólicamente:
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.8\textwidth,
+    height=6cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición $y$ (m)},
+    xmin=0, xmax=0.2,
+    ymin=-0.1, ymax=0.4,
+    grid=major,
+    title={Posición vertical vs tiempo (desde el nivel de la mesa)}
+]
+\addplot[blue, thick, domain=0:0.35] {-4.9*x^2};
+\addplot[red, only marks, mark=*] coordinates {(0.35,-0.600)};
+\node[below right] at (axis cs:0.35,-0.600) {$(0.350, -0.600)$};
+\node[above left] at (axis cs:0,0) {Mesa};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $v_x$ vs $t$}
+
+La velocidad horizontal permanece constante:
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.8\textwidth,
+    height=6cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad $v_x$ (m/s)},
+    xmin=0, xmax=0.4,
+    ymin=0, ymax=1.5,
+    grid=major,
+    title={Velocidad horizontal vs tiempo}
+]
+\addplot[blue, thick, domain=0:0.35] {1.10};
+\addplot[red, only marks, mark=*] coordinates {(0.35,1.10)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Gráfica $v_y$ vs $t$}
+
+La velocidad vertical aumenta linealmente (hacia abajo):
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.8\textwidth,
+    height=6cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad $v_y$ (m/s)},
+    xmin=0, xmax=0.4,
+    ymin=-4, ymax=0.5,
+    grid=major,
+    title={Velocidad vertical vs tiempo}
+]
+\addplot[blue, thick, domain=0:0.35] {-9.8*x};
+\addplot[red, only marks, mark=*] coordinates {(0.35,-3.43)};
+\node[below right] at (axis cs:0.35,-3.43) {$(0.350, -3.43)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Verificación}
+
+\subsection{Verificación de la altura}
+
+Usando la velocidad vertical final:
+\begin{align*}
+    v_y^2 &= v_{0y}^2 + 2gh \\
+    (-3.43)^2 &= 0 + 2(9.8)h \\
+    11.76 &= 19.6h \\
+    h &= \frac{11.76}{19.6} = 0.600 \text{ m} \quad \checkmark
+\end{align*}
+
+\subsection{Verificación de la velocidad}
+
+Usando energía (considerando solo magnitudes):
+\begin{align*}
+    \frac{1}{2}mv^2 &= \frac{1}{2}mv_0^2 + mgh \\
+    v^2 &= v_0^2 + 2gh \\
+    v^2 &= (1.10)^2 + 2(9.8)(0.600) \\
+    v^2 &= 1.21 + 11.76 = 12.97 \\
+    v &= 3.60 \text{ m/s} \quad \checkmark
+\end{align*}
+
+\section{Conceptos Clave}
+
+\begin{enumerate}
+    \item \textbf{Lanzamiento horizontal:} El objeto tiene velocidad inicial solo en la dirección horizontal.
+
+    \item \textbf{Caída libre vertical:} El movimiento vertical es independiente del horizontal y sigue las leyes de caída libre.
+
+    \item \textbf{Velocidad constante horizontal:} En ausencia de resistencia del aire, $v_x$ no cambia.
+
+    \item \textbf{Trayectoria parabólica:} La combinación de movimiento horizontal uniforme y vertical acelerado produce una parábola.
+
+    \item \textbf{Tiempo determina todo:} Conocer el tiempo de caída es suficiente para determinar todas las demás cantidades.
+\end{enumerate}
+
+\section{Análisis Adicional}
+
+\subsection{Relación entre altura y velocidad vertical}
+
+La velocidad vertical al impactar depende solo de la altura de caída:
+\begin{equation*}
+    v_y = \sqrt{2gh} = \sqrt{2(9.8)(0.600)} = 3.43 \text{ m/s}
+\end{equation*}
+
+\subsection{Ángulo de impacto}
+
+El ángulo de 72.2° indica que el libro impacta el piso con una trayectoria muy inclinada, casi vertical. Esto se debe a que:
+\begin{itemize}
+    \item La velocidad horizontal es relativamente pequeña (1.10 m/s)
+    \item La velocidad vertical al impacto es mucho mayor (3.43 m/s)
+    \item La relación es: $v_y/v_x = 3.43/1.10 \approx 3.1$
+\end{itemize}
+
+\section{Resumen de Fórmulas}
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black,title=Fórmulas Clave]
+
+\textbf{Para lanzamiento horizontal desde altura $h$ con velocidad $v_0$:}
+
+\textbf{Tiempo de caída:}
+\begin{equation*}
+    t = \sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Altura (si se conoce $t$):}
+\begin{equation*}
+    h = \frac{1}{2}gt^2
+\end{equation*}
+
+\textbf{Alcance horizontal:}
+\begin{equation*}
+    d = v_0 t = v_0\sqrt{\frac{2h}{g}}
+\end{equation*}
+
+\textbf{Velocidad final:}
+\begin{align*}
+    v_x &= v_0 \\
+    v_y &= \sqrt{2gh} \\
+    v &= \sqrt{v_0^2 + 2gh}
+\end{align*}
+
+\end{tcolorbox}
+
+\end{document}

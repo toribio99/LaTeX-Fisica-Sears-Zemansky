@@ -1,0 +1,568 @@
+\documentclass[11pt,a4paper]{article}
+
+% Paquetes necesarios
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,patterns,decorations.pathmorphing,calc}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} % (opcional) claves extra para \includegraphics
+\usepackage{xparse}
+
+% Definición de colores
+\definecolor{azuloscuro}{RGB}{0,51,102}
+\definecolor{azulclaro}{RGB}{230,240,250}
+\definecolor{verdeoscuro}{RGB}{0,100,0}
+\definecolor{rojoclaro}{RGB}{255,230,230}
+
+% Configuración de cajas
+\tcbuselibrary{theorems,skins,breakable}
+
+\newtcolorbox{datosbox}{
+    colback=azulclaro,
+    colframe=azuloscuro,
+    fonttitle=\bfseries,
+    title=Datos del Problema,
+    sharp corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{solucionbox}{
+    colback=white,
+    colframe=verdeoscuro,
+    fonttitle=\bfseries,
+    title=Desarrollo de la Solución,
+    sharp corners,
+    boxrule=1pt,
+    breakable
+}
+
+\newtcolorbox{resultadobox}{
+    colback=rojoclaro,
+    colframe=red!70!black,
+    fonttitle=\bfseries,
+    title=Resultado Final,
+    sharp corners,
+    boxrule=2pt
+}
+
+% Título y autor
+\title{\textbf{Solución del Ejercicio 3.23} \\
+\large Piedra Lanzada desde la Azotea de un Edificio}
+\author{Física Universitaria - Sears y Zemansky \\ Capítulo 3: Movimiento en Dos o Tres Dimensiones}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado del Problema}
+
+\begin{wrapfigure}[9]{r}{.7\textwidth}  % Ajusta el ancho según necesites
+	\centering
+	\vspace{-\baselineskip}
+	%\begin{center}
+\begin{tikzpicture}[scale=0.72]
+    % Edificio
+    \draw[fill=gray!30, thick] (0,0) rectangle (1,3);
+    \draw[pattern=north east lines, pattern color=gray] (0,0) rectangle (1,-0.2);
+    \node[right, font=\scriptsize] at (1,1.5) {Edificio};
+
+    % Azotea
+    \draw[fill=brown!30, thick] (0,3) rectangle (1,3.1);
+
+    % Persona en la azotea
+    \draw[fill=blue!20, thick] (0.5,3.1) circle (0.08);
+    \node[above, font=\scriptsize] at (0.5,3.25) {Lanzador};
+
+    % Vector velocidad inicial
+    \draw[-{Latex[length=2.5mm]},blue!70!black, ultra thick] (0.5,3.1) -- (1.3,3.65);
+    \node[blue!70!black, above right, font=\scriptsize] at (0.9,3.5) {$v_0=30$ m/s};
+    \node[blue!70!black, below, font=\scriptsize] at (1.1,3.3) {$33°$};
+
+    % Ángulo
+    \draw[thick] (0.7,3.1) arc (0:33:0.2);
+
+    % Trayectoria parabólica completa hasta el suelo
+    % Ecuación: y = 3.1 + 0.649x - 0.0773x²
+    % Toca el suelo (y=0) en x = 11.79
+    \draw[red!70!black, very thick, -{Latex[length=2.5mm]}]
+        plot[domain=0:11.79, samples=150, smooth] (0.5+\x, {3.1 + 0.649*\x - 0.0773*\x*\x});
+
+    % Punto más alto
+    \filldraw[orange!80!black] (0.5+4.2,4.463) circle (0.08);
+    \node[orange!80!black, above, font=\scriptsize] at (0.5+4.2,4.563) {Altura máxima};
+    \node[orange!80!black, below, font=\scriptsize] at (0.5+4.2,4.363) {$h_{max}$};
+
+    % Punto de impacto en el suelo
+    \filldraw[green!60!black] (0.5+11.79,0) circle (0.08);
+    \node[green!60!black, below, font=\scriptsize] at (0.5+11.79,-0.2) {Impacto};
+
+    % Altura del edificio
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.3,0) -- (-0.3,3);
+    \node[left, font=\small] at (-0.3,1.5) {$15.0$ m};
+
+    % Distancia horizontal
+    \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (1,-0.5) -- (12.29,-0.5);
+    \node[below, font=\small] at (6.5,-0.5) {$R = ?$};
+
+    % Suelo
+    \draw[thick] (-0.5,0) -- (13,0);
+    \draw[pattern=north east lines, pattern color=brown] (-0.5,0) rectangle (13,-0.2);
+
+\end{tikzpicture}
+%\end{center}
+\vspace{-\baselineskip} % Reduce espacio después
+\end{wrapfigure}
+Un hombre está parado en la azotea de un edificio de 15.0 m y lanza una piedra con velocidad de 30.0 m/s en un ángulo de 33.0° sobre la horizontal. Puede despreciarse la resistencia del aire. Calcule:
+
+\begin{enumerate}
+	\item[a)] La altura máxima que alcanza la piedra sobre la azotea
+\end{enumerate}
+
+\begin{enumerate}
+	\item[b)] La magnitud de la velocidad de la piedra justo antes de golpear el suelo
+	\item[c)] La distancia horizontal desde la base del edificio hasta el punto donde la roca golpea el suelo
+	\item[d)] Dibuje las gráficas $x$-$t$, $y$-$t$, $v_x$-$t$ y $v_y$-$t$ para el movimiento
+\end{enumerate}
+
+\section{Datos del Problema}
+
+\begin{datosbox}
+\begin{itemize}
+    \item \textbf{Altura del edificio:} $h_0 = 15.0$ m
+    \item \textbf{Velocidad inicial:} $v_0 = 30.0$ m/s
+    \item \textbf{Ángulo de lanzamiento:} $\alpha_0 = 33.0°$
+    \item \textbf{Aceleración gravitacional:} $g = 9.8$ m/s$^2$
+    \item \textbf{Posición inicial:} $x_0 = 0$, $y_0 = 15.0$ m (nivel de la azotea)
+    \item \textbf{Resistencia del aire:} despreciable
+\end{itemize}
+\end{datosbox}
+
+\section{Marco Teórico}
+
+Para un proyectil lanzado desde una altura $h_0$ con velocidad inicial $v_0$ a un ángulo $\alpha_0$:
+
+\textbf{Componentes de velocidad inicial:}
+\begin{align}
+    v_{0x} &= v_0 \cos\alpha_0 \\
+    v_{0y} &= v_0 \sin\alpha_0
+\end{align}
+
+\textbf{Ecuaciones de posición (con $y_0 = h_0$):}
+\begin{align}
+    x(t) &= v_{0x}t \\
+    y(t) &= h_0 + v_{0y}t - \frac{1}{2}gt^2
+\end{align}
+
+\textbf{Ecuaciones de velocidad:}
+\begin{align}
+    v_x(t) &= v_{0x} \quad \text{(constante)} \\
+    v_y(t) &= v_{0y} - gt
+\end{align}
+
+\textbf{Altura máxima sobre el punto de lanzamiento:}
+\begin{equation}
+    h_{max,rel} = \frac{v_{0y}^2}{2g}
+\end{equation}
+
+\textbf{Altura máxima sobre el suelo:}
+\begin{equation}
+    h_{max,abs} = h_0 + h_{max,rel}
+\end{equation}
+
+\section{Desarrollo de la Solución}
+
+\begin{solucionbox}
+
+\subsection*{Paso 1: Componentes de la velocidad inicial}
+
+Calculamos las componentes horizontal y vertical de la velocidad inicial:
+
+\begin{align}
+    v_{0x} &= v_0 \cos\alpha_0 = (30.0 \text{ m/s}) \cos(33.0°) \\
+    v_{0x} &= (30.0 \text{ m/s})(0.8387) = 25.16 \text{ m/s}
+\end{align}
+
+\begin{align}
+    v_{0y} &= v_0 \sin\alpha_0 = (30.0 \text{ m/s}) \sin(33.0°) \\
+    v_{0y} &= (30.0 \text{ m/s})(0.5446) = 16.34 \text{ m/s}
+\end{align}
+
+\subsection*{Parte a): Altura máxima sobre la azotea}
+
+La piedra alcanza su altura máxima cuando la velocidad vertical es cero. Usando la ecuación cinemática:
+
+\begin{equation}
+    v_y^2 = v_{0y}^2 - 2gh
+\end{equation}
+
+En el punto más alto, $v_y = 0$:
+
+\begin{align}
+    0 &= v_{0y}^2 - 2gh_{max} \\
+    h_{max} &= \frac{v_{0y}^2}{2g} = \frac{(16.34 \text{ m/s})^2}{2(9.8 \text{ m/s}^2)} \\
+    h_{max} &= \frac{267.00}{19.6} = 13.62 \text{ m}
+\end{align}
+
+La piedra alcanza una altura de \textbf{13.62 metros} sobre la azotea, lo que equivale a $15.0 + 13.62 = 28.62$ m sobre el suelo.
+
+\subsection*{Parte b): Velocidad justo antes de golpear el suelo}
+
+Primero necesitamos encontrar el tiempo en que la piedra llega al suelo. La piedra golpea el suelo cuando $y = 0$. Usando:
+
+\begin{equation}
+    y = h_0 + v_{0y}t - \frac{1}{2}gt^2
+\end{equation}
+
+Sustitu yendo $y = 0$ y $h_0 = 15.0$ m:
+
+\begin{align}
+    0 &= 15.0 + 16.34t - 4.9t^2 \\
+    4.9t^2 - 16.34t - 15.0 &= 0
+\end{align}
+
+Usando la fórmula cuadrática:
+
+\begin{align}
+    t &= \frac{16.34 \pm \sqrt{(16.34)^2 + 4(4.9)(15.0)}}{2(4.9)} \\
+    t &= \frac{16.34 \pm \sqrt{267.00 + 294.00}}{9.8} \\
+    t &= \frac{16.34 \pm \sqrt{561.00}}{9.8} \\
+    t &= \frac{16.34 \pm 23.69}{9.8}
+\end{align}
+
+Tomando la raíz positiva:
+
+\begin{equation}
+    t = \frac{40.03}{9.8} = 4.085 \text{ s}
+\end{equation}
+
+Ahora calculamos las componentes de la velocidad en $t = 4.085$ s:
+
+\textbf{Componente horizontal (constante):}
+\begin{equation}
+    v_x = v_{0x} = 25.16 \text{ m/s}
+\end{equation}
+
+\textbf{Componente vertical:}
+\begin{align}
+    v_y &= v_{0y} - gt \\
+    v_y &= 16.34 - (9.8)(4.085) \\
+    v_y &= 16.34 - 40.03 \\
+    v_y &= -23.69 \text{ m/s}
+\end{align}
+
+El signo negativo indica que la velocidad vertical apunta hacia abajo.
+
+\textbf{Magnitud de la velocidad:}
+\begin{align}
+    v &= \sqrt{v_x^2 + v_y^2} \\
+    v &= \sqrt{(25.16)^2 + (-23.69)^2} \\
+    v &= \sqrt{633.02 + 561.21} \\
+    v &= \sqrt{1194.23} = 34.56 \text{ m/s}
+\end{align}
+
+\textbf{Ángulo con respecto a la horizontal:}
+\begin{equation}
+    \theta = \arctan\left(\frac{v_y}{v_x}\right) = \arctan\left(\frac{-23.69}{25.16}\right) = -43.3°
+\end{equation}
+
+La piedra golpea el suelo con una velocidad de \textbf{34.56 m/s} a un ángulo de \textbf{43.3° bajo la horizontal}.
+
+\subsection*{Parte c): Distancia horizontal}
+
+La distancia horizontal desde la base del edificio hasta el punto de impacto es:
+
+\begin{align}
+    R &= v_{0x} \cdot t \\
+    R &= (25.16 \text{ m/s})(4.085 \text{ s}) \\
+    R &= 102.8 \text{ m}
+\end{align}
+
+La piedra cae a \textbf{102.8 metros} de la base del edificio.
+
+\subsection*{Verificación usando conservación de energía}
+
+Podemos verificar la velocidad final usando conservación de energía:
+
+\begin{equation}
+    \frac{1}{2}mv_f^2 = \frac{1}{2}mv_0^2 + mgh_0
+\end{equation}
+
+\begin{align}
+    v_f^2 &= v_0^2 + 2gh_0 \\
+    v_f &= \sqrt{(30.0)^2 + 2(9.8)(15.0)} \\
+    v_f &= \sqrt{900 + 294} \\
+    v_f &= \sqrt{1194} = 34.56 \text{ m/s} \quad \checkmark
+\end{align}
+
+\end{solucionbox}
+
+\section{Resultados Finales}
+
+\begin{resultadobox}
+
+\textbf{Parte a) Altura máxima sobre la azotea:}
+\begin{equation}
+    \boxed{h_{max} = 13.62 \text{ m}}
+\end{equation}
+
+La piedra alcanza su altura máxima \textbf{13.62 metros} sobre la azotea (o 28.62 m sobre el suelo).
+
+\vspace{0.3cm}
+
+\textbf{Parte b) Velocidad justo antes de golpear el suelo:}
+\begin{equation}
+    \boxed{v = 34.56 \text{ m/s a } 43.3° \text{ bajo la horizontal}}
+\end{equation}
+
+Componentes: $v_x = 25.16$ m/s (horizontal), $v_y = -23.69$ m/s (vertical)
+
+\vspace{0.3cm}
+
+\textbf{Parte c) Distancia horizontal desde la base del edificio:}
+\begin{equation}
+    \boxed{R = 102.8 \text{ m}}
+\end{equation}
+
+La piedra cae al suelo a \textbf{102.8 metros} de la base del edificio.
+
+\vspace{0.3cm}
+
+\textbf{Información adicional:}
+\begin{itemize}
+    \item Tiempo de vuelo total: $t = 4.085$ s
+    \item Tiempo hasta alcanzar altura máxima: $t_{max} = v_{0y}/g = 1.668$ s
+    \item Altura máxima sobre el suelo: $h_{abs} = 28.62$ m
+    \item Velocidad inicial: $v_0 = 30.0$ m/s
+    \item Velocidad final: $v_f = 34.56$ m/s (mayor que la inicial debido a la ganancia de energía potencial)
+\end{itemize}
+
+\end{resultadobox}
+
+\section{Gráficas del Movimiento}
+
+\subsection*{Parte d): Gráficas $x$-$t$, $y$-$t$, $v_x$-$t$ y $v_y$-$t$}
+
+\subsubsection*{Gráfica Posición horizontal vs. tiempo ($x$-$t$)}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm, height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición horizontal $x$ (m)},
+    xmin=0, xmax=4.5,
+    ymin=0, ymax=110,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos=north west
+]
+    % x(t) = 25.16*t
+    \addplot[domain=0:4.085, samples=100, blue, very thick] {25.16*x};
+    \addlegendentry{$x(t) = 25.16t$}
+
+    % Punto de impacto
+    \addplot[only marks, mark=*, mark size=3pt, red] coordinates {(4.085, 102.8)};
+    \node[red, above right] at (axis cs:4.085,102.8) {Impacto};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+La posición horizontal aumenta linealmente con el tiempo, ya que la velocidad horizontal es constante.
+
+\subsubsection*{Gráfica Posición vertical vs. tiempo ($y$-$t$)}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm, height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Posición vertical $y$ (m)},
+    xmin=0, xmax=4.5,
+    ymin=0, ymax=30,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos=north east
+]
+    % y(t) = 15 + 16.34*t - 4.9*t^2
+    \addplot[domain=0:4.085, samples=100, red, very thick] {15 + 16.34*x - 4.9*x^2};
+    \addlegendentry{$y(t) = 15 + 16.34t - 4.9t^2$}
+
+    % Altura máxima
+    \addplot[only marks, mark=*, mark size=3pt, orange] coordinates {(1.668, 28.62)};
+    \node[orange, above] at (axis cs:1.668,28.62) {Altura máxima};
+
+    % Punto de impacto
+    \addplot[only marks, mark=*, mark size=3pt, green!60!black] coordinates {(4.085, 0)};
+    \node[green!60!black, below right] at (axis cs:4.085,0) {Impacto};
+
+    % Línea de la azotea
+    \addplot[domain=0:4.5, dashed, gray, thick] {15};
+    \node[gray, right] at (axis cs:4.3,15) {Azotea};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+La posición vertical sigue una parábola. La piedra sube hasta alcanzar su altura máxima y luego desciende hasta el suelo.
+
+\subsubsection*{Gráfica Velocidad horizontal vs. tiempo ($v_x$-$t$)}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm, height=6cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad horizontal $v_x$ (m/s)},
+    xmin=0, xmax=4.5,
+    ymin=0, ymax=30,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos=south east
+]
+    % vx(t) = 25.16 (constante)
+    \addplot[domain=0:4.085, samples=50, blue, very thick] {25.16};
+    \addlegendentry{$v_x(t) = 25.16$ m/s}
+
+    % Punto de impacto
+    \addplot[only marks, mark=*, mark size=3pt, red] coordinates {(4.085, 25.16)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+La velocidad horizontal es constante durante todo el movimiento (no hay aceleración horizontal).
+
+\subsubsection*{Gráfica Velocidad vertical vs. tiempo ($v_y$-$t$)}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=12cm, height=7cm,
+    xlabel={Tiempo $t$ (s)},
+    ylabel={Velocidad vertical $v_y$ (m/s)},
+    xmin=0, xmax=4.5,
+    ymin=-25, ymax=20,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos=north east
+]
+    % vy(t) = 16.34 - 9.8*t
+    \addplot[domain=0:4.085, samples=100, red, very thick] {16.34 - 9.8*x};
+    \addlegendentry{$v_y(t) = 16.34 - 9.8t$}
+
+    % Punto donde vy = 0 (altura máxima)
+    \addplot[only marks, mark=*, mark size=3pt, orange] coordinates {(1.668, 0)};
+    \node[orange, above right] at (axis cs:1.668,0) {$v_y=0$ (altura máx.)};
+
+    % Punto de impacto
+    \addplot[only marks, mark=*, mark size=3pt, green!60!black] coordinates {(4.085, -23.69)};
+    \node[green!60!black, below right] at (axis cs:4.085,-23.69) {Impacto};
+
+    % Línea vy = 0
+    \addplot[domain=0:4.5, dashed, gray, thick] {0};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+La velocidad vertical disminuye linealmente con el tiempo debido a la aceleración gravitacional constante. Es positiva (hacia arriba) al inicio, cero en la altura máxima, y negativa (hacia abajo) durante el descenso.
+
+\section{Trayectoria en el plano $xy$}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=13cm, height=8cm,
+    xlabel={Posición horizontal $x$ (m)},
+    ylabel={Posición vertical $y$ (m)},
+    xmin=0, xmax=110,
+    ymin=0, ymax=30,
+    grid=both,
+    grid style={line width=.1pt, draw=gray!30},
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos=north east,
+    axis equal image=false
+]
+    % Trayectoria: y = 15 + 0.6494x - 0.0773x²
+    % Derivada de x = 25.16t => t = x/25.16
+    % y = 15 + 16.34(x/25.16) - 4.9(x/25.16)²
+    % y = 15 + 0.6494x - 0.0773x²
+    \addplot[domain=0:102.8, samples=100, red, very thick] {15 + 0.6494*x - 0.000773*x^2};
+    \addlegendentry{Trayectoria parabólica}
+
+    % Punto inicial (azotea)
+    \addplot[only marks, mark=*, mark size=3pt, blue] coordinates {(0, 15)};
+    \node[blue, left] at (axis cs:0,15) {Lanzamiento};
+
+    % Altura máxima
+    \addplot[only marks, mark=*, mark size=3pt, orange] coordinates {(42.01, 28.62)};
+    \node[orange, above] at (axis cs:42.01,28.62) {Altura máxima};
+
+    % Punto de impacto
+    \addplot[only marks, mark=*, mark size=3pt, green!60!black] coordinates {(102.8, 0)};
+    \node[green!60!black, below right] at (axis cs:102.8,0) {Impacto};
+
+    % Línea del edificio
+    \addplot[domain=0:0.01, blue!50, ultra thick] {x};
+    \addplot[blue!50, ultra thick] coordinates {(0,0) (0,15)};
+
+    % Línea del suelo
+    \addplot[domain=0:110, brown, thick] {0};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\section{Análisis y Conclusión}
+
+Este problema ilustra el movimiento de un proyectil lanzado desde una altura inicial. Las conclusiones principales son:
+
+\begin{enumerate}
+    \item \textbf{Altura máxima:} La piedra alcanza 13.62 m sobre la azotea (28.62 m sobre el suelo). Esta altura es menor que si se lanzara desde el suelo con la misma velocidad inicial, pero la altura total sobre el suelo es mayor.
+
+    \item \textbf{Velocidad final mayor que la inicial:} La velocidad al impacto (34.56 m/s) es mayor que la velocidad inicial (30.0 m/s). Esto se debe a que la piedra convierte energía potencial gravitacional en energía cinética durante la caída desde una altura de 15.0 m.
+
+    \item \textbf{Alcance horizontal:} La distancia de 102.8 m es significativa y se debe a dos factores:
+    \begin{itemize}
+        \item La alta velocidad horizontal constante (25.16 m/s)
+        \item El largo tiempo de vuelo (4.085 s), que incluye tanto el tiempo de subida como el de caída desde una altura inicial de 15 m
+    \end{itemize}
+
+    \item \textbf{Simetría del movimiento:} A diferencia de un proyectil lanzado desde el suelo que regresa al mismo nivel, en este caso:
+    \begin{itemize}
+        \item El tiempo de subida (1.668 s) es menor que el tiempo de bajada (2.417 s)
+        \item El ángulo de lanzamiento (33°) es diferente del ángulo de impacto (43.3°)
+        \item La velocidad vertical de lanzamiento ($+16.34$ m/s) tiene menor magnitud que la de impacto ($-23.69$ m/s)
+    \end{itemize}
+
+    \item \textbf{Gráficas del movimiento:}
+    \begin{itemize}
+        \item $x$-$t$: Línea recta (velocidad horizontal constante)
+        \item $y$-$t$: Parábola (aceleración vertical constante)
+        \item $v_x$-$t$: Línea horizontal (sin aceleración horizontal)
+        \item $v_y$-$t$: Línea recta decreciente (aceleración $-g$)
+    \end{itemize}
+
+    \item \textbf{Conservación de energía:} Verificamos que la velocidad final se puede calcular tanto con cinemática como con conservación de energía, obteniendo el mismo resultado (34.56 m/s).
+
+    \item \textbf{Aplicaciones prácticas:} Este tipo de problema es relevante para:
+    \begin{itemize}
+        \item Lanzamiento de proyectiles desde plataformas elevadas
+        \item Diseño de sistemas de extinción de incendios
+        \item Balística y trayectorias de proyectiles
+        \item Deportes como el lanzamiento desde trampolines
+    \end{itemize}
+\end{enumerate}
+
+\end{document}
